@@ -239,7 +239,7 @@
     },
     {
       "id": "chgST1_Hour",
-      "description": "TOU charge plan 1 start time U16 (high byte=hour, low byte=minute). Register 43711 (raw hour register, supports chgST1 calc)",
+      "description": "TOU charge plan 1 start time U16 (high byte=minute, low byte=hour). Register 43711 (raw hour register, supports chgST1 calc)",
       "category": "BatteryTOUCharge",
       "pollClass": "slow",
       "function": "HR",
@@ -248,7 +248,7 @@
     },
     {
       "id": "chgST1_Minute",
-      "description": "TOU charge plan 1 start time U16 (high byte=hour, low byte=minute). Register 43711 (raw minute register, supports chgST1 calc)",
+      "description": "TOU charge plan 1 start time U16 (high byte=minute, low byte=hour). Register 43711 (raw minute register, supports chgST1 calc)",
       "category": "BatteryTOUCharge",
       "pollClass": "slow",
       "function": "HR",
@@ -257,7 +257,7 @@
     },
     {
       "id": "chgST1",
-      "description": "TOU charge plan 1 start time U16 (high byte=hour, low byte=minute). Register 43711 [combined from hour reg 43711 + minute reg 43712 via calc]",
+      "description": "TOU charge plan 1 start time U16 (high byte=minute, low byte=hour). Register 43711 [combined from hour reg 43711 + minute reg 43712 via calc]",
       "category": "BatteryTOUCharge",
       "pollClass": "slow",
       "calc": {
@@ -265,7 +265,7 @@
           "hour": "chgST1_Hour",
           "minute": "chgST1_Minute"
         },
-        "expr": "(hour << 8) | minute"
+        "expr": "(minute << 8) | hour"
       },
       "ss40k": {
         "name": "chgST1",
@@ -300,7 +300,7 @@
           "hour": "chgET1_Hour",
           "minute": "chgET1_Minute"
         },
-        "expr": "(hour << 8) | minute"
+        "expr": "(minute << 8) | hour"
       },
       "ss40k": {
         "name": "chgET1",
@@ -335,7 +335,7 @@
           "hour": "chgST2_Hour",
           "minute": "chgST2_Minute"
         },
-        "expr": "(hour << 8) | minute"
+        "expr": "(minute << 8) | hour"
       },
       "ss40k": {
         "name": "chgST2",
@@ -370,7 +370,7 @@
           "hour": "chgET2_Hour",
           "minute": "chgET2_Minute"
         },
-        "expr": "(hour << 8) | minute"
+        "expr": "(minute << 8) | hour"
       },
       "ss40k": {
         "name": "chgET2",
@@ -405,7 +405,7 @@
           "hour": "chgST3_Hour",
           "minute": "chgST3_Minute"
         },
-        "expr": "(hour << 8) | minute"
+        "expr": "(minute << 8) | hour"
       },
       "ss40k": {
         "name": "chgST3",
@@ -440,7 +440,7 @@
           "hour": "chgET3_Hour",
           "minute": "chgET3_Minute"
         },
-        "expr": "(hour << 8) | minute"
+        "expr": "(minute << 8) | hour"
       },
       "ss40k": {
         "name": "chgET3",
@@ -530,7 +530,7 @@
           "hour": "dischgST1_Hour",
           "minute": "dischgST1_Minute"
         },
-        "expr": "(hour << 8) | minute"
+        "expr": "(minute << 8) | hour"
       },
       "ss40k": {
         "name": "dischgST1",
@@ -565,7 +565,7 @@
           "hour": "dischgET1_Hour",
           "minute": "dischgET1_Minute"
         },
-        "expr": "(hour << 8) | minute"
+        "expr": "(minute << 8) | hour"
       },
       "ss40k": {
         "name": "dischgET1",
@@ -600,7 +600,7 @@
           "hour": "dischgST2_Hour",
           "minute": "dischgST2_Minute"
         },
-        "expr": "(hour << 8) | minute"
+        "expr": "(minute << 8) | hour"
       },
       "ss40k": {
         "name": "dischgST2",
@@ -635,7 +635,7 @@
           "hour": "dischgET2_Hour",
           "minute": "dischgET2_Minute"
         },
-        "expr": "(hour << 8) | minute"
+        "expr": "(minute << 8) | hour"
       },
       "ss40k": {
         "name": "dischgET2",
@@ -670,7 +670,7 @@
           "hour": "dischgST3_Hour",
           "minute": "dischgST3_Minute"
         },
-        "expr": "(hour << 8) | minute"
+        "expr": "(minute << 8) | hour"
       },
       "ss40k": {
         "name": "dischgST3",
@@ -705,7 +705,7 @@
           "hour": "dischgET3_Hour",
           "minute": "dischgET3_Minute"
         },
-        "expr": "(hour << 8) | minute"
+        "expr": "(minute << 8) | hour"
       },
       "ss40k": {
         "name": "dischgET3",
