@@ -16,7 +16,7 @@
       "category": "Basic",
       "pollClass": "normal",
       "function": "IR",
-      "address": 3120,
+      "address": 33121,
       "enumStatus": true,
       "ss40k": {
         "name": "PowerStatus",
@@ -29,7 +29,7 @@
       "category": "Basic",
       "pollClass": "normal",
       "function": "HR",
-      "address": 3006,
+      "address": 43007,
       "enumStatus": true,
       "ss40k": {
         "name": "PowerControl",
@@ -42,7 +42,7 @@
       "category": "Basic",
       "pollClass": "normal",
       "function": "HR",
-      "address": 3109,
+      "address": 43110,
       "bitfieldStatus": true,
       "ss40k": {
         "name": "OperatingMode",
@@ -55,7 +55,7 @@
       "category": "Basic",
       "pollClass": "normal",
       "function": "HR",
-      "address": 3109,
+      "address": 43110,
       "bitfieldStatus": true,
       "ss40k": {
         "name": "WorkMode",
@@ -68,7 +68,7 @@
       "category": "Measurement",
       "pollClass": "slow",
       "function": "HR",
-      "address": 3072,
+      "address": 43073,
       "bitfieldStatus": true
     },
     {
@@ -77,7 +77,7 @@
       "category": "Measurement",
       "pollClass": "slow",
       "function": "HR",
-      "address": 3139
+      "address": 43140
     },
     {
       "id": "CTDirection",
@@ -85,7 +85,7 @@
       "category": "Measurement",
       "pollClass": "slow",
       "function": "HR",
-      "address": 3028,
+      "address": 43029,
       "enumStatus": true,
       "ss40k": {
         "name": "CTDirection",
@@ -98,7 +98,7 @@
       "category": "Battery",
       "pollClass": "slow",
       "function": "HR",
-      "address": 3008,
+      "address": 43009,
       "enumStatus": true,
       "ss40k": {
         "name": "BatteryType",
@@ -111,7 +111,7 @@
       "category": "Battery",
       "pollClass": "normal",
       "function": "HR",
-      "address": 3009,
+      "address": 43010,
       "ss40k": {
         "name": "ChargeLimitSoc",
         "model": "40104"
@@ -123,7 +123,7 @@
       "category": "Battery",
       "pollClass": "slow",
       "function": "HR",
-      "address": 3116,
+      "address": 43117,
       "ss40k": {
         "name": "MaxChargingCurrent",
         "model": "40104"
@@ -135,7 +135,7 @@
       "category": "Battery",
       "pollClass": "slow",
       "function": "HR",
-      "address": 3117
+      "address": 43118
     },
     {
       "id": "OnGridCutOffSoc",
@@ -143,7 +143,7 @@
       "category": "Battery",
       "pollClass": "slow",
       "function": "HR",
-      "address": 8124,
+      "address": 48125,
       "ss40k": {
         "name": "OnGridCutOffSoc",
         "model": "40104"
@@ -155,7 +155,7 @@
       "category": "Battery",
       "pollClass": "slow",
       "function": "HR",
-      "address": 8126,
+      "address": 48127,
       "ss40k": {
         "name": "OffGridCutOffSoc",
         "model": "40104"
@@ -167,7 +167,7 @@
       "category": "Battery",
       "pollClass": "slow",
       "function": "HR",
-      "address": 3023
+      "address": 43024
     },
     {
       "id": "BatteryScheduling",
@@ -175,7 +175,7 @@
       "category": "BatteryScheduling",
       "pollClass": "normal",
       "function": "HR",
-      "address": 3706,
+      "address": 43707,
       "bitfieldStatus": true,
       "ss40k": {
         "name": "BatteryScheduling",
@@ -188,7 +188,7 @@
       "category": "BatteryTOUCharge",
       "pollClass": "normal",
       "function": "HR",
-      "address": 8100,
+      "address": 48101,
       "scale": {
         "mode": "Linear",
         "rawLow": 0,
@@ -207,7 +207,7 @@
       "category": "BatteryTOUCharge",
       "pollClass": "normal",
       "function": "HR",
-      "address": 3707,
+      "address": 43708,
       "ss40k": {
         "name": "socChgEndT1",
         "model": "40104"
@@ -219,7 +219,7 @@
       "category": "BatteryTOUCharge",
       "pollClass": "normal",
       "function": "HR",
-      "address": 3714,
+      "address": 43715,
       "ss40k": {
         "name": "socChgEndT2",
         "model": "40104"
@@ -231,79 +231,217 @@
       "category": "BatteryTOUCharge",
       "pollClass": "normal",
       "function": "HR",
-      "address": 3721,
+      "address": 43722,
       "ss40k": {
         "name": "socChgEndT3",
         "model": "40104"
       }
     },
     {
-      "id": "chgST1",
-      "description": "TOU charge plan 1 start time U16 (high byte=hour, low byte=minute). Register 43711",
+      "id": "chgST1_Hour",
+      "description": "TOU charge plan 1 start time U16 (high byte=hour, low byte=minute). Register 43711 (raw hour register, supports chgST1 calc)",
       "category": "BatteryTOUCharge",
       "pollClass": "slow",
       "function": "HR",
-      "address": 3710,
+      "address": 43711,
+      "supporting": true
+    },
+    {
+      "id": "chgST1_Minute",
+      "description": "TOU charge plan 1 start time U16 (high byte=hour, low byte=minute). Register 43711 (raw minute register, supports chgST1 calc)",
+      "category": "BatteryTOUCharge",
+      "pollClass": "slow",
+      "function": "HR",
+      "address": 43712,
+      "supporting": true
+    },
+    {
+      "id": "chgST1",
+      "description": "TOU charge plan 1 start time U16 (high byte=hour, low byte=minute). Register 43711 [combined from hour reg 43711 + minute reg 43712 via calc]",
+      "category": "BatteryTOUCharge",
+      "pollClass": "slow",
+      "calc": {
+        "inputs": {
+          "hour": "chgST1_Hour",
+          "minute": "chgST1_Minute"
+        },
+        "expr": "(hour << 8) | minute"
+      },
       "ss40k": {
         "name": "chgST1",
         "model": "40104"
       }
     },
     {
-      "id": "chgET1",
-      "description": "TOU charge plan 1 end time U16. Register 43713",
+      "id": "chgET1_Hour",
+      "description": "TOU charge plan 1 end time U16. Register 43713 (raw hour register, supports chgET1 calc)",
       "category": "BatteryTOUCharge",
       "pollClass": "slow",
       "function": "HR",
-      "address": 3712,
+      "address": 43713,
+      "supporting": true
+    },
+    {
+      "id": "chgET1_Minute",
+      "description": "TOU charge plan 1 end time U16. Register 43713 (raw minute register, supports chgET1 calc)",
+      "category": "BatteryTOUCharge",
+      "pollClass": "slow",
+      "function": "HR",
+      "address": 43714,
+      "supporting": true
+    },
+    {
+      "id": "chgET1",
+      "description": "TOU charge plan 1 end time U16. Register 43713 [combined from hour reg 43713 + minute reg 43714 via calc]",
+      "category": "BatteryTOUCharge",
+      "pollClass": "slow",
+      "calc": {
+        "inputs": {
+          "hour": "chgET1_Hour",
+          "minute": "chgET1_Minute"
+        },
+        "expr": "(hour << 8) | minute"
+      },
       "ss40k": {
         "name": "chgET1",
         "model": "40104"
       }
     },
     {
-      "id": "chgST2",
-      "description": "TOU charge plan 2 start time U16. Register 43718",
+      "id": "chgST2_Hour",
+      "description": "TOU charge plan 2 start time U16. Register 43718 (raw hour register, supports chgST2 calc)",
       "category": "BatteryTOUCharge",
       "pollClass": "slow",
       "function": "HR",
-      "address": 3717,
+      "address": 43718,
+      "supporting": true
+    },
+    {
+      "id": "chgST2_Minute",
+      "description": "TOU charge plan 2 start time U16. Register 43718 (raw minute register, supports chgST2 calc)",
+      "category": "BatteryTOUCharge",
+      "pollClass": "slow",
+      "function": "HR",
+      "address": 43719,
+      "supporting": true
+    },
+    {
+      "id": "chgST2",
+      "description": "TOU charge plan 2 start time U16. Register 43718 [combined from hour reg 43718 + minute reg 43719 via calc]",
+      "category": "BatteryTOUCharge",
+      "pollClass": "slow",
+      "calc": {
+        "inputs": {
+          "hour": "chgST2_Hour",
+          "minute": "chgST2_Minute"
+        },
+        "expr": "(hour << 8) | minute"
+      },
       "ss40k": {
         "name": "chgST2",
         "model": "40104"
       }
     },
     {
-      "id": "chgET2",
-      "description": "TOU charge plan 2 end time U16. Register 43720",
+      "id": "chgET2_Hour",
+      "description": "TOU charge plan 2 end time U16. Register 43720 (raw hour register, supports chgET2 calc)",
       "category": "BatteryTOUCharge",
       "pollClass": "slow",
       "function": "HR",
-      "address": 3719,
+      "address": 43720,
+      "supporting": true
+    },
+    {
+      "id": "chgET2_Minute",
+      "description": "TOU charge plan 2 end time U16. Register 43720 (raw minute register, supports chgET2 calc)",
+      "category": "BatteryTOUCharge",
+      "pollClass": "slow",
+      "function": "HR",
+      "address": 43721,
+      "supporting": true
+    },
+    {
+      "id": "chgET2",
+      "description": "TOU charge plan 2 end time U16. Register 43720 [combined from hour reg 43720 + minute reg 43721 via calc]",
+      "category": "BatteryTOUCharge",
+      "pollClass": "slow",
+      "calc": {
+        "inputs": {
+          "hour": "chgET2_Hour",
+          "minute": "chgET2_Minute"
+        },
+        "expr": "(hour << 8) | minute"
+      },
       "ss40k": {
         "name": "chgET2",
         "model": "40104"
       }
     },
     {
-      "id": "chgST3",
-      "description": "TOU charge plan 3 start time U16. Register 43725",
+      "id": "chgST3_Hour",
+      "description": "TOU charge plan 3 start time U16. Register 43725 (raw hour register, supports chgST3 calc)",
       "category": "BatteryTOUCharge",
       "pollClass": "slow",
       "function": "HR",
-      "address": 3724,
+      "address": 43725,
+      "supporting": true
+    },
+    {
+      "id": "chgST3_Minute",
+      "description": "TOU charge plan 3 start time U16. Register 43725 (raw minute register, supports chgST3 calc)",
+      "category": "BatteryTOUCharge",
+      "pollClass": "slow",
+      "function": "HR",
+      "address": 43726,
+      "supporting": true
+    },
+    {
+      "id": "chgST3",
+      "description": "TOU charge plan 3 start time U16. Register 43725 [combined from hour reg 43725 + minute reg 43726 via calc]",
+      "category": "BatteryTOUCharge",
+      "pollClass": "slow",
+      "calc": {
+        "inputs": {
+          "hour": "chgST3_Hour",
+          "minute": "chgST3_Minute"
+        },
+        "expr": "(hour << 8) | minute"
+      },
       "ss40k": {
         "name": "chgST3",
         "model": "40104"
       }
     },
     {
-      "id": "chgET3",
-      "description": "TOU charge plan 3 end time U16. Register 43727",
+      "id": "chgET3_Hour",
+      "description": "TOU charge plan 3 end time U16. Register 43727 (raw hour register, supports chgET3 calc)",
       "category": "BatteryTOUCharge",
       "pollClass": "slow",
       "function": "HR",
-      "address": 3726,
+      "address": 43727,
+      "supporting": true
+    },
+    {
+      "id": "chgET3_Minute",
+      "description": "TOU charge plan 3 end time U16. Register 43727 (raw minute register, supports chgET3 calc)",
+      "category": "BatteryTOUCharge",
+      "pollClass": "slow",
+      "function": "HR",
+      "address": 43728,
+      "supporting": true
+    },
+    {
+      "id": "chgET3",
+      "description": "TOU charge plan 3 end time U16. Register 43727 [combined from hour reg 43727 + minute reg 43728 via calc]",
+      "category": "BatteryTOUCharge",
+      "pollClass": "slow",
+      "calc": {
+        "inputs": {
+          "hour": "chgET3_Hour",
+          "minute": "chgET3_Minute"
+        },
+        "expr": "(hour << 8) | minute"
+      },
       "ss40k": {
         "name": "chgET3",
         "model": "40104"
@@ -315,7 +453,7 @@
       "category": "BatteryTOUDischarge",
       "pollClass": "normal",
       "function": "HR",
-      "address": 8112,
+      "address": 48113,
       "scale": {
         "mode": "Linear",
         "rawLow": 0,
@@ -334,7 +472,7 @@
       "category": "BatteryTOUDischarge",
       "pollClass": "normal",
       "function": "HR",
-      "address": 3749,
+      "address": 43750,
       "ss40k": {
         "name": "socDischgEndT1",
         "model": "40104"
@@ -346,7 +484,7 @@
       "category": "BatteryTOUDischarge",
       "pollClass": "normal",
       "function": "HR",
-      "address": 3756,
+      "address": 43757,
       "ss40k": {
         "name": "socDischgEndT2",
         "model": "40104"
@@ -358,79 +496,217 @@
       "category": "BatteryTOUDischarge",
       "pollClass": "normal",
       "function": "HR",
-      "address": 3763,
+      "address": 43764,
       "ss40k": {
         "name": "socDischgEndT3",
         "model": "40104"
       }
     },
     {
-      "id": "dischgST1",
-      "description": "TOU discharge plan 1 start time U16. Register 43753",
+      "id": "dischgST1_Hour",
+      "description": "TOU discharge plan 1 start time U16. Register 43753 (raw hour register, supports dischgST1 calc)",
       "category": "BatteryTOUDischarge",
       "pollClass": "slow",
       "function": "HR",
-      "address": 3752,
+      "address": 43753,
+      "supporting": true
+    },
+    {
+      "id": "dischgST1_Minute",
+      "description": "TOU discharge plan 1 start time U16. Register 43753 (raw minute register, supports dischgST1 calc)",
+      "category": "BatteryTOUDischarge",
+      "pollClass": "slow",
+      "function": "HR",
+      "address": 43754,
+      "supporting": true
+    },
+    {
+      "id": "dischgST1",
+      "description": "TOU discharge plan 1 start time U16. Register 43753 [combined from hour reg 43753 + minute reg 43754 via calc]",
+      "category": "BatteryTOUDischarge",
+      "pollClass": "slow",
+      "calc": {
+        "inputs": {
+          "hour": "dischgST1_Hour",
+          "minute": "dischgST1_Minute"
+        },
+        "expr": "(hour << 8) | minute"
+      },
       "ss40k": {
         "name": "dischgST1",
         "model": "40104"
       }
     },
     {
-      "id": "dischgET1",
-      "description": "TOU discharge plan 1 end time U16. Register 43755",
+      "id": "dischgET1_Hour",
+      "description": "TOU discharge plan 1 end time U16. Register 43755 (raw hour register, supports dischgET1 calc)",
       "category": "BatteryTOUDischarge",
       "pollClass": "slow",
       "function": "HR",
-      "address": 3754,
+      "address": 43755,
+      "supporting": true
+    },
+    {
+      "id": "dischgET1_Minute",
+      "description": "TOU discharge plan 1 end time U16. Register 43755 (raw minute register, supports dischgET1 calc)",
+      "category": "BatteryTOUDischarge",
+      "pollClass": "slow",
+      "function": "HR",
+      "address": 43756,
+      "supporting": true
+    },
+    {
+      "id": "dischgET1",
+      "description": "TOU discharge plan 1 end time U16. Register 43755 [combined from hour reg 43755 + minute reg 43756 via calc]",
+      "category": "BatteryTOUDischarge",
+      "pollClass": "slow",
+      "calc": {
+        "inputs": {
+          "hour": "dischgET1_Hour",
+          "minute": "dischgET1_Minute"
+        },
+        "expr": "(hour << 8) | minute"
+      },
       "ss40k": {
         "name": "dischgET1",
         "model": "40104"
       }
     },
     {
-      "id": "dischgST2",
-      "description": "TOU discharge plan 2 start time U16. Register 43760",
+      "id": "dischgST2_Hour",
+      "description": "TOU discharge plan 2 start time U16. Register 43760 (raw hour register, supports dischgST2 calc)",
       "category": "BatteryTOUDischarge",
       "pollClass": "slow",
       "function": "HR",
-      "address": 3759,
+      "address": 43760,
+      "supporting": true
+    },
+    {
+      "id": "dischgST2_Minute",
+      "description": "TOU discharge plan 2 start time U16. Register 43760 (raw minute register, supports dischgST2 calc)",
+      "category": "BatteryTOUDischarge",
+      "pollClass": "slow",
+      "function": "HR",
+      "address": 43761,
+      "supporting": true
+    },
+    {
+      "id": "dischgST2",
+      "description": "TOU discharge plan 2 start time U16. Register 43760 [combined from hour reg 43760 + minute reg 43761 via calc]",
+      "category": "BatteryTOUDischarge",
+      "pollClass": "slow",
+      "calc": {
+        "inputs": {
+          "hour": "dischgST2_Hour",
+          "minute": "dischgST2_Minute"
+        },
+        "expr": "(hour << 8) | minute"
+      },
       "ss40k": {
         "name": "dischgST2",
         "model": "40104"
       }
     },
     {
-      "id": "dischgET2",
-      "description": "TOU discharge plan 2 end time U16. Register 43762",
+      "id": "dischgET2_Hour",
+      "description": "TOU discharge plan 2 end time U16. Register 43762 (raw hour register, supports dischgET2 calc)",
       "category": "BatteryTOUDischarge",
       "pollClass": "slow",
       "function": "HR",
-      "address": 3761,
+      "address": 43762,
+      "supporting": true
+    },
+    {
+      "id": "dischgET2_Minute",
+      "description": "TOU discharge plan 2 end time U16. Register 43762 (raw minute register, supports dischgET2 calc)",
+      "category": "BatteryTOUDischarge",
+      "pollClass": "slow",
+      "function": "HR",
+      "address": 43763,
+      "supporting": true
+    },
+    {
+      "id": "dischgET2",
+      "description": "TOU discharge plan 2 end time U16. Register 43762 [combined from hour reg 43762 + minute reg 43763 via calc]",
+      "category": "BatteryTOUDischarge",
+      "pollClass": "slow",
+      "calc": {
+        "inputs": {
+          "hour": "dischgET2_Hour",
+          "minute": "dischgET2_Minute"
+        },
+        "expr": "(hour << 8) | minute"
+      },
       "ss40k": {
         "name": "dischgET2",
         "model": "40104"
       }
     },
     {
-      "id": "dischgST3",
-      "description": "TOU discharge plan 3 start time U16. Register 43767",
+      "id": "dischgST3_Hour",
+      "description": "TOU discharge plan 3 start time U16. Register 43767 (raw hour register, supports dischgST3 calc)",
       "category": "BatteryTOUDischarge",
       "pollClass": "slow",
       "function": "HR",
-      "address": 3766,
+      "address": 43767,
+      "supporting": true
+    },
+    {
+      "id": "dischgST3_Minute",
+      "description": "TOU discharge plan 3 start time U16. Register 43767 (raw minute register, supports dischgST3 calc)",
+      "category": "BatteryTOUDischarge",
+      "pollClass": "slow",
+      "function": "HR",
+      "address": 43768,
+      "supporting": true
+    },
+    {
+      "id": "dischgST3",
+      "description": "TOU discharge plan 3 start time U16. Register 43767 [combined from hour reg 43767 + minute reg 43768 via calc]",
+      "category": "BatteryTOUDischarge",
+      "pollClass": "slow",
+      "calc": {
+        "inputs": {
+          "hour": "dischgST3_Hour",
+          "minute": "dischgST3_Minute"
+        },
+        "expr": "(hour << 8) | minute"
+      },
       "ss40k": {
         "name": "dischgST3",
         "model": "40104"
       }
     },
     {
-      "id": "dischgET3",
-      "description": "TOU discharge plan 3 end time U16. Register 43769",
+      "id": "dischgET3_Hour",
+      "description": "TOU discharge plan 3 end time U16. Register 43769 (raw hour register, supports dischgET3 calc)",
       "category": "BatteryTOUDischarge",
       "pollClass": "slow",
       "function": "HR",
-      "address": 3768,
+      "address": 43769,
+      "supporting": true
+    },
+    {
+      "id": "dischgET3_Minute",
+      "description": "TOU discharge plan 3 end time U16. Register 43769 (raw minute register, supports dischgET3 calc)",
+      "category": "BatteryTOUDischarge",
+      "pollClass": "slow",
+      "function": "HR",
+      "address": 43770,
+      "supporting": true
+    },
+    {
+      "id": "dischgET3",
+      "description": "TOU discharge plan 3 end time U16. Register 43769 [combined from hour reg 43769 + minute reg 43770 via calc]",
+      "category": "BatteryTOUDischarge",
+      "pollClass": "slow",
+      "calc": {
+        "inputs": {
+          "hour": "dischgET3_Hour",
+          "minute": "dischgET3_Minute"
+        },
+        "expr": "(hour << 8) | minute"
+      },
       "ss40k": {
         "name": "dischgET3",
         "model": "40104"
@@ -442,7 +718,7 @@
       "category": "GridBase",
       "pollClass": "slow",
       "function": "HR",
-      "address": 3067,
+      "address": 43068,
       "enumStatus": true,
       "ss40k": {
         "name": "GridRegulation",
@@ -455,7 +731,7 @@
       "category": "GridConnection",
       "pollClass": "slow",
       "function": "HR",
-      "address": 3428,
+      "address": 43429,
       "ss40k": {
         "name": "RampRate",
         "model": "40104"
@@ -467,7 +743,7 @@
       "category": "GridConnection",
       "pollClass": "normal",
       "function": "HR",
-      "address": 3006,
+      "address": 43007,
       "enumStatus": true,
       "ss40k": {
         "name": "PermitServiceStatus",
@@ -480,7 +756,7 @@
       "category": "GridConnection",
       "pollClass": "slow",
       "function": "HR",
-      "address": 3082,
+      "address": 43083,
       "scale": {
         "mode": "Linear",
         "rawLow": 0,
@@ -499,7 +775,7 @@
       "category": "GridConnection",
       "pollClass": "slow",
       "function": "HR",
-      "address": 3081,
+      "address": 43082,
       "scale": {
         "mode": "Linear",
         "rawLow": 0,
@@ -518,7 +794,7 @@
       "category": "GridConnection",
       "pollClass": "slow",
       "function": "HR",
-      "address": 3084,
+      "address": 43085,
       "scale": {
         "mode": "Linear",
         "rawLow": 0,
@@ -537,7 +813,7 @@
       "category": "GridConnection",
       "pollClass": "slow",
       "function": "HR",
-      "address": 3083,
+      "address": 43084,
       "scale": {
         "mode": "Linear",
         "rawLow": 0,
@@ -556,7 +832,7 @@
       "category": "GridConnection",
       "pollClass": "slow",
       "function": "HR",
-      "address": 3105,
+      "address": 43106,
       "ss40k": {
         "name": "ConnectionDelayTime",
         "model": "40104"
@@ -568,7 +844,7 @@
       "category": "GridConnection",
       "pollClass": "slow",
       "function": "HR",
-      "address": 3106,
+      "address": 43107,
       "ss40k": {
         "name": "ReconnectionDelayTime",
         "model": "40104"
@@ -580,7 +856,7 @@
       "category": "GridProtection",
       "pollClass": "slow",
       "function": "HR",
-      "address": 3093,
+      "address": 43094,
       "scale": {
         "mode": "Linear",
         "rawLow": 0,
@@ -599,7 +875,7 @@
       "category": "GridProtection",
       "pollClass": "slow",
       "function": "HR",
-      "address": 3089,
+      "address": 43090,
       "scale": {
         "mode": "Linear",
         "rawLow": 0,
@@ -618,7 +894,7 @@
       "category": "GridProtection",
       "pollClass": "slow",
       "function": "HR",
-      "address": 3094,
+      "address": 43095,
       "ss40k": {
         "name": "GridVoltLimit1LowTime",
         "model": "40104"
@@ -630,7 +906,7 @@
       "category": "GridProtection",
       "pollClass": "slow",
       "function": "HR",
-      "address": 3090,
+      "address": 43091,
       "ss40k": {
         "name": "GridVoltLimit1HighTime",
         "model": "40104"
@@ -642,7 +918,7 @@
       "category": "GridProtection",
       "pollClass": "slow",
       "function": "HR",
-      "address": 3095,
+      "address": 43096,
       "scale": {
         "mode": "Linear",
         "rawLow": 0,
@@ -661,7 +937,7 @@
       "category": "GridProtection",
       "pollClass": "slow",
       "function": "HR",
-      "address": 3091,
+      "address": 43092,
       "scale": {
         "mode": "Linear",
         "rawLow": 0,
@@ -680,7 +956,7 @@
       "category": "GridProtection",
       "pollClass": "slow",
       "function": "HR",
-      "address": 3101,
+      "address": 43102,
       "scale": {
         "mode": "Linear",
         "rawLow": 0,
@@ -699,7 +975,7 @@
       "category": "GridProtection",
       "pollClass": "slow",
       "function": "HR",
-      "address": 3097,
+      "address": 43098,
       "scale": {
         "mode": "Linear",
         "rawLow": 0,
@@ -718,7 +994,7 @@
       "category": "GridProtection",
       "pollClass": "slow",
       "function": "HR",
-      "address": 3103,
+      "address": 43104,
       "scale": {
         "mode": "Linear",
         "rawLow": 0,
@@ -737,7 +1013,7 @@
       "category": "GridProtection",
       "pollClass": "slow",
       "function": "HR",
-      "address": 3099,
+      "address": 43100,
       "scale": {
         "mode": "Linear",
         "rawLow": 0,
@@ -756,7 +1032,7 @@
       "category": "FrequencyActivePowerMode",
       "pollClass": "slow",
       "function": "HR",
-      "address": 3226,
+      "address": 43227,
       "ss40k": {
         "name": "OverFrequencyDroop_dbOF",
         "model": "40104"
@@ -768,7 +1044,7 @@
       "category": "FrequencyActivePowerMode",
       "pollClass": "slow",
       "function": "HR",
-      "address": 3227,
+      "address": 43228,
       "ss40k": {
         "name": "OverFrequencyDroop_kOF",
         "model": "40104"
@@ -780,7 +1056,7 @@
       "category": "FrequencyActivePowerMode",
       "pollClass": "slow",
       "function": "HR",
-      "address": 3232,
+      "address": 43233,
       "ss40k": {
         "name": "UnderFrequencyDroop_dbUF",
         "model": "40104"
@@ -792,7 +1068,7 @@
       "category": "FrequencyActivePowerMode",
       "pollClass": "slow",
       "function": "HR",
-      "address": 3233,
+      "address": 43234,
       "ss40k": {
         "name": "UnderFrequencyDroop_kUF",
         "model": "40104"
@@ -804,7 +1080,7 @@
       "category": "FeedInGrid",
       "pollClass": "normal",
       "function": "HR",
-      "address": 3482,
+      "address": 43483,
       "bitfieldStatus": true,
       "ss40k": {
         "name": "FeedInGridStatus",
@@ -817,7 +1093,7 @@
       "category": "FeedInGrid",
       "pollClass": "slow",
       "function": "HR",
-      "address": 3073,
+      "address": 43074,
       "scale": {
         "mode": "Linear",
         "rawLow": 0,
@@ -836,7 +1112,7 @@
       "category": "BackupPower",
       "pollClass": "normal",
       "function": "HR",
-      "address": 3110,
+      "address": 43111,
       "enumStatus": true,
       "ss40k": {
         "name": "OffGridOutput",
@@ -849,7 +1125,7 @@
       "category": "BackupPower",
       "pollClass": "slow",
       "function": "HR",
-      "address": 3111,
+      "address": 43112,
       "ss40k": {
         "name": "EPSVoltage",
         "model": "40104"
@@ -861,7 +1137,7 @@
       "category": "Generator",
       "pollClass": "slow",
       "function": "HR",
-      "address": 3363,
+      "address": 43364,
       "scale": {
         "mode": "Linear",
         "rawLow": 0,
@@ -880,7 +1156,7 @@
       "category": "Generator",
       "pollClass": "slow",
       "function": "HR",
-      "address": 3343,
+      "address": 43344,
       "ss40k": {
         "name": "socGenStart",
         "model": "40104"
@@ -892,7 +1168,7 @@
       "category": "Generator",
       "pollClass": "slow",
       "function": "HR",
-      "address": 3344,
+      "address": 43345,
       "ss40k": {
         "name": "socGenEnd",
         "model": "40104"
@@ -904,10 +1180,10 @@
       "category": "Generator",
       "pollClass": "normal",
       "function": "IR",
-      "address": 3286,
+      "address": 33287,
       "enumStatus": true,
       "ss40k": {
-        "name": "GenDryContact",
+        "name": "genDryContactState",
         "model": "40101"
       }
     },
@@ -917,7 +1193,7 @@
       "category": "Generator",
       "pollClass": "slow",
       "function": "HR",
-      "address": 3368,
+      "address": 43369,
       "scale": {
         "mode": "Linear",
         "rawLow": 0,
@@ -932,7 +1208,7 @@
       "category": "Generator",
       "pollClass": "slow",
       "function": "HR",
-      "address": 3339,
+      "address": 43340,
       "enumStatus": true
     },
     {
@@ -941,7 +1217,7 @@
       "category": "ACCoupledPV",
       "pollClass": "slow",
       "function": "HR",
-      "address": 3482,
+      "address": 43483,
       "bitfieldStatus": true,
       "ss40k": {
         "name": "ACCoupledPV",
@@ -954,7 +1230,7 @@
       "category": "ACCoupledPV",
       "pollClass": "slow",
       "function": "HR",
-      "address": 3485,
+      "address": 43486,
       "scale": {
         "mode": "Linear",
         "rawLow": 0,
@@ -969,7 +1245,7 @@
       "category": "LoadShedding",
       "pollClass": "slow",
       "function": "HR",
-      "address": 3482,
+      "address": 43483,
       "bitfieldStatus": true,
       "ss40k": {
         "name": "SmartLoad",
@@ -982,7 +1258,7 @@
       "category": "LoadShedding",
       "pollClass": "slow",
       "function": "HR",
-      "address": 3672,
+      "address": 43673,
       "ss40k": {
         "name": "SmartLoadOnSoc",
         "model": "40104"
@@ -994,7 +1270,7 @@
       "category": "LoadShedding",
       "pollClass": "slow",
       "function": "HR",
-      "address": 3671,
+      "address": 43672,
       "ss40k": {
         "name": "SmartLoadOffSoc",
         "model": "40104"
@@ -1006,7 +1282,7 @@
       "category": "Parallel",
       "pollClass": "startup",
       "function": "HR",
-      "address": 3005,
+      "address": 43006,
       "ss40k": {
         "name": "ModbusAddr",
         "model": "40104"
@@ -1018,7 +1294,7 @@
       "category": "Parallel",
       "pollClass": "slow",
       "function": "HR",
-      "address": 3381,
+      "address": 43382,
       "enumStatus": true,
       "ss40k": {
         "name": "Role",
@@ -1031,7 +1307,7 @@
       "category": "Parallel",
       "pollClass": "slow",
       "function": "HR",
-      "address": 3390,
+      "address": 43391,
       "enumStatus": true
     }
   ],
@@ -1040,56 +1316,77 @@
       "id": "PowerControl",
       "description": "Control inverter power state - 0xDE: Standby, 0xBE: PowerOn",
       "function": "HR",
-      "address": 3006,
+      "address": 43007,
       "readback": true
     },
     {
       "id": "OffGridOutput",
       "description": "Enable or disable off-grid output - 0: Disable, 1: Enable",
       "function": "HR",
-      "address": 3110,
+      "address": 43111,
       "readback": true
     },
     {
       "id": "GenCtrlMode",
       "description": "Set generator control mode - 0: Manual, 1: Auto",
       "function": "HR",
-      "address": 3339,
+      "address": 43340,
       "readback": true
     },
     {
       "id": "GenEnable",
       "description": "Trigger generator start - write 1 to start",
       "function": "HR",
-      "address": 3362,
+      "address": 43363,
       "readback": false
     },
     {
       "id": "FeedInGridMaxPower",
       "description": "Set feed-in grid max power (0.1kW)",
       "function": "HR",
-      "address": 3073,
+      "address": 43074,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 10,
+        "scaledLow": 0,
+        "scaledHigh": 1
+      },
       "readback": true
     },
     {
       "id": "ChargeLimitSoc",
       "description": "Set charge limit SOC %",
       "function": "HR",
-      "address": 3009,
+      "address": 43010,
       "readback": true
     },
     {
       "id": "TOUMaximumChargingPower",
       "description": "Set TOU max charging power - write to 48101, 48103, 48105 together",
       "function": "HR",
-      "address": 8100,
+      "address": 48101,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 10,
+        "scaledLow": 0,
+        "scaledHigh": 1
+      },
       "readback": true
     },
     {
       "id": "TOUMaximumDischargingPower",
       "description": "Set TOU max discharging power - write to 48113, 48115, 48117 together",
       "function": "HR",
-      "address": 8112,
+      "address": 48113,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 10,
+        "scaledLow": 0,
+        "scaledHigh": 1
+      },
       "readback": true
     }
   ]
