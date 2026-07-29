@@ -45,7 +45,7 @@ export interface SystemNominal {
 
 export interface SystemConfig {
   /**
-   * "eSpire280" or Mini model code like "MINI-60-90-163-480"
+   * "eSpire280", "NANO", or Mini model code like "MINI-60-90-163-480"
    */
   systemProfile: string;
 
@@ -58,7 +58,7 @@ export interface ModbusServerConfig {
   port: number; // usually 502
 }
 
-export type SiteAssetProductLine = "280" | "Mini" | "all";
+export type SiteAssetProductLine = "280" | "Mini" | "NANO" | "all";
 
 export type SiteAssetRole =
   | "pcs"

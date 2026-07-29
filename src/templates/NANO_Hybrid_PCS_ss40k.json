@@ -1309,6 +1309,1521 @@
       "function": "HR",
       "address": 43391,
       "enumStatus": true
+    },
+    {
+      "id": "ManufacturerName",
+      "description": "ManufacturerName identity constant",
+      "category": "Info",
+      "pollClass": "startup",
+      "constant": "Fortress Power",
+      "ss40k": {
+        "name": "Mn",
+        "model": "40100"
+      }
+    },
+    {
+      "id": "SerialNumber",
+      "description": "Inverter serial number. Register 33004, 16 Modbus words as big-endian ASCII.",
+      "category": "Info",
+      "pollClass": "startup",
+      "function": "IRUS",
+      "address": 33004,
+      "length": 16,
+      "parser": "STR16BE",
+      "ss40k": {
+        "name": "SN",
+        "model": "40100"
+      }
+    },
+    {
+      "id": "ModelCode",
+      "description": "Inverter model code. Register 33000.",
+      "category": "Info",
+      "pollClass": "startup",
+      "function": "IRUS",
+      "address": 33000,
+      "ss40k": {
+        "name": "Md",
+        "model": "40100"
+      }
+    },
+    {
+      "id": "DspVersionMain",
+      "description": "DSP version main word. Register 33001.",
+      "category": "Info",
+      "pollClass": "startup",
+      "function": "IRUS",
+      "address": 33001,
+      "supporting": true
+    },
+    {
+      "id": "DspVersionAux",
+      "description": "DSP version auxiliary word. Register 33021.",
+      "category": "Info",
+      "pollClass": "startup",
+      "function": "IRUS",
+      "address": 33021,
+      "supporting": true
+    },
+    {
+      "id": "RatedPowerVa",
+      "description": "Rated power. Register 33067, 10 VA/count.",
+      "category": "Info",
+      "pollClass": "startup",
+      "function": "IRUS",
+      "address": 33067,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 1,
+        "scaledLow": 0,
+        "scaledHigh": 10
+      },
+      "supporting": true
+    },
+    {
+      "id": "PvTotalPower",
+      "description": "PV total power. Register 33057.",
+      "category": "PV",
+      "pollClass": "normal",
+      "function": "IRUI",
+      "address": 33057,
+      "ss40k": {
+        "name": "pPvTotal",
+        "model": "40101"
+      }
+    },
+    {
+      "id": "GridFrequency",
+      "description": "Grid frequency. Register 33094, 0.01 Hz/count.",
+      "category": "Grid",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 33094,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 100,
+        "scaledLow": 0,
+        "scaledHigh": 1
+      },
+      "ss40k": {
+        "name": "fGrid",
+        "model": "40101"
+      }
+    },
+    {
+      "id": "GridL1NVoltage",
+      "description": "Grid phase L1-N voltage. Register 33073, 0.1 V/count.",
+      "category": "Grid",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 33073,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 10,
+        "scaledLow": 0,
+        "scaledHigh": 1
+      },
+      "ss40k": {
+        "name": "vGridL1N",
+        "model": "40101"
+      }
+    },
+    {
+      "id": "GridL2NVoltage",
+      "description": "Grid phase L2-N voltage. Register 33074, 0.1 V/count.",
+      "category": "Grid",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 33074,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 10,
+        "scaledLow": 0,
+        "scaledHigh": 1
+      },
+      "ss40k": {
+        "name": "vGridL2N",
+        "model": "40101"
+      }
+    },
+    {
+      "id": "GridL3NVoltage",
+      "description": "Grid phase L3-N voltage. Register 33075, 0.1 V/count.",
+      "category": "Grid",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 33075,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 10,
+        "scaledLow": 0,
+        "scaledHigh": 1
+      },
+      "ss40k": {
+        "name": "vGridL3N",
+        "model": "40101"
+      }
+    },
+    {
+      "id": "GridL1Current",
+      "description": "Grid phase L1 current. Register 33076, 0.1 A/count.",
+      "category": "Grid",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 33076,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 10,
+        "scaledLow": 0,
+        "scaledHigh": 1
+      },
+      "ss40k": {
+        "name": "iGridL1",
+        "model": "40101"
+      }
+    },
+    {
+      "id": "GridL2Current",
+      "description": "Grid phase L2 current. Register 33077, 0.1 A/count.",
+      "category": "Grid",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 33077,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 10,
+        "scaledLow": 0,
+        "scaledHigh": 1
+      },
+      "ss40k": {
+        "name": "iGridL2",
+        "model": "40101"
+      }
+    },
+    {
+      "id": "GridL3Current",
+      "description": "Grid phase L3 current. Register 33078, 0.1 A/count.",
+      "category": "Grid",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 33078,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 10,
+        "scaledLow": 0,
+        "scaledHigh": 1
+      },
+      "ss40k": {
+        "name": "iGridL3",
+        "model": "40101"
+      }
+    },
+    {
+      "id": "GridL1ActivePower",
+      "description": "Grid L1 active power. Register 33512, 10 W/count.",
+      "category": "Grid",
+      "pollClass": "normal",
+      "function": "IRI",
+      "address": 33512,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 1,
+        "scaledLow": 0,
+        "scaledHigh": 10
+      },
+      "ss40k": {
+        "name": "pGridL1",
+        "model": "40101"
+      }
+    },
+    {
+      "id": "GridL2ActivePower",
+      "description": "Grid L2 active power. Register 33515, 10 W/count.",
+      "category": "Grid",
+      "pollClass": "normal",
+      "function": "IRI",
+      "address": 33515,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 1,
+        "scaledLow": 0,
+        "scaledHigh": 10
+      },
+      "ss40k": {
+        "name": "pGridL2",
+        "model": "40101"
+      }
+    },
+    {
+      "id": "GridL3ActivePower",
+      "description": "Grid L3 active power. Register 33518, 10 W/count.",
+      "category": "Grid",
+      "pollClass": "normal",
+      "function": "IRI",
+      "address": 33518,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 1,
+        "scaledLow": 0,
+        "scaledHigh": 10
+      },
+      "ss40k": {
+        "name": "pGridL3",
+        "model": "40101"
+      }
+    },
+    {
+      "id": "GridTotalPower",
+      "description": "Grid total active power signed. Register 33151. Positive import, negative export.",
+      "category": "Grid",
+      "pollClass": "normal",
+      "function": "IRI",
+      "address": 33151,
+      "ss40k": {
+        "name": "pGridImpTot",
+        "model": "40101",
+        "exportExpr": "max(value, 0)"
+      }
+    },
+    {
+      "id": "MeterGridPower",
+      "description": "Meter/grid-side power signed. Register 33263.",
+      "category": "Grid",
+      "pollClass": "normal",
+      "function": "IRI",
+      "address": 33263,
+      "supporting": true
+    },
+    {
+      "id": "MeterL1Power",
+      "description": "Meter L1 power. Register 33257.",
+      "category": "Grid",
+      "pollClass": "normal",
+      "function": "IRI",
+      "address": 33257,
+      "supporting": true
+    },
+    {
+      "id": "MeterL2Power",
+      "description": "Meter L2 power. Register 33259.",
+      "category": "Grid",
+      "pollClass": "normal",
+      "function": "IRI",
+      "address": 33259,
+      "supporting": true
+    },
+    {
+      "id": "MeterL3Power",
+      "description": "Meter L3 power. Register 33261.",
+      "category": "Grid",
+      "pollClass": "normal",
+      "function": "IRI",
+      "address": 33261,
+      "supporting": true
+    },
+    {
+      "id": "GridExportPower",
+      "description": "Derived SS40K export grid power from signed GridTotalPower.",
+      "category": "Grid",
+      "pollClass": "normal",
+      "calc": {
+        "inputs": {
+          "p": "GridTotalPower"
+        },
+        "expr": "max(-p, 0)"
+      },
+      "ss40k": {
+        "sourceTagID": "PCS.GridExportPower",
+        "name": "pGridExpTot",
+        "model": "40101"
+      }
+    },
+    {
+      "id": "LoadPowerLow",
+      "description": "Load active power low word. Register 33147.",
+      "category": "Load",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 33147,
+      "supporting": true
+    },
+    {
+      "id": "LoadPowerHigh",
+      "description": "Load active power high word for >50 kW cases. Register 34343.",
+      "category": "Load",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 34343,
+      "supporting": true
+    },
+    {
+      "id": "LoadTotalPower",
+      "description": "Load total active power derived from high/low words.",
+      "category": "Load",
+      "pollClass": "normal",
+      "calc": {
+        "inputs": {
+          "hi": "LoadPowerHigh",
+          "lo": "LoadPowerLow"
+        },
+        "expr": "hi * 65536 + lo"
+      },
+      "ss40k": {
+        "name": "pLoad",
+        "model": "40101"
+      }
+    },
+    {
+      "id": "BackupLoadPower",
+      "description": "Backup load total active power. Register 33148.",
+      "category": "BackupLoad",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 33148,
+      "ss40k": {
+        "name": "pBkupTot",
+        "model": "40101"
+      }
+    },
+    {
+      "id": "BackupL1Voltage",
+      "description": "Backup L1 voltage. Register 33137, 0.1 V/count.",
+      "category": "BackupLoad",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 33137,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 10,
+        "scaledLow": 0,
+        "scaledHigh": 1
+      }
+    },
+    {
+      "id": "BackupL2Voltage",
+      "description": "Backup L2 voltage. Register 33153, 0.1 V/count.",
+      "category": "BackupLoad",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 33153,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 10,
+        "scaledLow": 0,
+        "scaledHigh": 1
+      }
+    },
+    {
+      "id": "BackupL3Voltage",
+      "description": "Backup L3 voltage. Register 33155, 0.1 V/count.",
+      "category": "BackupLoad",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 33155,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 10,
+        "scaledLow": 0,
+        "scaledHigh": 1
+      }
+    },
+    {
+      "id": "BackupL1Current",
+      "description": "Backup L1 current. Register 33138, 0.1 A/count.",
+      "category": "BackupLoad",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 33138,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 10,
+        "scaledLow": 0,
+        "scaledHigh": 1
+      }
+    },
+    {
+      "id": "BackupL2Current",
+      "description": "Backup L2 current. Register 33154, 0.1 A/count.",
+      "category": "BackupLoad",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 33154,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 10,
+        "scaledLow": 0,
+        "scaledHigh": 1
+      }
+    },
+    {
+      "id": "BackupL3Current",
+      "description": "Backup L3 current. Register 33156, 0.1 A/count.",
+      "category": "BackupLoad",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 33156,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 10,
+        "scaledLow": 0,
+        "scaledHigh": 1
+      }
+    },
+    {
+      "id": "BackupL1Power",
+      "description": "Backup L1 active power. Register 33521, 10 W/count.",
+      "category": "BackupLoad",
+      "pollClass": "normal",
+      "function": "IRI",
+      "address": 33521,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 1,
+        "scaledLow": 0,
+        "scaledHigh": 10
+      },
+      "ss40k": {
+        "name": "pLoadL1",
+        "model": "40101"
+      }
+    },
+    {
+      "id": "BackupL2Power",
+      "description": "Backup L2 active power. Register 33524, 10 W/count.",
+      "category": "BackupLoad",
+      "pollClass": "normal",
+      "function": "IRI",
+      "address": 33524,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 1,
+        "scaledLow": 0,
+        "scaledHigh": 10
+      },
+      "ss40k": {
+        "name": "pLoadL2",
+        "model": "40101"
+      }
+    },
+    {
+      "id": "BackupL3Power",
+      "description": "Backup L3 active power. Register 33527, 10 W/count.",
+      "category": "BackupLoad",
+      "pollClass": "normal",
+      "function": "IRI",
+      "address": 33527,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 1,
+        "scaledLow": 0,
+        "scaledHigh": 10
+      },
+      "ss40k": {
+        "name": "pLoadL3",
+        "model": "40101"
+      }
+    },
+    {
+      "id": "BatteryPower",
+      "description": "Battery power signed summary. Register 33149. Positive discharge, negative charge.",
+      "category": "Battery",
+      "pollClass": "normal",
+      "function": "IRI",
+      "address": 33149,
+      "ss40k": {
+        "name": "pBatDischg",
+        "model": "40101",
+        "exportExpr": "max(value, 0)"
+      }
+    },
+    {
+      "id": "BatteryChargePower",
+      "description": "Derived SS40K battery charge power from signed BatteryPower.",
+      "category": "Battery",
+      "pollClass": "normal",
+      "calc": {
+        "inputs": {
+          "p": "BatteryPower"
+        },
+        "expr": "max(-p, 0)"
+      },
+      "ss40k": {
+        "sourceTagID": "PCS.BatteryChargePower",
+        "name": "pBatChg",
+        "model": "40101"
+      }
+    },
+    {
+      "id": "BatteryVoltage",
+      "description": "Battery voltage summary. Register 33133, 0.1 V/count.",
+      "category": "Battery",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 33133,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 10,
+        "scaledLow": 0,
+        "scaledHigh": 1
+      },
+      "ss40k": {
+        "name": "vBat",
+        "model": "40101"
+      }
+    },
+    {
+      "id": "BatteryCurrent",
+      "description": "Battery current summary. Register 33134, 0.1 A/count.",
+      "category": "Battery",
+      "pollClass": "normal",
+      "function": "IRI",
+      "address": 33134,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 10,
+        "scaledLow": 0,
+        "scaledHigh": 1
+      },
+      "ss40k": {
+        "name": "iBat",
+        "model": "40101"
+      }
+    },
+    {
+      "id": "BatteryDirection",
+      "description": "Battery charge/discharge direction. Register 33135.",
+      "category": "Battery",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 33135,
+      "supporting": true
+    },
+    {
+      "id": "BmsSoc",
+      "description": "BMS SOC. Register 33139, 1%/count.",
+      "category": "Battery",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 33139,
+      "ss40k": {
+        "name": "socBat",
+        "model": "40101"
+      }
+    },
+    {
+      "id": "BmsSoh",
+      "description": "BMS SOH. Register 33140, 1%/count.",
+      "category": "Battery",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 33140,
+      "ss40k": {
+        "name": "sohBat",
+        "model": "40101"
+      }
+    },
+    {
+      "id": "BmsVoltageHigh",
+      "description": "BMS voltage high word. Register 33045.",
+      "category": "Battery",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 33045,
+      "supporting": true
+    },
+    {
+      "id": "BmsVoltageLow",
+      "description": "BMS voltage low word. Register 33141.",
+      "category": "Battery",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 33141,
+      "supporting": true
+    },
+    {
+      "id": "BmsVoltage",
+      "description": "BMS voltage derived from high/low words, 0.01 V/count.",
+      "category": "Battery",
+      "pollClass": "normal",
+      "calc": {
+        "inputs": {
+          "hi": "BmsVoltageHigh",
+          "lo": "BmsVoltageLow"
+        },
+        "expr": "(hi * 65536 + lo) * 0.01"
+      },
+      "ss40k": {
+        "name": "vBat",
+        "model": "40101"
+      }
+    },
+    {
+      "id": "BmsCurrent",
+      "description": "BMS current. Register 33142, 0.1 A/count.",
+      "category": "Battery",
+      "pollClass": "normal",
+      "function": "IRI",
+      "address": 33142,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 10,
+        "scaledLow": 0,
+        "scaledHigh": 1
+      },
+      "ss40k": {
+        "name": "iBat",
+        "model": "40101"
+      }
+    },
+    {
+      "id": "BmsChargeCurrentLimit",
+      "description": "BMS charge current limit. Register 33143.",
+      "category": "Battery",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 33143,
+      "supporting": true
+    },
+    {
+      "id": "BmsDischargeCurrentLimit",
+      "description": "BMS discharge current limit. Register 33144.",
+      "category": "Battery",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 33144,
+      "supporting": true
+    },
+    {
+      "id": "PvEnergyToday",
+      "description": "PV energy today. Register 33035, 0.1 kWh/count.",
+      "category": "Energy",
+      "pollClass": "slow",
+      "function": "IRUI",
+      "address": 33035,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 10,
+        "scaledLow": 0,
+        "scaledHigh": 1
+      },
+      "ss40k": {
+        "name": "ePvTdy",
+        "model": "40102",
+        "exportMultiplier": 1000
+      }
+    },
+    {
+      "id": "PvEnergyTotal",
+      "description": "PV energy total. Register 33029, kWh/count.",
+      "category": "Energy",
+      "pollClass": "slow",
+      "function": "IRUI",
+      "address": 33029,
+      "ss40k": {
+        "name": "ePvTot",
+        "model": "40102",
+        "exportMultiplier": 1000
+      }
+    },
+    {
+      "id": "BatteryChargeEnergyToday",
+      "description": "Battery charge energy today. Register 33163, kWh/count.",
+      "category": "Energy",
+      "pollClass": "slow",
+      "function": "IRUI",
+      "address": 33163,
+      "ss40k": {
+        "name": "eBatChgTdy",
+        "model": "40102",
+        "exportMultiplier": 1000
+      }
+    },
+    {
+      "id": "BatteryChargeEnergyTotal",
+      "description": "Battery charge energy total. Register 33161, kWh/count.",
+      "category": "Energy",
+      "pollClass": "slow",
+      "function": "IRUI",
+      "address": 33161,
+      "ss40k": {
+        "name": "eBatChgTot",
+        "model": "40102",
+        "exportMultiplier": 1000
+      }
+    },
+    {
+      "id": "BatteryDischargeEnergyToday",
+      "description": "Battery discharge energy today. Register 33167, kWh/count.",
+      "category": "Energy",
+      "pollClass": "slow",
+      "function": "IRUI",
+      "address": 33167,
+      "ss40k": {
+        "name": "eBatDischgTdy",
+        "model": "40102",
+        "exportMultiplier": 1000
+      }
+    },
+    {
+      "id": "BatteryDischargeEnergyTotal",
+      "description": "Battery discharge energy total. Register 33165, kWh/count.",
+      "category": "Energy",
+      "pollClass": "slow",
+      "function": "IRUI",
+      "address": 33165,
+      "ss40k": {
+        "name": "eBatDischgTot",
+        "model": "40102",
+        "exportMultiplier": 1000
+      }
+    },
+    {
+      "id": "GridImportEnergyToday",
+      "description": "Grid import energy today. Register 33171, kWh/count.",
+      "category": "Energy",
+      "pollClass": "slow",
+      "function": "IRUI",
+      "address": 33171,
+      "ss40k": {
+        "name": "eGridImpTdy",
+        "model": "40102",
+        "exportMultiplier": 1000
+      }
+    },
+    {
+      "id": "GridImportEnergyTotal",
+      "description": "Grid import energy total. Register 33169, kWh/count.",
+      "category": "Energy",
+      "pollClass": "slow",
+      "function": "IRUI",
+      "address": 33169,
+      "ss40k": {
+        "name": "eGridImpTot",
+        "model": "40102",
+        "exportMultiplier": 1000
+      }
+    },
+    {
+      "id": "GridExportEnergyToday",
+      "description": "Grid export energy today. Register 33175, kWh/count.",
+      "category": "Energy",
+      "pollClass": "slow",
+      "function": "IRUI",
+      "address": 33175,
+      "ss40k": {
+        "name": "eGridExpTdy",
+        "model": "40102",
+        "exportMultiplier": 1000
+      }
+    },
+    {
+      "id": "GridExportEnergyTotal",
+      "description": "Grid export energy total. Register 33173, kWh/count.",
+      "category": "Energy",
+      "pollClass": "slow",
+      "function": "IRUI",
+      "address": 33173,
+      "ss40k": {
+        "name": "eGridExpTot",
+        "model": "40102",
+        "exportMultiplier": 1000
+      }
+    },
+    {
+      "id": "LoadEnergyToday",
+      "description": "Load energy today. Register 33586, kWh/count.",
+      "category": "Energy",
+      "pollClass": "slow",
+      "function": "IRUI",
+      "address": 33586,
+      "ss40k": {
+        "name": "eLoadTdy",
+        "model": "40102",
+        "exportMultiplier": 1000
+      }
+    },
+    {
+      "id": "LoadEnergyTotal",
+      "description": "Load energy total. Register 33580, kWh/count.",
+      "category": "Energy",
+      "pollClass": "slow",
+      "function": "IRUI",
+      "address": 33580,
+      "ss40k": {
+        "name": "eLoadTot",
+        "model": "40102",
+        "exportMultiplier": 1000
+      }
+    },
+    {
+      "id": "BackupLoadEnergyToday",
+      "description": "Backup load energy today. Register 33596, kWh/count.",
+      "category": "Energy",
+      "pollClass": "slow",
+      "function": "IRUI",
+      "address": 33596,
+      "ss40k": {
+        "name": "eBkupTdy",
+        "model": "40102",
+        "exportMultiplier": 1000
+      }
+    },
+    {
+      "id": "BackupLoadEnergyTotal",
+      "description": "Backup load energy total. Register 33590, kWh/count.",
+      "category": "Energy",
+      "pollClass": "slow",
+      "function": "IRUI",
+      "address": 33590,
+      "ss40k": {
+        "name": "eBkupTot",
+        "model": "40102",
+        "exportMultiplier": 1000
+      }
+    },
+    {
+      "id": "WarningWord33339",
+      "description": "Nano warning word. Register 33339.",
+      "category": "Fault",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 33339,
+      "supporting": true,
+      "alarm": true
+    },
+    {
+      "id": "FaultWord33116",
+      "description": "Nano fault word. Register 33116.",
+      "category": "Fault",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 33116,
+      "supporting": true,
+      "alarm": true
+    },
+    {
+      "id": "FaultWord33117",
+      "description": "Nano fault word. Register 33117.",
+      "category": "Fault",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 33117,
+      "supporting": true,
+      "alarm": true
+    },
+    {
+      "id": "FaultWord33118",
+      "description": "Nano fault word. Register 33118.",
+      "category": "Fault",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 33118,
+      "supporting": true,
+      "alarm": true
+    },
+    {
+      "id": "FaultWord33119",
+      "description": "Nano fault word. Register 33119.",
+      "category": "Fault",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 33119,
+      "supporting": true,
+      "alarm": true
+    },
+    {
+      "id": "FaultWord33120",
+      "description": "Nano fault word. Register 33120.",
+      "category": "Fault",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 33120,
+      "supporting": true,
+      "alarm": true
+    },
+    {
+      "id": "FanStatusWord33121",
+      "description": "Nano fan/status word. Register 33121.",
+      "category": "Fault",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 33121,
+      "supporting": true,
+      "alarm": true
+    },
+    {
+      "id": "FaultWord33124",
+      "description": "Nano fault word. Register 33124.",
+      "category": "Fault",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 33124,
+      "supporting": true,
+      "alarm": true
+    },
+    {
+      "id": "FaultWord33125",
+      "description": "Nano fault word. Register 33125.",
+      "category": "Fault",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 33125,
+      "supporting": true,
+      "alarm": true
+    },
+    {
+      "id": "FaultWord33510",
+      "description": "Nano fault word. Register 33510.",
+      "category": "Fault",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 33510,
+      "supporting": true,
+      "alarm": true
+    },
+    {
+      "id": "pcsWarning",
+      "description": "Standard 40103 warning aggregate from Nano warning word.",
+      "category": "Fault",
+      "pollClass": "normal",
+      "calc": {
+        "inputs": {
+          "w": "WarningWord33339"
+        },
+        "expr": "w"
+      },
+      "ss40k": {
+        "name": "pcsWarning",
+        "model": "40103"
+      },
+      "alarm": true
+    },
+    {
+      "id": "pcsFault",
+      "description": "Standard 40103 fault aggregate from Nano fault/status words.",
+      "category": "Fault",
+      "pollClass": "normal",
+      "calc": {
+        "inputs": {
+          "w1": "FaultWord33116",
+          "w2": "FaultWord33117",
+          "w3": "FaultWord33118",
+          "w4": "FaultWord33119",
+          "w5": "FaultWord33120",
+          "w6": "FanStatusWord33121",
+          "w7": "FaultWord33124",
+          "w8": "FaultWord33125",
+          "w9": "FaultWord33510"
+        },
+        "expr": "w1 | w2 | w3 | w4 | w5 | w6 | w7 | w8 | w9"
+      },
+      "ss40k": {
+        "name": "pcsFault",
+        "model": "40103"
+      },
+      "alarm": true
+    },
+    {
+      "id": "Mppt1Voltage",
+      "description": "PV MPPT 1 voltage. Register 33049, 0.1 V/count.",
+      "category": "PV",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 33049,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 10,
+        "scaledLow": 0,
+        "scaledHigh": 1
+      },
+      "ss40k": {
+        "name": "vMppt1",
+        "model": "40101"
+      }
+    },
+    {
+      "id": "Mppt1Current",
+      "description": "PV MPPT 1 current. Register 33050, 0.1 A/count.",
+      "category": "PV",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 33050,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 10,
+        "scaledLow": 0,
+        "scaledHigh": 1
+      },
+      "ss40k": {
+        "name": "iMppt1",
+        "model": "40101"
+      }
+    },
+    {
+      "id": "Mppt1Power",
+      "description": "PV MPPT 1 calculated power.",
+      "category": "PV",
+      "pollClass": "normal",
+      "calc": {
+        "inputs": {
+          "v": "Mppt1Voltage",
+          "i": "Mppt1Current"
+        },
+        "expr": "v * i"
+      },
+      "ss40k": {
+        "name": "pMppt1",
+        "model": "40101"
+      }
+    },
+    {
+      "id": "Mppt2Voltage",
+      "description": "PV MPPT 2 voltage. Register 33051, 0.1 V/count.",
+      "category": "PV",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 33051,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 10,
+        "scaledLow": 0,
+        "scaledHigh": 1
+      },
+      "ss40k": {
+        "name": "vMppt2",
+        "model": "40101"
+      }
+    },
+    {
+      "id": "Mppt2Current",
+      "description": "PV MPPT 2 current. Register 33052, 0.1 A/count.",
+      "category": "PV",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 33052,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 10,
+        "scaledLow": 0,
+        "scaledHigh": 1
+      },
+      "ss40k": {
+        "name": "iMppt2",
+        "model": "40101"
+      }
+    },
+    {
+      "id": "Mppt2Power",
+      "description": "PV MPPT 2 calculated power.",
+      "category": "PV",
+      "pollClass": "normal",
+      "calc": {
+        "inputs": {
+          "v": "Mppt2Voltage",
+          "i": "Mppt2Current"
+        },
+        "expr": "v * i"
+      },
+      "ss40k": {
+        "name": "pMppt2",
+        "model": "40101"
+      }
+    },
+    {
+      "id": "Mppt3Voltage",
+      "description": "PV MPPT 3 voltage. Register 33053, 0.1 V/count.",
+      "category": "PV",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 33053,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 10,
+        "scaledLow": 0,
+        "scaledHigh": 1
+      },
+      "ss40k": {
+        "name": "vMppt3",
+        "model": "40101"
+      }
+    },
+    {
+      "id": "Mppt3Current",
+      "description": "PV MPPT 3 current. Register 33054, 0.1 A/count.",
+      "category": "PV",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 33054,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 10,
+        "scaledLow": 0,
+        "scaledHigh": 1
+      },
+      "ss40k": {
+        "name": "iMppt3",
+        "model": "40101"
+      }
+    },
+    {
+      "id": "Mppt3Power",
+      "description": "PV MPPT 3 calculated power.",
+      "category": "PV",
+      "pollClass": "normal",
+      "calc": {
+        "inputs": {
+          "v": "Mppt3Voltage",
+          "i": "Mppt3Current"
+        },
+        "expr": "v * i"
+      },
+      "ss40k": {
+        "name": "pMppt3",
+        "model": "40101"
+      }
+    },
+    {
+      "id": "Mppt4Voltage",
+      "description": "PV MPPT 4 voltage. Register 33055, 0.1 V/count.",
+      "category": "PV",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 33055,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 10,
+        "scaledLow": 0,
+        "scaledHigh": 1
+      },
+      "ss40k": {
+        "name": "vMppt4",
+        "model": "40101"
+      }
+    },
+    {
+      "id": "Mppt4Current",
+      "description": "PV MPPT 4 current. Register 33056, 0.1 A/count.",
+      "category": "PV",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 33056,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 10,
+        "scaledLow": 0,
+        "scaledHigh": 1
+      },
+      "ss40k": {
+        "name": "iMppt4",
+        "model": "40101"
+      }
+    },
+    {
+      "id": "Mppt4Power",
+      "description": "PV MPPT 4 calculated power.",
+      "category": "PV",
+      "pollClass": "normal",
+      "calc": {
+        "inputs": {
+          "v": "Mppt4Voltage",
+          "i": "Mppt4Current"
+        },
+        "expr": "v * i"
+      },
+      "ss40k": {
+        "name": "pMppt4",
+        "model": "40101"
+      }
+    },
+    {
+      "id": "Mppt5Voltage",
+      "description": "PV MPPT 5 voltage. Register 33057, 0.1 V/count.",
+      "category": "PV",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 33057,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 10,
+        "scaledLow": 0,
+        "scaledHigh": 1
+      }
+    },
+    {
+      "id": "Mppt5Current",
+      "description": "PV MPPT 5 current. Register 33058, 0.1 A/count.",
+      "category": "PV",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 33058,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 10,
+        "scaledLow": 0,
+        "scaledHigh": 1
+      }
+    },
+    {
+      "id": "Mppt5Power",
+      "description": "PV MPPT 5 calculated power.",
+      "category": "PV",
+      "pollClass": "normal",
+      "calc": {
+        "inputs": {
+          "v": "Mppt5Voltage",
+          "i": "Mppt5Current"
+        },
+        "expr": "v * i"
+      }
+    },
+    {
+      "id": "Mppt6Voltage",
+      "description": "PV MPPT 6 voltage. Register 33059, 0.1 V/count.",
+      "category": "PV",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 33059,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 10,
+        "scaledLow": 0,
+        "scaledHigh": 1
+      }
+    },
+    {
+      "id": "Mppt6Current",
+      "description": "PV MPPT 6 current. Register 33060, 0.1 A/count.",
+      "category": "PV",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 33060,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 10,
+        "scaledLow": 0,
+        "scaledHigh": 1
+      }
+    },
+    {
+      "id": "Mppt6Power",
+      "description": "PV MPPT 6 calculated power.",
+      "category": "PV",
+      "pollClass": "normal",
+      "calc": {
+        "inputs": {
+          "v": "Mppt6Voltage",
+          "i": "Mppt6Current"
+        },
+        "expr": "v * i"
+      }
+    },
+    {
+      "id": "Mppt7Voltage",
+      "description": "PV MPPT 7 voltage. Register 33061, 0.1 V/count.",
+      "category": "PV",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 33061,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 10,
+        "scaledLow": 0,
+        "scaledHigh": 1
+      }
+    },
+    {
+      "id": "Mppt7Current",
+      "description": "PV MPPT 7 current. Register 33062, 0.1 A/count.",
+      "category": "PV",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 33062,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 10,
+        "scaledLow": 0,
+        "scaledHigh": 1
+      }
+    },
+    {
+      "id": "Mppt7Power",
+      "description": "PV MPPT 7 calculated power.",
+      "category": "PV",
+      "pollClass": "normal",
+      "calc": {
+        "inputs": {
+          "v": "Mppt7Voltage",
+          "i": "Mppt7Current"
+        },
+        "expr": "v * i"
+      }
+    },
+    {
+      "id": "Mppt8Voltage",
+      "description": "PV MPPT 8 voltage. Register 33063, 0.1 V/count.",
+      "category": "PV",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 33063,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 10,
+        "scaledLow": 0,
+        "scaledHigh": 1
+      }
+    },
+    {
+      "id": "Mppt8Current",
+      "description": "PV MPPT 8 current. Register 33064, 0.1 A/count.",
+      "category": "PV",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 33064,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 10,
+        "scaledLow": 0,
+        "scaledHigh": 1
+      }
+    },
+    {
+      "id": "Mppt8Power",
+      "description": "PV MPPT 8 calculated power.",
+      "category": "PV",
+      "pollClass": "normal",
+      "calc": {
+        "inputs": {
+          "v": "Mppt8Voltage",
+          "i": "Mppt8Current"
+        },
+        "expr": "v * i"
+      }
+    },
+    {
+      "id": "Mppt9Voltage",
+      "description": "PV MPPT 9 voltage. Register 34498, 0.1 V/count.",
+      "category": "PV",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 34498,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 10,
+        "scaledLow": 0,
+        "scaledHigh": 1
+      }
+    },
+    {
+      "id": "Mppt9Current",
+      "description": "PV MPPT 9 current. Register 34499, 0.1 A/count.",
+      "category": "PV",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 34499,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 10,
+        "scaledLow": 0,
+        "scaledHigh": 1
+      }
+    },
+    {
+      "id": "Mppt9Power",
+      "description": "PV MPPT 9 calculated power.",
+      "category": "PV",
+      "pollClass": "normal",
+      "calc": {
+        "inputs": {
+          "v": "Mppt9Voltage",
+          "i": "Mppt9Current"
+        },
+        "expr": "v * i"
+      }
+    },
+    {
+      "id": "Mppt10Voltage",
+      "description": "PV MPPT 10 voltage. Register 34500, 0.1 V/count.",
+      "category": "PV",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 34500,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 10,
+        "scaledLow": 0,
+        "scaledHigh": 1
+      }
+    },
+    {
+      "id": "Mppt10Current",
+      "description": "PV MPPT 10 current. Register 34501, 0.1 A/count.",
+      "category": "PV",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 34501,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 10,
+        "scaledLow": 0,
+        "scaledHigh": 1
+      }
+    },
+    {
+      "id": "Mppt10Power",
+      "description": "PV MPPT 10 calculated power.",
+      "category": "PV",
+      "pollClass": "normal",
+      "calc": {
+        "inputs": {
+          "v": "Mppt10Voltage",
+          "i": "Mppt10Current"
+        },
+        "expr": "v * i"
+      }
     }
   ],
   "commands": [

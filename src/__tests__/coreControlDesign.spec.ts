@@ -817,6 +817,31 @@ describe("Unified core control design", () => {
     );
   });
 
+  test("route plan selects NANO path without eSpire280 topology", () => {
+    const config = makeBase280Config();
+    config.system.systemProfile = "NANO";
+    config.system.nominal.voltageVll = 240;
+    config.operation.crdMode = "no-restriction";
+    config.operation.scheduledControlEnabled = false;
+    delete config.pcs;
+    delete config.mbmu;
+    delete config.generator;
+    config.pv.acInverters = [];
+    config.pv.curtailmentMethod = null;
+
+    const design = buildUnifiedControlDesign(config);
+    const routePlan = buildUnifiedControlRoutePlan(design);
+
+    expect(design.productLine).toBe("NANO");
+    expect(routePlan.productPath).toBe("NANO");
+    expect(routePlan.activeRouteIds).toEqual(
+      expect.arrayContaining(["product-nano", "metering"])
+    );
+    expect(routePlan.activeRouteIds).not.toEqual(
+      expect.arrayContaining(["product-280", "product-mini", "pcs-dispatch"])
+    );
+  });
+
   test("generator charge support respects generator, PCS, and charge availability limits", () => {
     const config = makeBase280Config();
     config.operation.crdMode = "no-restriction";

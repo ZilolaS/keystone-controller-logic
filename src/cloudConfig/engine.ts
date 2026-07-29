@@ -4,6 +4,7 @@ import { isDeepStrictEqual } from "util";
 import type { SiteConfig, CustomGridProfile } from "../config";
 import {
   deriveCapabilities,
+  isNanoModel,
   parseMiniModel,
   type SiteCapabilities,
 } from "../capabilities";
@@ -565,9 +566,11 @@ function applySystemProfile(
   config.system.systemProfile = systemProfile;
 
   const miniModel = parseMiniModel(systemProfile);
-  if (miniModel) {
+  if (miniModel || isNanoModel(systemProfile)) {
     delete config.pcs;
     delete config.mbmu;
+  }
+  if (miniModel) {
     config.system.nominal.voltageVll = miniModel.voltageVll;
   }
 
@@ -851,11 +854,12 @@ export function validateSiteConfig(config: SiteConfig): SiteConfigValidationIssu
     issues.push({ path: "system.systemProfile", message: "systemProfile is required" });
   } else if (
     config.system.systemProfile !== "eSpire280" &&
-    !parseMiniModel(config.system.systemProfile)
+    !parseMiniModel(config.system.systemProfile) &&
+    !isNanoModel(config.system.systemProfile)
   ) {
     issues.push({
       path: "system.systemProfile",
-      message: "systemProfile must be eSpire280 or a valid MINI-* profile",
+      message: "systemProfile must be eSpire280, NANO, or a valid MINI-* profile",
     });
   }
   if (!config.system?.controllerTimezone) {

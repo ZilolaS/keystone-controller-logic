@@ -246,6 +246,28 @@ describe("Cloud SiteConfig ingestion", () => {
     );
   });
 
+  test("accepts NANO system profile and removes eSpire280-only topology", () => {
+    const result = applyCloudConfigUpdates(makeBaseConfig(), [
+      {
+        commandId: "SITE.SystemProfile",
+        values: { SystemProfile: "NANO" },
+      },
+    ]);
+
+    expect(result.success).toBe(true);
+    expect(result.restartRequired).toBe(true);
+    expect(result.nextConfig.system.systemProfile).toBe("NANO");
+    expect(result.nextConfig.pcs).toBeUndefined();
+    expect(result.nextConfig.mbmu).toBeUndefined();
+    expect(result.nextCapabilities).toMatchObject({
+      isNano: true,
+      isMini: false,
+      is280: false,
+      hasPcs: true,
+      hasMbmu: false,
+    });
+  });
+
   test("validates Mini model profile size options", () => {
     const invalidPcs = makeBaseConfig();
     invalidPcs.system.systemProfile = "MINI-40-90-163-480";
@@ -253,7 +275,7 @@ describe("Cloud SiteConfig ingestion", () => {
       expect.arrayContaining([
         expect.objectContaining({
           path: "system.systemProfile",
-          message: "systemProfile must be eSpire280 or a valid MINI-* profile",
+          message: "systemProfile must be eSpire280, NANO, or a valid MINI-* profile",
         }),
       ])
     );

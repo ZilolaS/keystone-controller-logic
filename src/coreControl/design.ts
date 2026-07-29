@@ -11,7 +11,7 @@ import {
   type CloudConfigSpec,
 } from "../cloudConfig/engine";
 
-export type ControlProductLine = "280" | "Mini" | "unknown";
+export type ControlProductLine = "280" | "Mini" | "NANO" | "unknown";
 
 export type ControlDesignRole =
   | "site-identity"
@@ -259,6 +259,8 @@ export function buildUnifiedControlDesign(
       pcsDispatch:
         productLine === "280"
           ? "site-pcs"
+          : productLine === "NANO"
+            ? "site-pcs"
           : productLine === "Mini"
             ? "mini-pcs"
             : "none",
@@ -310,6 +312,7 @@ function toControlCommandDesign(command: CloudCommandSpec): ControlCommandDesign
 function resolveProductLine(capabilities: SiteCapabilities): ControlProductLine {
   if (capabilities.is280) return "280";
   if (capabilities.isMini) return "Mini";
+  if (capabilities.isNano) return "NANO";
   return "unknown";
 }
 

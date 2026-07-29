@@ -846,6 +846,36 @@ describe("SS40K export helpers", () => {
       model: "40104",
       modelIndex: "10",
     });
+    expect(lookup["PCS.SerialNumber"]).toMatchObject({
+      equipment: "PCS",
+      name: "SN",
+      model: "40100",
+      modelIndex: "0",
+    });
+    expect(lookup["PCS.PvTotalPower"]).toMatchObject({
+      equipment: "PCS",
+      name: "pPvTotal",
+      model: "40101",
+      modelIndex: "0",
+    });
+    expect(lookup["PCS.GridTotalPower"]).toMatchObject({
+      equipment: "PCS",
+      name: "pGridImpTot",
+      model: "40101",
+      modelIndex: "0",
+    });
+    expect(lookup["PCS.PvEnergyTotal"]).toMatchObject({
+      equipment: "PCS",
+      name: "ePvTot",
+      model: "40102",
+      modelIndex: "0",
+    });
+    expect(lookup["PCS.pcsFault"]).toMatchObject({
+      equipment: "PCS",
+      name: "pcsFault",
+      model: "40103",
+      modelIndex: "0",
+    });
   });
 
   test("inverter 40104 exposes visible daily schedule fields on component 10 by default", () => {
