@@ -80,6 +80,19 @@ export {
   type MiniFaultTelemetry,
 } from "./miniFaultRecovery";
 export {
+  classifyEspire314Faults,
+  evaluateEspire314FaultRecovery,
+  espire314FaultRecoveryCommandsToWriterEnvelopes,
+  type Espire314FaultClassification,
+  type Espire314FaultRecoveryCommand,
+  type Espire314FaultRecoveryMode,
+  type Espire314FaultRecoveryOptions,
+  type Espire314FaultRecoveryResult,
+  type Espire314FaultRecoveryState,
+  type Espire314FaultRecoveryWriterOptions,
+  type Espire314FaultTelemetry,
+} from "./espire314FaultRecovery";
+export {
   evaluateMiniStandaloneSequencer,
   miniStandaloneCommandsToWriterEnvelopes,
   type MiniStandaloneCommand,

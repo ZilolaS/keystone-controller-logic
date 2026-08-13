@@ -37,6 +37,12 @@ export {
   filterSs40kPayloadsForReporting,
   type Ss40kReportingState,
 } from "./reportingStrategy";
+export {
+  ESPIRE314_INFO_MODELS,
+  ESPIRE314_MONITORING_MODELS,
+  ESPIRE314_FAULT_MODELS,
+  ESPIRE314_CONFIG_MODELS,
+} from "./espire314ReportingModels";
 
 export function initTelemetry(config: SiteConfig): {
   caps: SiteCapabilities;
