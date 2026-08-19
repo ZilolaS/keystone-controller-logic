@@ -312,12 +312,12 @@
     },
     {
       "id": "RechargeableCapacity",
-      "description": "System rechargeable capacity, 0.1kW/bit",
+      "description": "System rechargeable capacity (UINT32), 0.1kWh/bit. Corrected from address 32 (IRUS) - verified against vendor doc p.41: address 32 is actually Allowable Maximum Discharge Power.",
       "category": "Telemetry",
       "pollClass": "normal",
-      "function": "IRUS",
-      "address": 32,
-      "confidence": "low",
+      "function": "IRUI",
+      "address": 26,
+      "confidence": "high",
       "ss40k": {
         "name": "RechargeableCapacity",
         "model": "TODO"
@@ -325,12 +325,12 @@
     },
     {
       "id": "DischargeCapacity",
-      "description": "System discharge capacity, 0.1kW/bit",
+      "description": "System discharge capacity (UINT32), 0.1kWh/bit. Corrected from address 33 (IRUS) - verified against vendor doc p.41: address 33 is actually Allowable Maximum Charge Power.",
       "category": "Telemetry",
       "pollClass": "normal",
-      "function": "IRUS",
-      "address": 33,
-      "confidence": "low",
+      "function": "IRUI",
+      "address": 28,
+      "confidence": "high",
       "ss40k": {
         "name": "DischargeCapacity",
         "model": "TODO"
@@ -338,12 +338,12 @@
     },
     {
       "id": "AllowableMaxChargePower",
-      "description": "Allowable maximum charge power, 0.1kW/bit",
+      "description": "Allowable maximum charge power, 0.1kW/bit. Corrected from address 34 - verified against vendor doc p.41.",
       "category": "Telemetry",
       "pollClass": "normal",
       "function": "IRUS",
-      "address": 34,
-      "confidence": "low",
+      "address": 33,
+      "confidence": "high",
       "ss40k": {
         "name": "AllowableMaxChargePower",
         "model": "TODO"
@@ -351,12 +351,12 @@
     },
     {
       "id": "AllowableMaxDischargePower",
-      "description": "Allowable maximum discharge power, 0.1A/bit, offset -1600.0A",
+      "description": "Allowable maximum discharge power, 0.1kW/bit. Corrected from address 35 (previously mislabeled with a current/offset description belonging to a different register) - verified against vendor doc p.41.",
       "category": "Telemetry",
       "pollClass": "normal",
       "function": "IRUS",
-      "address": 35,
-      "confidence": "low",
+      "address": 32,
+      "confidence": "high",
       "ss40k": {
         "name": "AllowableMaxDischargePower",
         "model": "TODO"
@@ -364,12 +364,12 @@
     },
     {
       "id": "AllowableMaxChargeCurrent",
-      "description": "Allowable maximum charge current",
+      "description": "Allowable maximum charge current, 0.1A/bit. Corrected from address 36 - verified against vendor doc p.41. NOTE: table text still shows offset -1600.0A for this register, but the V2.1 changelog claims this offset was removed in section 5.1.3 - source document is self-contradictory here, confirm with vendor before applying the offset.",
       "category": "Telemetry",
       "pollClass": "normal",
       "function": "IRUS",
-      "address": 36,
-      "confidence": "low",
+      "address": 35,
+      "confidence": "medium",
       "ss40k": {
         "name": "AllowableMaxChargeCurrent",
         "model": "TODO"
@@ -377,12 +377,12 @@
     },
     {
       "id": "AllowableMaxDischargeCurrent",
-      "description": "Allowable maximum discharge current",
+      "description": "Allowable maximum discharge current, 0.1A/bit. Corrected from address 37 - verified against vendor doc p.41. NOTE: table text still shows offset -1600.0A for this register, but the V2.1 changelog claims this offset was removed in section 5.1.3 - source document is self-contradictory here, confirm with vendor before applying the offset.",
       "category": "Telemetry",
       "pollClass": "normal",
       "function": "IRUS",
-      "address": 37,
-      "confidence": "low",
+      "address": 34,
+      "confidence": "medium",
       "ss40k": {
         "name": "AllowableMaxDischargeCurrent",
         "model": "TODO"
@@ -1752,31 +1752,256 @@
       "confidence": "high"
     },
     {
-      "id": "SystemPowerUpDownControl_TODO",
-      "description": "TODO: garbled in source PDF extraction (range 503, or 504-523 one register per string?) - verify against PDF p. A336 before use.",
+      "id": "SystemPowerUpDownControl",
+      "description": "System power up/down control: 0 = no operation, 1 = power on (high voltage), 2 = power off (high voltage), other = invalid. Not used by default - string auto-powers-on after supply unless configured otherwise during project setup. Resolved from '_TODO' - verified against vendor doc p.36.",
       "function": "HRUS",
       "address": 503,
       "pollClass": "normal",
       "readback": true,
-      "confidence": "low"
+      "confidence": "high"
     },
     {
-      "id": "StringMaintenanceModeControl",
-      "description": "String N (selected via StringNumberSelector/500) maintenance mode: 0 = no operation, 1 = power on, 2 = power off. Registers 525-527 appear adjacent in the source; unclear if distinct fields or padding - verify against PDF p. A336.",
+      "id": "String1MaintenanceModeControl",
+      "description": "String 1 maintenance mode: 0 = invalid, 1 = power on, 2 = power off. Resolved from the previous single-register 'StringMaintenanceModeControl' guess (address 524, tied to StringNumberSelector/500) - vendor doc p.36 shows this is actually a dedicated register per string (504-523, one per string 1-20), not a selector+single-register pattern. Address 524 is unrelated (RTC-Year).",
+      "function": "HRUS",
+      "address": 504,
+      "pollClass": "normal",
+      "readback": true,
+      "confidence": "high"
+    },
+    {
+      "id": "String2MaintenanceModeControl",
+      "description": "String 2 maintenance mode: 0 = invalid, 1 = power on, 2 = power off.",
+      "function": "HRUS",
+      "address": 505,
+      "pollClass": "normal",
+      "readback": true,
+      "confidence": "high"
+    },
+    {
+      "id": "String3MaintenanceModeControl",
+      "description": "String 3 maintenance mode: 0 = invalid, 1 = power on, 2 = power off.",
+      "function": "HRUS",
+      "address": 506,
+      "pollClass": "normal",
+      "readback": true,
+      "confidence": "high"
+    },
+    {
+      "id": "String4MaintenanceModeControl",
+      "description": "String 4 maintenance mode: 0 = invalid, 1 = power on, 2 = power off.",
+      "function": "HRUS",
+      "address": 507,
+      "pollClass": "normal",
+      "readback": true,
+      "confidence": "high"
+    },
+    {
+      "id": "String5MaintenanceModeControl",
+      "description": "String 5 maintenance mode: 0 = invalid, 1 = power on, 2 = power off.",
+      "function": "HRUS",
+      "address": 508,
+      "pollClass": "normal",
+      "readback": true,
+      "confidence": "high"
+    },
+    {
+      "id": "String6MaintenanceModeControl",
+      "description": "String 6 maintenance mode: 0 = invalid, 1 = power on, 2 = power off.",
+      "function": "HRUS",
+      "address": 509,
+      "pollClass": "normal",
+      "readback": true,
+      "confidence": "high"
+    },
+    {
+      "id": "String7MaintenanceModeControl",
+      "description": "String 7 maintenance mode: 0 = invalid, 1 = power on, 2 = power off.",
+      "function": "HRUS",
+      "address": 510,
+      "pollClass": "normal",
+      "readback": true,
+      "confidence": "high"
+    },
+    {
+      "id": "String8MaintenanceModeControl",
+      "description": "String 8 maintenance mode: 0 = invalid, 1 = power on, 2 = power off.",
+      "function": "HRUS",
+      "address": 511,
+      "pollClass": "normal",
+      "readback": true,
+      "confidence": "high"
+    },
+    {
+      "id": "String9MaintenanceModeControl",
+      "description": "String 9 maintenance mode: 0 = invalid, 1 = power on, 2 = power off.",
+      "function": "HRUS",
+      "address": 512,
+      "pollClass": "normal",
+      "readback": true,
+      "confidence": "high"
+    },
+    {
+      "id": "String10MaintenanceModeControl",
+      "description": "String 10 maintenance mode: 0 = invalid, 1 = power on, 2 = power off.",
+      "function": "HRUS",
+      "address": 513,
+      "pollClass": "normal",
+      "readback": true,
+      "confidence": "high"
+    },
+    {
+      "id": "String11MaintenanceModeControl",
+      "description": "String 11 maintenance mode: 0 = invalid, 1 = power on, 2 = power off.",
+      "function": "HRUS",
+      "address": 514,
+      "pollClass": "normal",
+      "readback": true,
+      "confidence": "high"
+    },
+    {
+      "id": "String12MaintenanceModeControl",
+      "description": "String 12 maintenance mode: 0 = invalid, 1 = power on, 2 = power off.",
+      "function": "HRUS",
+      "address": 515,
+      "pollClass": "normal",
+      "readback": true,
+      "confidence": "high"
+    },
+    {
+      "id": "String13MaintenanceModeControl",
+      "description": "String 13 maintenance mode: 0 = invalid, 1 = power on, 2 = power off.",
+      "function": "HRUS",
+      "address": 516,
+      "pollClass": "normal",
+      "readback": true,
+      "confidence": "high"
+    },
+    {
+      "id": "String14MaintenanceModeControl",
+      "description": "String 14 maintenance mode: 0 = invalid, 1 = power on, 2 = power off.",
+      "function": "HRUS",
+      "address": 517,
+      "pollClass": "normal",
+      "readback": true,
+      "confidence": "high"
+    },
+    {
+      "id": "String15MaintenanceModeControl",
+      "description": "String 15 maintenance mode: 0 = invalid, 1 = power on, 2 = power off.",
+      "function": "HRUS",
+      "address": 518,
+      "pollClass": "normal",
+      "readback": true,
+      "confidence": "high"
+    },
+    {
+      "id": "String16MaintenanceModeControl",
+      "description": "String 16 maintenance mode: 0 = invalid, 1 = power on, 2 = power off.",
+      "function": "HRUS",
+      "address": 519,
+      "pollClass": "normal",
+      "readback": true,
+      "confidence": "high"
+    },
+    {
+      "id": "String17MaintenanceModeControl",
+      "description": "String 17 maintenance mode: 0 = invalid, 1 = power on, 2 = power off.",
+      "function": "HRUS",
+      "address": 520,
+      "pollClass": "normal",
+      "readback": true,
+      "confidence": "high"
+    },
+    {
+      "id": "String18MaintenanceModeControl",
+      "description": "String 18 maintenance mode: 0 = invalid, 1 = power on, 2 = power off.",
+      "function": "HRUS",
+      "address": 521,
+      "pollClass": "normal",
+      "readback": true,
+      "confidence": "high"
+    },
+    {
+      "id": "String19MaintenanceModeControl",
+      "description": "String 19 maintenance mode: 0 = invalid, 1 = power on, 2 = power off.",
+      "function": "HRUS",
+      "address": 522,
+      "pollClass": "normal",
+      "readback": true,
+      "confidence": "high"
+    },
+    {
+      "id": "String20MaintenanceModeControl",
+      "description": "String 20 maintenance mode: 0 = invalid, 1 = power on, 2 = power off.",
+      "function": "HRUS",
+      "address": 523,
+      "pollClass": "normal",
+      "readback": true,
+      "confidence": "high"
+    },
+    {
+      "id": "RtcYear",
+      "description": "RTC year. Resolution 1, offset 2000 (register value 0-100 -> year 2000-2100). Resolved from 'RtcAndHeartbeat_TODO' (previously guessed at address 528) - verified against vendor doc p.36-37.",
       "function": "HRUS",
       "address": 524,
       "pollClass": "normal",
       "readback": true,
-      "confidence": "medium"
+      "confidence": "high"
     },
     {
-      "id": "RtcAndHeartbeat_TODO",
-      "description": "TODO: genuinely garbled in source extraction - RTC year/month/day/hour/minute/second + a heartbeat register, somewhere across 528-530. Needs a direct look at PDF p. A336-A337 before use.",
+      "id": "RtcMonth",
+      "description": "RTC month, range 1-12.",
+      "function": "HRUS",
+      "address": 525,
+      "pollClass": "normal",
+      "readback": true,
+      "confidence": "high"
+    },
+    {
+      "id": "RtcDay",
+      "description": "RTC day, range 1-31.",
+      "function": "HRUS",
+      "address": 526,
+      "pollClass": "normal",
+      "readback": true,
+      "confidence": "high"
+    },
+    {
+      "id": "RtcHour",
+      "description": "RTC hour, range 0-23.",
+      "function": "HRUS",
+      "address": 527,
+      "pollClass": "normal",
+      "readback": true,
+      "confidence": "high"
+    },
+    {
+      "id": "RtcMinute",
+      "description": "RTC minute, range 0-59.",
       "function": "HRUS",
       "address": 528,
       "pollClass": "normal",
       "readback": true,
-      "confidence": "low"
+      "confidence": "high"
+    },
+    {
+      "id": "RtcSecond",
+      "description": "RTC second, range 0-59.",
+      "function": "HRUS",
+      "address": 529,
+      "pollClass": "normal",
+      "readback": true,
+      "confidence": "high"
+    },
+    {
+      "id": "Heartbeat",
+      "description": "Heartbeat register, range 0-65535. Separate from the RTC block, not part of it.",
+      "function": "HRUS",
+      "address": 530,
+      "pollClass": "fast",
+      "readback": true,
+      "confidence": "high"
     }
   ]
 }
