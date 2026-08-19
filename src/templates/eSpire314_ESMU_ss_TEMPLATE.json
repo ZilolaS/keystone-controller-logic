@@ -115,6 +115,7 @@
       "function": "IRUS",
       "address": 7,
       "confidence": "medium",
+      "supportingTag": true,
       "ss40k": {
         "name": "MaxBatteryVoltageStringNo",
         "model": "TODO"
@@ -128,6 +129,7 @@
       "function": "IRUS",
       "address": 8,
       "confidence": "medium",
+      "supportingTag": true,
       "ss40k": {
         "name": "MaxBatteryVoltagePointNo",
         "model": "TODO"
@@ -154,6 +156,7 @@
       "function": "IRUS",
       "address": 10,
       "confidence": "medium",
+      "supportingTag": true,
       "ss40k": {
         "name": "MinBatteryVoltageStringNo",
         "model": "TODO"
@@ -167,6 +170,7 @@
       "function": "IRUS",
       "address": 11,
       "confidence": "medium",
+      "supportingTag": true,
       "ss40k": {
         "name": "MinBatteryVoltagePointNo",
         "model": "TODO"
@@ -193,6 +197,7 @@
       "function": "IRUS",
       "address": 13,
       "confidence": "medium",
+      "supportingTag": true,
       "ss40k": {
         "name": "MaxBatteryTemperatureStringNo",
         "model": "TODO"
@@ -206,6 +211,7 @@
       "function": "IRUS",
       "address": 14,
       "confidence": "medium",
+      "supportingTag": true,
       "ss40k": {
         "name": "MaxBatteryTemperaturePointNo",
         "model": "TODO"
@@ -232,6 +238,7 @@
       "function": "IRUS",
       "address": 16,
       "confidence": "medium",
+      "supportingTag": true,
       "ss40k": {
         "name": "MinBatteryTemperatureStringNo",
         "model": "TODO"
@@ -245,6 +252,7 @@
       "function": "IRUS",
       "address": 17,
       "confidence": "medium",
+      "supportingTag": true,
       "ss40k": {
         "name": "MinBatteryTemperaturePointNo",
         "model": "TODO"
@@ -1721,6 +1729,7 @@
       "description": "Selects which battery string subsequent per-string commands target (1-20)",
       "function": "HRUS",
       "address": 500,
+      "pollClass": "normal",
       "readback": true,
       "confidence": "high"
     },
@@ -1729,6 +1738,7 @@
       "description": "System fault reset: 0 = do not reset, 1 = reset, other = invalid",
       "function": "HRUS",
       "address": 501,
+      "pollClass": "normal",
       "readback": false,
       "confidence": "high"
     },
@@ -1737,6 +1747,7 @@
       "description": "Main circuit breaker/contactor control: 0 = no operation, 1 = close, 2 = open, other = invalid",
       "function": "HRUS",
       "address": 502,
+      "pollClass": "normal",
       "readback": true,
       "confidence": "high"
     },
@@ -1745,6 +1756,7 @@
       "description": "TODO: garbled in source PDF extraction (range 503, or 504-523 one register per string?) - verify against PDF p. A336 before use.",
       "function": "HRUS",
       "address": 503,
+      "pollClass": "normal",
       "readback": true,
       "confidence": "low"
     },
@@ -1753,6 +1765,7 @@
       "description": "String N (selected via StringNumberSelector/500) maintenance mode: 0 = no operation, 1 = power on, 2 = power off. Registers 525-527 appear adjacent in the source; unclear if distinct fields or padding - verify against PDF p. A336.",
       "function": "HRUS",
       "address": 524,
+      "pollClass": "normal",
       "readback": true,
       "confidence": "medium"
     },
@@ -1761,6 +1774,7 @@
       "description": "TODO: genuinely garbled in source extraction - RTC year/month/day/hour/minute/second + a heartbeat register, somewhere across 528-530. Needs a direct look at PDF p. A336-A337 before use.",
       "function": "HRUS",
       "address": 528,
+      "pollClass": "normal",
       "readback": true,
       "confidence": "low"
     }

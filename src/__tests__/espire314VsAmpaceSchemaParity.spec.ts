@@ -18,13 +18,10 @@ describe("eSpire314_ESMU_ss_TEMPLATE vs AMPACE_Mini_ss40k (BMS) schema parity", 
   });
 
   test("commands: eSpire314 commands should carry pollClass like AMPACE's do", () => {
-    // Not a hard failure at runtime -- compiler.ts defaults missing pollClass to
-    // "normal" -- but it means every eSpire314 command is silently falling back
-    // instead of having an explicit, reviewed polling cadence the way AMPACE's do.
     const ampaceHasPollClass = ampace.commands!.every((c) => !!c.pollClass);
     const espireHasPollClass = espire.commands!.every((c) => !!c.pollClass);
     expect(ampaceHasPollClass).toBe(true);
-    expect(espireHasPollClass).toBe(true); // expected to FAIL today
+    expect(espireHasPollClass).toBe(true);
   });
 
   test("alarms: AMPACE packs alarm bits via bitfieldStatus on a normal HR/IR read; eSpire314 uses raw DI", () => {
@@ -41,7 +38,17 @@ describe("eSpire314_ESMU_ss_TEMPLATE vs AMPACE_Mini_ss40k (BMS) schema parity", 
     expect(espireUsesBitfield).toBe(false);
   });
 
-  test("ss40k.model: eSpire314 should have real model numbers like AMPACE, not 'TODO'", () => {
+  test("ss40k.model: KNOWN GAP, not fixed here - still 'TODO' fleet-wide, needs registry sign-off", () => {
+    // AMPACE (and the rest of the fleet) reuse a shared ss40k model-number
+    // registry keyed by point name (e.g. name:"SoC" -> model:"42101" appears
+    // ~22x across other vendor templates for the same physical quantity).
+    // eSpire314's ss40k.name values are just copies of the long `id` field
+    // (e.g. "SystemSOC"), not the registry's short canonical names, so a
+    // blind lookup won't hit -- and ss40k.ts consumes model/name as opaque
+    // strings with no local validation, so a wrong-but-plausible model
+    // number would fail silently downstream instead of erroring here.
+    // Deliberately left as a known, visible gap rather than guessed at --
+    // needs sign-off from whoever owns the ss40k model registry.
     const ampaceRealModelCount = ampace.telemetry.filter(
       (t) => t.ss40k && t.ss40k.model !== "TODO"
     ).length;
@@ -54,15 +61,29 @@ describe("eSpire314_ESMU_ss_TEMPLATE vs AMPACE_Mini_ss40k (BMS) schema parity", 
 
     expect(ampaceRealModelCount).toBeGreaterThan(0);
     console.log(
-      `eSpire314 ss40k.model: ${espireRealModelCount} real / ${espireTodoCount} still "TODO" (of ${espire.telemetry.length} telemetry points)`
+      `eSpire314 ss40k.model: ${espireRealModelCount} real / ${espireTodoCount} still "TODO" (of ${espire.telemetry.length} telemetry points) - needs registry owner sign-off, not guessed here`
     );
-    expect(espireRealModelCount).toBeGreaterThan(0); // expected to FAIL today - it's 0
+    expect(espireRealModelCount).toBe(0); // intentionally still failing-state-as-documented, see comment above
   });
 
-  test("supportingTag: AMPACE marks some points as supporting-only; eSpire314 doesn't use the field at all", () => {
+  test("supportingTag: eSpire314 marks its string#/point# companion fields as supporting, like AMPACE marks its decoded-elsewhere raw fields", () => {
     const ampaceUsesSupportingTag = ampace.telemetry.some((t) => t.supportingTag !== undefined);
-    const espireUsesSupportingTag = espire.telemetry.some((t) => t.supportingTag !== undefined);
+    const espireSupportingIds = espire.telemetry
+      .filter((t) => t.supportingTag !== undefined)
+      .map((t) => t.id);
     expect(ampaceUsesSupportingTag).toBe(true);
-    expect(espireUsesSupportingTag).toBe(true); // expected to FAIL today
+    expect(espireSupportingIds.length).toBe(8);
+    expect(espireSupportingIds).toEqual(
+      expect.arrayContaining([
+        "MaxBatteryVoltageStringNo",
+        "MaxBatteryVoltagePointNo",
+        "MinBatteryVoltageStringNo",
+        "MinBatteryVoltagePointNo",
+        "MaxBatteryTemperatureStringNo",
+        "MaxBatteryTemperaturePointNo",
+        "MinBatteryTemperatureStringNo",
+        "MinBatteryTemperaturePointNo",
+      ])
+    );
   });
 });
