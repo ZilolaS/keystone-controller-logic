@@ -10,7 +10,7 @@ type FlowNode = {
 describe("unified platform runtime flow", () => {
   const flow = JSON.parse(
     readFileSync(
-      path.resolve(__dirname, "../flows/unified_platform_runtime_flow.json"),
+      path.resolve(__dirname, "../flows/keystone_legacy_addition_flow.json"),
       "utf8"
     )
   ) as FlowNode[];

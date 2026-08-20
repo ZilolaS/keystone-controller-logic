@@ -12,7 +12,7 @@ type FlowNode = {
 describe("schedule realtime API flow", () => {
   const flow = JSON.parse(
     readFileSync(
-      path.resolve(__dirname, "../flows/schedule_realtime_api_flow.json"),
+      path.resolve(__dirname, "../flows/keystone_legacy_addition_flow.json"),
       "utf8"
     )
   ) as FlowNode[];
