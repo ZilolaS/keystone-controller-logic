@@ -13,13 +13,13 @@
   "telemetry": [
     {
       "id": "Manufacturer",
-      "constant": "CATL",
+      "constant": "fortress",
       "pollClass": "startup",
       "ss40k": { "name": "Mn", "model": "42100" }
     },
     {
       "id": "ProductModel",
-      "constant": "eSpire280",
+      "constant": "eSpire-BMS",
       "pollClass": "startup",
       "ss40k": { "name": "Md", "model": "42100" }
     },
@@ -293,8 +293,8 @@
     {
       "id": "SbmuChargeStatus",
       "calc": {
-        "inputs": { "st": "SbmuStringStatus", "a": "BatterySubsystemCurrent" },
-        "expr": "st === 0 ? 0 : (a < -1 ? 1 : (a > 1 ? 2 : 3))"
+        "inputs": { "a": "BatterySubsystemCurrent" },
+        "expr": "a < -1 ? 1 : (a > 1 ? 2 : 3)"
       },
       "pollClass": "slow",
       "ss40k": { "name": "ChaSt", "model": "42101" }

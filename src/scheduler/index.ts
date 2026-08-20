@@ -4,6 +4,7 @@ import { SiteConfig } from "../config";
 
 export type ScheduleStrategy = Record<string, unknown>;
 export type ScheduleConstraints = Record<string, unknown>;
+export type ScheduleCommandPayload = Record<string, unknown>;
 
 export interface ScheduleDuration {
   unit?: "minute" | "minutes" | "hour" | "hours" | "day" | "days" | string;
@@ -12,9 +13,14 @@ export interface ScheduleDuration {
 
 export interface SchedulePlan {
   planID?: string;
+  jobId?: string | number;
   name?: string;
   description?: string;
   version?: string;
+  owner?: string;
+  priority?: number | string;
+  flags?: number | string;
+  execType?: string;
   cron?: string;
   default?: boolean | string;
   duration?: ScheduleDuration | number | string;
@@ -26,6 +32,8 @@ export interface SchedulePlan {
   };
   strategy?: ScheduleStrategy;
   constraints?: ScheduleConstraints;
+  payload?: ScheduleCommandPayload | string;
+  payloadJson?: string;
   activePowerKwSetpoint?: number;
   reactivePowerKvarSetpoint?: number;
   setpoint?: {
@@ -73,6 +81,8 @@ export interface ActiveSchedulePlan {
 export interface ScheduleSelection {
   planID?: string;
   name?: string;
+  owner?: string;
+  priority?: number | string;
   reason?: string;
   via?: ActiveSchedulePlan["via"];
   isFallback?: boolean;
@@ -86,6 +96,8 @@ export interface ScheduleOutput {
   selectedPlan?: ScheduleSelection;
   strategy?: ScheduleStrategy;
   constraints?: ScheduleConstraints;
+  payload?: ScheduleCommandPayload;
+  payloadJson?: string;
 }
 
 export interface ScheduleMatchOptions {
@@ -175,14 +187,15 @@ export function matchActiveSchedulePlan(
   const nowLocalMs = localMs(nowParts);
   const nowLocal = new Date(nowLocalMs);
 
-  for (let index = plans.length - 1; index >= 0; index -= 1) {
+  const candidates: ActiveSchedulePlan[] = [];
+  for (let index = 0; index < plans.length; index += 1) {
     const plan = plans[index];
     if (isDefaultPlan(plan)) continue;
     const active = getAbsoluteTimeWindow(plan, now) ?? getActiveWindow(plan, nowParts, nowLocalMs);
     if (!active) continue;
     if (!withinPlanBounds(plan, nowLocalMs)) continue;
 
-    return {
+    candidates.push({
       plan,
       start: new Date(active.startMs),
       end: new Date(active.endMs),
@@ -190,7 +203,11 @@ export function matchActiveSchedulePlan(
       source: "local",
       via: "timed",
       selectedReason: "timed",
-    };
+    });
+  }
+
+  if (candidates.length) {
+    return candidates.sort(compareActivePlansByPrecedence)[0];
   }
 
   const fallback = findDefaultPlan(plans);
@@ -211,6 +228,7 @@ export function matchActiveSchedulePlan(
 
 export function scheduleOutputFromActivePlan(activePlan: ActiveSchedulePlan): ScheduleOutput {
   const plan = activePlan.plan;
+  const payload = normalizeCommandPayload(plan.payload ?? plan.payloadJson);
   const activePowerKwSetpoint = firstFiniteNumber(
     plan.activePowerKwSetpoint,
     plan.setpoint?.activePowerKw,
@@ -227,8 +245,10 @@ export function scheduleOutputFromActivePlan(activePlan: ActiveSchedulePlan): Sc
     ...(reactivePowerKvarSetpoint !== undefined ? { reactivePowerKvarSetpoint } : {}),
     activePlan,
     selectedPlan: {
-      planID: plan.planID,
+      planID: plan.planID ?? String(plan.jobId ?? ""),
       name: plan.name,
+      owner: plan.owner,
+      priority: plan.priority,
       reason: activePlan.selectedReason,
       via: activePlan.via,
       isFallback: activePlan.isFallback,
@@ -236,7 +256,25 @@ export function scheduleOutputFromActivePlan(activePlan: ActiveSchedulePlan): Sc
     },
     strategy: plan.strategy,
     constraints: plan.constraints,
+    ...(payload ? { payload } : {}),
+    ...(typeof plan.payloadJson === "string" ? { payloadJson: plan.payloadJson } : {}),
   };
+}
+
+function normalizeCommandPayload(value: unknown): ScheduleCommandPayload | undefined {
+  if (!value) return undefined;
+  if (typeof value === "string") {
+    try {
+      const parsed = JSON.parse(value);
+      return normalizeCommandPayload(parsed);
+    } catch {
+      return undefined;
+    }
+  }
+  if (typeof value === "object" && !Array.isArray(value)) {
+    return value as ScheduleCommandPayload;
+  }
+  return undefined;
 }
 
 function normalizePlans(plansRaw: SchedulePlanInput): SchedulePlan[] {
@@ -414,11 +452,7 @@ function withinPlanBounds(plan: SchedulePlan, nowLocalMs: number): boolean {
 }
 
 function findDefaultPlan(plans: SchedulePlan[]): SchedulePlan | null {
-  for (let index = plans.length - 1; index >= 0; index -= 1) {
-    const plan = plans[index];
-    if (isDefaultPlan(plan)) return plan;
-  }
-  return null;
+  return plans.filter(isDefaultPlan).sort(comparePlansByPrecedence)[0] ?? null;
 }
 
 function findNextTimedStart(
@@ -462,7 +496,42 @@ function findNextTimedStart(
 }
 
 function isDefaultPlan(plan: SchedulePlan): boolean {
-  return plan.default === true || String(plan.default).toLowerCase() === "true";
+  return (
+    plan.default === true ||
+    String(plan.default).toLowerCase() === "true" ||
+    Number(plan.flags) === 1
+  );
+}
+
+function compareActivePlansByPrecedence(
+  left: ActiveSchedulePlan,
+  right: ActiveSchedulePlan
+): number {
+  return comparePlansByPrecedence(left.plan, right.plan);
+}
+
+function comparePlansByPrecedence(left: SchedulePlan, right: SchedulePlan): number {
+  const priorityDelta = planPriority(right) - planPriority(left);
+  if (priorityDelta !== 0) return priorityDelta;
+
+  const ownerDelta = ownerRank(right) - ownerRank(left);
+  if (ownerDelta !== 0) return ownerDelta;
+
+  return planOrder(right) - planOrder(left);
+}
+
+function planPriority(plan: SchedulePlan): number {
+  const priority = Number(plan.priority);
+  return Number.isFinite(priority) ? priority : 0;
+}
+
+function ownerRank(plan: SchedulePlan): number {
+  return String(plan.owner || "").trim().toLowerCase() === "vpp" ? 1 : 0;
+}
+
+function planOrder(plan: SchedulePlan): number {
+  const id = Number(plan.jobId ?? plan.planID);
+  return Number.isFinite(id) ? id : 0;
 }
 
 function getLocalParts(date: Date, timezone: string): LocalParts {

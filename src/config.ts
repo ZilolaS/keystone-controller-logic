@@ -355,6 +355,7 @@ export type MeteringRegisterFunction =
 
 export type MeteringRegisterSignalKey =
   | MeteringReadingKey
+  | "acCoupledPvKw"
   | "gridImportPowerKw"
   | "gridExportPowerKw"
   | "backupLoadKw"
@@ -367,6 +368,13 @@ export type MeteringRegisterSignalKey =
   | "voltageL3L1"
   | "energyImportKwh"
   | "energyExportKwh"
+  | "gridImportEnergyKwh"
+  | "gridExportEnergyKwh"
+  | "gridNetEnergyKwh"
+  | "loadEnergyKwh"
+  | "pvEnergyKwh"
+  | "acCoupledPvEnergyKwh"
+  | "generatorEnergyKwh"
   | "custom";
 
 export interface MeteringRegisterMapping {
@@ -410,6 +418,23 @@ export type MeteringCalculationConfig = Partial<
   Record<MeteringReadingKey, MeteringReadingCalculation>
 >;
 
+export interface SiteMeterConfig {
+  /**
+   * Stable equipment id used by the telemetry runtime, for example "Meter" or
+   * "Meter2". Site-specific eGauge register layouts live here instead of in
+   * committed template files.
+   */
+  id: string;
+  meterType: string;
+  modbusProfile?: string;
+  baseProfile?: string;
+  ip: string;
+  port?: number;
+  unitId?: number;
+  route?: string;
+  registerMap: MeteringRegisterMapping[];
+}
+
 export interface MeteringConfig {
   meterType: string;      // "eGauge-4015", "Accuenergy-AcuRev", etc.
   modbusProfile: string;  // "udt_eGauge_V1", "acurev_v1", etc.
@@ -417,6 +442,12 @@ export interface MeteringConfig {
   port?: number;
   unitId?: number;
   reads: MeterReadsConfig;
+  /**
+   * Multi-meter site-specific register definitions. Preferred for new and
+   * migrated eGauge sites. The legacy top-level registerMap remains supported
+   * as a single "Meter" definition.
+   */
+  meters?: SiteMeterConfig[];
   registerMap?: MeteringRegisterMapping[];
   calculations?: MeteringCalculationConfig;
 }
@@ -447,6 +478,24 @@ export interface SignalMappingSourceConfig {
 export interface SignalMappingSignalConfig {
   expr: string;
   invertSign?: boolean;
+  model?: string;
+  modelIndex?: string;
+}
+
+export interface EnergyAccumulatorSourceTagsConfig {
+  utilityNetKwh?: string;
+  acCoupledPvKwh?: string;
+  generatorKwh?: string;
+  batteryPowerKw?: string | string[];
+}
+
+export interface EnergyAccumulatorConfig {
+  enabled?: boolean;
+  dailyEnabled?: boolean;
+  timezone?: string;
+  maxGapMs?: number;
+  outputMultiplier?: number;
+  sourceTagIDs?: EnergyAccumulatorSourceTagsConfig;
 }
 
 export interface SignalMappingConfig {
@@ -459,6 +508,7 @@ export interface SignalMappingConfig {
    * instead of product-default telemetry.
    */
   ss40k?: Partial<Record<string, SignalMappingSignalConfig>>;
+  energyAccumulator?: EnergyAccumulatorConfig;
 }
 
 // ---- Generator ----

@@ -5,7 +5,10 @@ import {
   buildSs40kLookup,
   DEFAULT_SS40K_MODEL_INDEX_MAP,
 } from "../telemetry/ss40k";
-import { buildAmpaceBcu42kEquipmentConfig } from "../telemetry/ampaceBcu42k";
+import {
+  buildAmpaceBcu42kEquipmentConfig,
+  buildAmpaceBcu42kTemplate,
+} from "../telemetry/ampaceBcu42k";
 import { buildCatlSbmu42kEquipmentConfig } from "../telemetry/catlSbmu42k";
 import { resolveTelemetryTemplate } from "../telemetry/templateAdapter";
 
@@ -22,6 +25,26 @@ describe("SS40K export helpers", () => {
       model: "40101",
       exportMultiplier: 100,
     });
+    expect(Object.values(result.lookup)).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          equipment: "MBMU",
+          sourceTagID: "MBMU.System_Power_kW",
+          name: "pBatDischg",
+          model: "40101",
+          exportMultiplier: 1000,
+          exportExpr: "max(value, 0)",
+        }),
+        expect.objectContaining({
+          equipment: "MBMU",
+          sourceTagID: "MBMU.System_Power_kW_Charge",
+          name: "pBatChg",
+          model: "40101",
+          exportMultiplier: 1000,
+          exportExpr: "max(-value, 0)",
+        }),
+      ])
+    );
 
     expect(result.lookup["PCS.SYSTEM_POWER_ACTIVE_ALL"]).toMatchObject({
       equipment: "PCS",
@@ -139,6 +162,67 @@ describe("SS40K export helpers", () => {
         timestamp: "2026-04-16T12:00:02.000Z",
       },
     });
+  });
+
+  test("buildSs40kFixedPayloads drops samples older than configured freshness window", () => {
+    const { lookup } = buildSs40kLookup({
+      BCU_1: {
+        profileName: "AMPACE_Mini_BCU_42k",
+        template: buildAmpaceBcu42kTemplate({ bcuIndex: 0 }),
+      },
+      Meter: "eGauge_Assisted_Living",
+    });
+
+    const messages = buildSs40kFixedPayloads({
+      lookup,
+      telemetry: {
+        BCU_1: [
+          {
+            tagID: "BCU_1.SerialNumber",
+            value: 2350317571,
+            timestamp: "2026-08-14T16:26:11.000Z",
+          },
+          {
+            tagID: "BCU_1.USOC",
+            value: 0.94,
+            timestamp: "2026-08-14T16:26:11.000Z",
+          },
+        ],
+        Meter: [
+          {
+            tagID: "Meter.Utility_Total_Power",
+            value: -12.4,
+            timestamp: "2026-08-17T18:00:00.000Z",
+          },
+        ],
+      },
+      signalMapping: {
+        signals: {
+          gridPowerKw: { expr: "Meter.Utility_Total_Power" },
+          batteryPowerKw: { expr: "BCU_1.USOC" },
+        },
+      },
+      topic: "fort/v1/things/test/telem",
+      nowMs: Date.parse("2026-08-17T18:00:30.000Z"),
+      maxSampleAgeMs: 10 * 60 * 1000,
+    });
+
+    const byModel = Object.fromEntries(
+      messages.map((message) => [message.ss40k.model, message])
+    );
+    expect(byModel["42101"]).toBeUndefined();
+    expect(byModel["40101"]).toMatchObject({
+      payload: {
+        "0": {
+          fixed: expect.objectContaining({
+            ID: 40101,
+            pGridImpTot: 0,
+            pGridExpTot: 12400,
+          }),
+        },
+      },
+    });
+    expect(byModel["40101"].payload["0"].fixed).not.toHaveProperty("pBatDischg");
   });
 
   test("AMPACE Mini BMS maps battery telemetry into SS40K monitoring models", () => {
@@ -386,8 +470,8 @@ describe("SS40K export helpers", () => {
       telemetry: {
         AMPACE_BCU_1: [
           { tagID: "AMPACE_BCU_1.SerialNumber", value: 2350317571 },
-          { tagID: "AMPACE_BCU_1.Manufacturer", value: "AMPACE" },
-          { tagID: "AMPACE_BCU_1.ProductModel", value: "MINI" },
+          { tagID: "AMPACE_BCU_1.Manufacturer", value: "fortress" },
+          { tagID: "AMPACE_BCU_1.ProductModel", value: "eSpire-Mini-BMS" },
           { tagID: "AMPACE_BCU_1.BatteryType", value: 4 },
           { tagID: "AMPACE_BCU_1.USOC", value: 0.72 },
           { tagID: "AMPACE_BCU_1.SOH", value: 0.98 },
@@ -412,8 +496,8 @@ describe("SS40K export helpers", () => {
           fixed: expect.objectContaining({
             ID: 42100,
             SN: "2350317571",
-            Mn: "AMPACE",
-            Md: "MINI",
+            Mn: "fortress",
+            Md: "eSpire-Mini-BMS",
             Typ: 4,
           }),
         },
@@ -426,7 +510,7 @@ describe("SS40K export helpers", () => {
           fixed: expect.objectContaining({
             ID: 42101,
             SN: "2350317571",
-            Md: "MINI",
+            Md: "eSpire-Mini-BMS",
             SoC: 72,
             SoH: 98,
             V: 720.5,
@@ -443,7 +527,7 @@ describe("SS40K export helpers", () => {
           fixed: expect.objectContaining({
             ID: 42103,
             SN: "2350317571",
-            Md: "MINI",
+            Md: "eSpire-Mini-BMS",
             BatteryFault: 1,
           }),
         },
@@ -530,13 +614,15 @@ describe("SS40K export helpers", () => {
       telemetry: {
         CATL_SBMU_1: [
           { tagID: "CATL_SBMU_1.SerialNumber", value: "001PBAMP00000CF2H0100004" },
-          { tagID: "CATL_SBMU_1.Manufacturer", value: "CATL" },
-          { tagID: "CATL_SBMU_1.ProductModel", value: "eSpire280" },
+          { tagID: "CATL_SBMU_1.Manufacturer", value: "fortress" },
+          { tagID: "CATL_SBMU_1.ProductModel", value: "eSpire-BMS" },
           { tagID: "CATL_SBMU_1.SOC", value: 0.71 },
           { tagID: "CATL_SBMU_1.SOH", value: 0.99 },
           { tagID: "CATL_SBMU_1.BatterySubsystemVoltageInside", value: 780.5 },
           { tagID: "CATL_SBMU_1.BatterySubsystemCurrent", value: -12.5 },
           { tagID: "CATL_SBMU_1.BatterySubsystemPower", value: -9.8 },
+          { tagID: "CATL_SBMU_1.HighVoltageOnlineStatus", value: 1 },
+          { tagID: "CATL_SBMU_1.SbmuChargeStatus", value: 1 },
           { tagID: "CATL_SBMU_1.SbmuBatteryFault", value: 1 },
         ],
       },
@@ -555,8 +641,8 @@ describe("SS40K export helpers", () => {
           fixed: expect.objectContaining({
             ID: 42100,
             SN: "001PBAMP00000CF2H0100004",
-            Mn: "CATL",
-            Md: "eSpire280",
+            Mn: "fortress",
+            Md: "eSpire-BMS",
           }),
         },
       },
@@ -568,12 +654,13 @@ describe("SS40K export helpers", () => {
           fixed: expect.objectContaining({
             ID: 42101,
             SN: "001PBAMP00000CF2H0100004",
-            Md: "eSpire280",
+            Md: "eSpire-BMS",
             SoC: 71,
             SoH: 99,
             V: 780.5,
             A: -12.5,
             W: -9800,
+            ChaSt: 1,
           }),
         },
       },
@@ -585,7 +672,7 @@ describe("SS40K export helpers", () => {
           fixed: expect.objectContaining({
             ID: 42103,
             SN: "001PBAMP00000CF2H0100004",
-            Md: "eSpire280",
+            Md: "eSpire-BMS",
             BatteryFault: 1,
           }),
         },
@@ -1481,6 +1568,273 @@ describe("SS40K export helpers", () => {
         model: "40101",
         modelIndex: "0",
       },
+    });
+  });
+
+  test("direct SS40K signal mapping can drive AC-coupled PV and energy models", () => {
+    const messages = buildSs40kFixedPayloads({
+      lookup: {},
+      mergeByModelIndex: true,
+      signalMapping: {
+        ss40k: {
+          pAcCplTot: { expr: "deadband(Meter2.Solar, 0.3)" },
+          iAcCplTot: {
+            expr: "SolarEdge1.AC_CURRENT_TOTAL + SolarEdge2.AC_CURRENT_TOTAL",
+          },
+          vAcCplL12: {
+            expr: "(SolarEdge1.AC_VOLTAGE_AB + SolarEdge2.AC_VOLTAGE_AB) / 2",
+          },
+          eAcCplTot: {
+            expr: "SolarEdge1.AC_ENERGY_WH + SolarEdge2.AC_ENERGY_WH",
+          },
+          eGridImpTot: { expr: "Meter.Utility_Import_Energy_Wh" },
+          eGridExpTot: { expr: "Meter.Utility_Export_Energy_Wh" },
+        },
+      },
+      telemetry: {
+        Meter2: [{ tagID: "Meter2.Solar", value: 89.278 }],
+        Meter: [
+          { tagID: "Meter.Utility_Import_Energy_Wh", value: 1200 },
+          { tagID: "Meter.Utility_Export_Energy_Wh", value: 3400 },
+        ],
+        SolarEdge1: [
+          { tagID: "SolarEdge1.AC_CURRENT_TOTAL", value: 166.7 },
+          { tagID: "SolarEdge1.AC_VOLTAGE_AB", value: 492.8 },
+          { tagID: "SolarEdge1.AC_ENERGY_WH", value: 12526 },
+        ],
+        SolarEdge2: [
+          { tagID: "SolarEdge2.AC_CURRENT_TOTAL", value: 155.05 },
+          { tagID: "SolarEdge2.AC_VOLTAGE_AB", value: 492.4 },
+          { tagID: "SolarEdge2.AC_ENERGY_WH", value: 13018 },
+        ],
+      },
+      topic: "fort/v1/things/test/telem",
+    });
+
+    const byModel = Object.fromEntries(
+      messages.map((message) => [message.ss40k.model, message])
+    );
+
+    expect(byModel["40101"]).toMatchObject({
+      payload: {
+        "0": {
+          fixed: expect.objectContaining({
+            ID: 40101,
+            pAcCplTot: 89278,
+            iAcCplTot: 321.75,
+            vAcCplL12: 492.6,
+          }),
+        },
+      },
+    });
+    expect(byModel["40102"]).toMatchObject({
+      payload: {
+        "0": {
+          fixed: expect.objectContaining({
+            ID: 40102,
+            eAcCplTot: 25544,
+            eGridImpTot: 1200,
+            eGridExpTot: 3400,
+          }),
+        },
+      },
+    });
+  });
+
+  test("energy accumulator splits signed eGauge energy and integrates load/battery power", () => {
+    const state = {};
+    const baseOptions = {
+      lookup: {},
+      mergeByModelIndex: true,
+      signalMapping: {
+        ss40k: {
+          pLoad: { expr: "Meter.Load_Active_Power" },
+        },
+      },
+      topic: "fort/v1/things/test/telem",
+      energyAccumulator: {
+        state,
+        sourceTagIDs: {
+          utilityNetKwh: "Meter.Utility_Energy",
+          acCoupledPvKwh: "Meter2.PV_Energy",
+          generatorKwh: "Meter.Generator_Energy",
+          batteryPowerKw: "MBMU.System_Power_kW",
+        },
+      },
+    };
+
+    buildSs40kFixedPayloads({
+      ...baseOptions,
+      energyAccumulator: { ...baseOptions.energyAccumulator, nowMs: 1000 },
+      telemetry: {
+        Meter: [
+          { tagID: "Meter.Utility_Energy", value: -100 },
+          { tagID: "Meter.Generator_Energy", value: 20 },
+          { tagID: "Meter.Load_Active_Power", value: 120 },
+        ],
+        Meter2: [{ tagID: "Meter2.PV_Energy", value: 1000 }],
+        MBMU: [{ tagID: "MBMU.System_Power_kW", value: -30 }],
+      },
+    });
+
+    const second = buildSs40kFixedPayloads({
+      ...baseOptions,
+      energyAccumulator: { ...baseOptions.energyAccumulator, nowMs: 61000 },
+      telemetry: {
+        Meter: [
+          { tagID: "Meter.Utility_Energy", value: -98 },
+          { tagID: "Meter.Generator_Energy", value: 19.9 },
+          { tagID: "Meter.Load_Active_Power", value: 120 },
+        ],
+        Meter2: [{ tagID: "Meter2.PV_Energy", value: 1010 }],
+        MBMU: [{ tagID: "MBMU.System_Power_kW", value: -30 }],
+      },
+    });
+
+    const second40102 = second.find((message) => message.ss40k.model === "40102");
+    expect(second40102?.payload["0"].fixed).toMatchObject({
+      ID: 40102,
+      eGridImpTot: 2,
+      eGridExpTot: 0,
+      eAcCplTot: 10,
+      eGenTot: 0,
+      eLoadTot: 2,
+      eBatChgTot: 0.5,
+      eBatDischgTot: 0,
+    });
+
+    const third = buildSs40kFixedPayloads({
+      ...baseOptions,
+      energyAccumulator: { ...baseOptions.energyAccumulator, nowMs: 121000 },
+      telemetry: {
+        Meter: [
+          { tagID: "Meter.Utility_Energy", value: -101 },
+          { tagID: "Meter.Generator_Energy", value: 20.5 },
+          { tagID: "Meter.Load_Active_Power", value: 60 },
+        ],
+        Meter2: [{ tagID: "Meter2.PV_Energy", value: 1010 }],
+        MBMU: [{ tagID: "MBMU.System_Power_kW", value: 12 }],
+      },
+    });
+
+    const third40102 = third.find((message) => message.ss40k.model === "40102");
+    expect(third40102?.payload["0"].fixed).toMatchObject({
+      ID: 40102,
+      eGridImpTot: 2,
+      eGridExpTot: 3,
+      eAcCplTot: 10,
+      eGenTot: 0.6,
+      eLoadTot: 3,
+      eBatChgTot: 0.5,
+      eBatDischgTot: 0.2,
+    });
+  });
+
+  test("energy accumulator preserves device totals and derives daily 40102 energy fields", () => {
+    const state = {};
+    const baseOptions = {
+      lookup: {
+        "PCS.PVGeneratedEnergy": {
+          equipment: "PCS",
+          sourceTagID: "PCS.PVGeneratedEnergy",
+          profileName: "Sinexcel_Mini_PCS_ss40k",
+          name: "ePvTot",
+          model: "40102",
+          modelIndex: "0",
+          exportMultiplier: 1000,
+        },
+        "Battery.BamsChargedEnergy": {
+          equipment: "Battery",
+          sourceTagID: "Battery.BamsChargedEnergy",
+          profileName: "AMPACE_Mini_ss40k",
+          name: "eBatChgTot",
+          model: "40102",
+          modelIndex: "0",
+          exportMultiplier: 1000,
+        },
+      },
+      mergeByModelIndex: true,
+      signalMapping: {
+        signals: {
+          loadPowerKw: { expr: "Meter.Load_Total_Power" },
+          gridPowerKw: { expr: "Meter.Utility_Total_Power" },
+        },
+      },
+      topic: "fort/v1/things/test/telem",
+      energyAccumulator: {
+        state,
+        outputMultiplier: 1000,
+        timezone: "America/Los_Angeles",
+      },
+    };
+
+    buildSs40kFixedPayloads({
+      ...baseOptions,
+      energyAccumulator: { ...baseOptions.energyAccumulator, nowMs: Date.UTC(2026, 7, 14, 7, 0, 0) },
+      telemetry: {
+        PCS: [{ tagID: "PCS.PVGeneratedEnergy", value: 1000 }],
+        Battery: [{ tagID: "Battery.BamsChargedEnergy", value: 200 }],
+        Meter: [
+          { tagID: "Meter.Load_Total_Power", value: 60 },
+          { tagID: "Meter.Utility_Total_Power", value: 24 },
+        ],
+      },
+    });
+
+    const second = buildSs40kFixedPayloads({
+      ...baseOptions,
+      energyAccumulator: { ...baseOptions.energyAccumulator, nowMs: Date.UTC(2026, 7, 14, 7, 5, 0) },
+      telemetry: {
+        PCS: [{ tagID: "PCS.PVGeneratedEnergy", value: 1001.25 }],
+        Battery: [{ tagID: "Battery.BamsChargedEnergy", value: 201 }],
+        Meter: [
+          { tagID: "Meter.Load_Total_Power", value: 60 },
+          { tagID: "Meter.Utility_Total_Power", value: 24 },
+        ],
+      },
+    });
+
+    const second40102 = second.find((message) => message.ss40k.model === "40102");
+    expect(second40102?.payload["0"].fixed).toMatchObject({
+      ID: 40102,
+      ePvTot: 1001250,
+      ePvTdy: 1250,
+      eBatChgTot: 201000,
+      eBatChgTdy: 1000,
+      eGridImpTot: 2000,
+      eGridImpTdy: 2000,
+      eGridExpTot: 0,
+      eGridExpTdy: 0,
+      eLoadTot: 5000,
+      eLoadTdy: 5000,
+    });
+
+    const third = buildSs40kFixedPayloads({
+      ...baseOptions,
+      energyAccumulator: { ...baseOptions.energyAccumulator, nowMs: Date.UTC(2026, 7, 15, 7, 1, 0) },
+      telemetry: {
+        PCS: [{ tagID: "PCS.PVGeneratedEnergy", value: 1010 }],
+        Battery: [{ tagID: "Battery.BamsChargedEnergy", value: 205 }],
+        Meter: [
+          { tagID: "Meter.Load_Total_Power", value: 60 },
+          { tagID: "Meter.Utility_Total_Power", value: -12 },
+        ],
+      },
+    });
+
+    const third40102 = third.find((message) => message.ss40k.model === "40102");
+    expect(third40102?.payload["0"].fixed).toMatchObject({
+      ID: 40102,
+      ePvTot: 1010000,
+      ePvTdy: 0,
+      eBatChgTot: 205000,
+      eBatChgTdy: 0,
+      eGridImpTot: 2000,
+      eGridImpTdy: 0,
+      eGridExpTot: 1000,
+      eGridExpTdy: 0,
+      eLoadTot: 10000,
+      eLoadTdy: 0,
     });
   });
 

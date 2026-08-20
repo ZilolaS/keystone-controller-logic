@@ -13,7 +13,7 @@
   "telemetry": [
     {
       "id": "Manufacturer",
-      "constant": "AMPACE",
+      "constant": "fortress",
       "pollClass": "startup",
       "ss40k": {
         "name": "Mn",
@@ -22,7 +22,7 @@
     },
     {
       "id": "ProductModel",
-      "constant": "MINI",
+      "constant": "eSpire-Mini-BMS",
       "pollClass": "startup",
       "ss40k": {
         "name": "Md",

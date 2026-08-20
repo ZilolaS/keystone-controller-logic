@@ -381,6 +381,93 @@ describe("scheduler", () => {
     expect(output.selectedPlan?.planID).toBe("fixed");
   });
 
+  test("returns the EdgeScheduler command payload from the selected plan", () => {
+    const activePlan = matchActiveSchedulePlan(
+      [
+        {
+          planID: "peak-shaving",
+          default: true,
+          payload: {
+            command: "peakShaving",
+            dischargeThresholdKw: 40,
+            chargeThresholdKw: 20,
+            minSocPct: 50,
+            maxSocPct: 95,
+            maxChargePowerPct: 100,
+            maxDischargePowerPct: 100,
+          },
+        },
+      ],
+      { now: "2026-05-02T19:00:00.000Z", timezone: "America/Los_Angeles" }
+    );
+
+    const output = scheduleOutputFromActivePlan(activePlan!);
+
+    expect(output.payload).toEqual(
+      expect.objectContaining({
+        command: "peakShaving",
+        dischargeThresholdKw: 40,
+      })
+    );
+  });
+
+  test("selects the highest-priority active EdgeScheduler job", () => {
+    const activePlan = matchActiveSchedulePlan(
+      [
+        {
+          planID: "local",
+          owner: "LocalSchedule",
+          priority: 50,
+          cron: "0 0 * MAY *",
+          duration: 1439,
+          payload: { command: "peakShaving", dischargeThresholdKw: 100 },
+        },
+        {
+          planID: "vpp",
+          owner: "Vpp",
+          priority: 200,
+          cron: "0 0 * MAY *",
+          duration: 1439,
+          payload: { command: "peakShaving", dischargeThresholdKw: 40 },
+        },
+      ],
+      { now: "2026-05-02T19:00:00.000Z", timezone: "America/Los_Angeles" }
+    );
+
+    const output = scheduleOutputFromActivePlan(activePlan!);
+
+    expect(output.selectedPlan?.planID).toBe("vpp");
+    expect(output.selectedPlan?.owner).toBe("Vpp");
+    expect(output.selectedPlan?.priority).toBe(200);
+    expect(output.payload?.dischargeThresholdKw).toBe(40);
+  });
+
+  test("parses payloadJson on selected EdgeScheduler plans", () => {
+    const activePlan = matchActiveSchedulePlan(
+      [
+        {
+          planID: "self-consumption",
+          default: true,
+          payloadJson: JSON.stringify({
+            command: "maximizePvSelfConsumption",
+            targetImportKw: 0.5,
+            deadbandKw: 0.8,
+          }),
+        },
+      ],
+      { now: "2026-05-02T19:00:00.000Z", timezone: "America/Los_Angeles" }
+    );
+
+    const output = scheduleOutputFromActivePlan(activePlan!);
+
+    expect(output.payload).toEqual({
+      command: "maximizePvSelfConsumption",
+      targetImportKw: 0.5,
+      deadbandKw: 0.8,
+    });
+    expect(output.payloadJson).toContain("maximizePvSelfConsumption");
+  });
+
   test("initScheduler uses controller timezone and configured plans", () => {
     const scheduler = initScheduler(makeConfig(), {
       plans: [{ timed: monthlyPlans }],

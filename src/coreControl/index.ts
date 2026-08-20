@@ -1149,6 +1149,17 @@ function resolveScheduledActivePowerKw(
     return schedule.activePowerKwSetpoint;
   }
 
+  const payload = normalizeScheduledCommandPayload(
+    schedule.payload ?? schedule.payloadJson
+  );
+  const payloadTarget = resolveScheduledCommandPayloadKw(
+    ctx,
+    telemetry,
+    payload,
+    reasons
+  );
+  if (payloadTarget !== undefined) return payloadTarget;
+
   const strategy = schedule.strategy;
   if (!strategy) return undefined;
 
@@ -1163,6 +1174,266 @@ function resolveScheduledActivePowerKw(
   }
 
   return undefined;
+}
+
+function resolveScheduledCommandPayloadKw(
+  ctx: CoreControlContext,
+  telemetry: TelemetrySnapshot,
+  payload: Record<string, unknown> | undefined,
+  reasons: string[]
+): number | undefined {
+  if (!payload) return undefined;
+
+  const args =
+    readPayloadObject(payload, "arguments") ??
+    readPayloadObject(payload, "Arguments") ??
+    {};
+  const source = { ...payload, ...args };
+  const commandText = [
+    source.command,
+    source.Command,
+    source.cluster,
+    source.Cluster,
+    source.element,
+    source.Element,
+  ]
+    .filter((value) => value !== undefined && value !== null)
+    .map((value) => String(value))
+    .join(".");
+  const command = normalizeScheduledCommandName(commandText);
+
+  if (command === "discharge" || command.endsWith("discharge")) {
+    return resolveScheduledFixedCommandKw(ctx, telemetry, source, "discharge", reasons);
+  }
+
+  if (command === "charge" || command.endsWith("charge")) {
+    return resolveScheduledFixedCommandKw(ctx, telemetry, source, "charge", reasons);
+  }
+
+  if (command.includes("peakshaving")) {
+    return resolveScheduledPeakShavingPayloadKw(ctx, telemetry, source, reasons);
+  }
+
+  if (
+    command.includes("maximizepvselfconsumption") ||
+    command.includes("pvselfconsumption") ||
+    command.includes("selfconsumption")
+  ) {
+    return resolveScheduledSelfConsumptionPayloadKw(ctx, telemetry, source, reasons);
+  }
+
+  reasons.push("scheduled-command-unsupported");
+  return undefined;
+}
+
+function resolveScheduledFixedCommandKw(
+  ctx: CoreControlContext,
+  telemetry: TelemetrySnapshot,
+  payload: Record<string, unknown>,
+  direction: "charge" | "discharge",
+  reasons: string[]
+): number | undefined {
+  const activePowerKw =
+    readPayloadNumber(payload, "activePowerKw", "activePowerKW", "powerKw", "powerKW") ??
+    wattsToKw(
+      readPayloadNumber(
+        payload,
+        "activePowerW",
+        "activePower",
+        "powerW",
+        "pW",
+        "realPowerW"
+      )
+    );
+  if (activePowerKw == null) {
+    reasons.push(`scheduled-command-${direction}-missing-power`);
+    return undefined;
+  }
+
+  const allowCharge = scheduledAllowCharge(ctx, telemetry, payload);
+  const allowDischarge = scheduledAllowDischarge(ctx, telemetry, payload);
+  if (direction === "charge") {
+    if (!allowCharge) {
+      reasons.push("scheduled-command-charge-blocked");
+      return 0;
+    }
+    reasons.push("scheduled-command-charge");
+    return -Math.min(
+      Math.abs(activePowerKw),
+      scheduledMaxChargeKw(ctx, payload)
+    );
+  }
+
+  if (!allowDischarge) {
+    reasons.push("scheduled-command-discharge-blocked");
+    return 0;
+  }
+  reasons.push("scheduled-command-discharge");
+  return Math.min(
+    Math.abs(activePowerKw),
+    scheduledMaxDischargeKw(ctx, payload)
+  );
+}
+
+function resolveScheduledPeakShavingPayloadKw(
+  ctx: CoreControlContext,
+  telemetry: TelemetrySnapshot,
+  payload: Record<string, unknown>,
+  reasons: string[]
+): number | undefined {
+  const utilityPowerKw = telemetry.utilityPowerKw;
+  if (utilityPowerKw == null || !Number.isFinite(utilityPowerKw)) {
+    reasons.push("scheduled-command-peak-shaving-missing-utility");
+    return undefined;
+  }
+
+  const dischargeThresholdKw = readPayloadNumber(
+    payload,
+    "dischargeThresholdKw",
+    "dischargeThresholdKW",
+    "dischargeThreshold",
+    "DischargeThresholdKw",
+    "DischargeThreshold"
+  );
+  const chargeThresholdKw = readPayloadNumber(
+    payload,
+    "chargeThresholdKw",
+    "chargeThresholdKW",
+    "chargeThreshold",
+    "ChargeThresholdKw",
+    "ChargeThreshold"
+  );
+  const deadbandKw =
+    readPayloadNumber(payload, "deadbandKw", "deadbandKW", "deadband") ?? 0.5;
+  const bessPowerKw = resolveMeasuredBatteryActivePowerKw(ctx, telemetry);
+  const baselineUtilityKw = utilityPowerKw + bessPowerKw;
+  const holdAtThreshold =
+    readPayloadBoolean(payload, "holdAtThreshold", "hold_at_threshold") ?? true;
+
+  if (
+    dischargeThresholdKw != null &&
+    utilityPowerKw > dischargeThresholdKw + deadbandKw
+  ) {
+    if (!scheduledAllowDischarge(ctx, telemetry, payload)) {
+      reasons.push("scheduled-command-peak-shaving-discharge-blocked");
+      return 0;
+    }
+    reasons.push("scheduled-command-peak-shaving-discharge");
+    return Math.min(
+      scheduledMaxDischargeKw(ctx, payload),
+      Math.max(0, baselineUtilityKw - dischargeThresholdKw)
+    );
+  }
+
+  if (
+    holdAtThreshold &&
+    dischargeThresholdKw != null &&
+    bessPowerKw > 0 &&
+    baselineUtilityKw > dischargeThresholdKw + deadbandKw
+  ) {
+    if (!scheduledAllowDischarge(ctx, telemetry, payload)) {
+      reasons.push("scheduled-command-peak-shaving-discharge-blocked");
+      return 0;
+    }
+    reasons.push("scheduled-command-peak-shaving-discharge-hold");
+    return Math.min(
+      scheduledMaxDischargeKw(ctx, payload),
+      Math.max(0, baselineUtilityKw - dischargeThresholdKw)
+    );
+  }
+
+  if (
+    chargeThresholdKw != null &&
+    utilityPowerKw < chargeThresholdKw - deadbandKw
+  ) {
+    if (!scheduledAllowCharge(ctx, telemetry, payload)) {
+      reasons.push("scheduled-command-peak-shaving-charge-blocked");
+      return 0;
+    }
+    reasons.push("scheduled-command-peak-shaving-charge");
+    return Math.max(
+      -scheduledMaxChargeKw(ctx, payload),
+      Math.min(0, baselineUtilityKw - chargeThresholdKw)
+    );
+  }
+
+  if (
+    holdAtThreshold &&
+    chargeThresholdKw != null &&
+    bessPowerKw < 0 &&
+    baselineUtilityKw < chargeThresholdKw - deadbandKw
+  ) {
+    if (!scheduledAllowCharge(ctx, telemetry, payload)) {
+      reasons.push("scheduled-command-peak-shaving-charge-blocked");
+      return 0;
+    }
+    reasons.push("scheduled-command-peak-shaving-charge-hold");
+    return Math.max(
+      -scheduledMaxChargeKw(ctx, payload),
+      Math.min(0, baselineUtilityKw - chargeThresholdKw)
+    );
+  }
+
+  reasons.push("scheduled-command-peak-shaving-idle");
+  return 0;
+}
+
+function resolveScheduledSelfConsumptionPayloadKw(
+  ctx: CoreControlContext,
+  telemetry: TelemetrySnapshot,
+  payload: Record<string, unknown>,
+  reasons: string[]
+): number | undefined {
+  if (telemetry.utilityPowerKw == null || telemetry.pcsActivePowerKw == null) {
+    reasons.push("scheduled-command-self-consumption-missing-base-readings");
+    return undefined;
+  }
+
+  const targetImportKw =
+    readPayloadNumber(
+      payload,
+      "targetImportKw",
+      "targetImportKW",
+      "targetImport"
+    ) ?? 0.5;
+  const deadbandKw =
+    readPayloadNumber(payload, "deadbandKw", "deadbandKW", "deadband") ?? 0.8;
+  const baseAlpha = readPayloadNumber(payload, "baseAlpha", "base_alpha") ?? 0.15;
+  const baseStickEpsKw =
+    readPayloadNumber(payload, "baseStickEpsKw", "base_stick_eps_kw") ?? 1;
+  const baseInstantKw = telemetry.utilityPowerKw + telemetry.pcsActivePowerKw;
+  let baseMemKw = finiteNumber(ctx.state?.baseMemKw);
+
+  if (baseMemKw == null) {
+    baseMemKw = baseInstantKw;
+  }
+
+  const delta = baseInstantKw - baseMemKw;
+  if (Math.abs(delta) > baseStickEpsKw) {
+    baseMemKw = baseMemKw + clamp(baseAlpha, 0, 1) * delta;
+    reasons.push("scheduled-command-self-consumption-base-filter");
+  }
+
+  if (ctx.state) {
+    ctx.state.baseMemKw = baseMemKw;
+  }
+
+  let targetKw = baseMemKw - targetImportKw;
+  const errorNowKw = telemetry.utilityPowerKw - targetImportKw;
+  if (Math.abs(errorNowKw) < deadbandKw) {
+    const holdKw = finiteNumber(ctx.state?.previousPcsActivePowerKw);
+    if (holdKw != null) {
+      targetKw = holdKw;
+      reasons.push("scheduled-command-self-consumption-deadband-hold");
+    }
+  }
+
+  reasons.push("scheduled-command-self-consumption");
+  return clamp(
+    targetKw,
+    -scheduledMaxChargeKw(ctx, payload),
+    scheduledMaxDischargeKw(ctx, payload)
+  );
 }
 
 function resolveScheduledMeterRuleKw(
@@ -1383,6 +1654,167 @@ function readRuleKw(
     return undefined;
   }
   return numeric;
+}
+
+function normalizeScheduledCommandPayload(
+  value: unknown
+): Record<string, unknown> | undefined {
+  if (!value) return undefined;
+  if (typeof value === "string") {
+    try {
+      return normalizeScheduledCommandPayload(JSON.parse(value));
+    } catch {
+      return undefined;
+    }
+  }
+  if (typeof value === "object" && !Array.isArray(value)) {
+    return value as Record<string, unknown>;
+  }
+  return undefined;
+}
+
+function readPayloadObject(
+  source: Record<string, unknown>,
+  key: string
+): Record<string, unknown> | undefined {
+  const value = source[key];
+  if (value && typeof value === "object" && !Array.isArray(value)) {
+    return value as Record<string, unknown>;
+  }
+  return undefined;
+}
+
+function readPayloadNumber(
+  source: Record<string, unknown> | undefined,
+  ...keys: string[]
+): number | undefined {
+  if (!source) return undefined;
+  for (const key of keys) {
+    const raw = source[key];
+    if (raw == null) continue;
+    const value =
+      raw && typeof raw === "object" && "value" in raw
+        ? (raw as { value?: unknown }).value
+        : raw;
+    const numeric =
+      typeof value === "string"
+        ? Number(value.replace(/[^0-9+-.]/g, "").trim())
+        : Number(value);
+    if (Number.isFinite(numeric)) return numeric;
+  }
+  return undefined;
+}
+
+function readPayloadBoolean(
+  source: Record<string, unknown> | undefined,
+  ...keys: string[]
+): boolean | undefined {
+  if (!source) return undefined;
+  for (const key of keys) {
+    const raw = source[key];
+    if (raw == null) continue;
+    const value =
+      raw && typeof raw === "object" && "value" in raw
+        ? (raw as { value?: unknown }).value
+        : raw;
+    if (typeof value === "boolean") return value;
+    if (typeof value === "number") return value !== 0;
+    if (typeof value === "string") {
+      const normalized = value.trim().toLowerCase();
+      if (["true", "1", "yes", "on"].includes(normalized)) return true;
+      if (["false", "0", "no", "off"].includes(normalized)) return false;
+    }
+  }
+  return undefined;
+}
+
+function normalizeScheduledCommandName(value: string): string {
+  return value.toLowerCase().replace(/[^a-z0-9]/g, "");
+}
+
+function wattsToKw(value: number | undefined): number | undefined {
+  return value == null ? undefined : value / 1000;
+}
+
+function readPayloadPercentAsFraction(
+  source: Record<string, unknown>,
+  ...keys: string[]
+): number | undefined {
+  const value = readPayloadNumber(source, ...keys);
+  if (value == null) return undefined;
+  // EdgeScheduler API payloads use 0-100 percent values. Keep accepting
+  // 0-1 values defensively so older local test schedules do not become unsafe.
+  const fraction = Math.abs(value) > 1 ? value / 100 : value;
+  return clamp(fraction, 0, 1);
+}
+
+function scheduledMinSoc(
+  ctx: CoreControlContext,
+  payload: Record<string, unknown>
+): number {
+  return (
+    readPayloadPercentAsFraction(payload, "minSocPct", "minSocPercent", "minSoc") ??
+    ctx.config.battery.minSoc
+  );
+}
+
+function scheduledMaxSoc(
+  ctx: CoreControlContext,
+  payload: Record<string, unknown>
+): number {
+  return (
+    readPayloadPercentAsFraction(payload, "maxSocPct", "maxSocPercent", "maxSoc") ??
+    ctx.config.battery.maxSoc
+  );
+}
+
+function scheduledMaxChargeKw(
+  ctx: CoreControlContext,
+  payload: Record<string, unknown>
+): number {
+  return (
+    ctx.design.limits.pcs.maxChargeKw *
+    (readPayloadPercentAsFraction(
+      payload,
+      "maxChargePowerPct",
+      "maxChargePowerPercent",
+      "maxChargePower"
+    ) ?? 1)
+  );
+}
+
+function scheduledMaxDischargeKw(
+  ctx: CoreControlContext,
+  payload: Record<string, unknown>
+): number {
+  return (
+    ctx.design.limits.pcs.maxDischargeKw *
+    (readPayloadPercentAsFraction(
+      payload,
+      "maxDischargePowerPct",
+      "maxDischargePowerPercent",
+      "maxDischargePower"
+    ) ?? 1)
+  );
+}
+
+function scheduledAllowCharge(
+  ctx: CoreControlContext,
+  telemetry: TelemetrySnapshot,
+  payload: Record<string, unknown>
+): boolean {
+  return telemetry.allowCharge !== false && telemetry.soc < scheduledMaxSoc(ctx, payload);
+}
+
+function scheduledAllowDischarge(
+  ctx: CoreControlContext,
+  telemetry: TelemetrySnapshot,
+  payload: Record<string, unknown>
+): boolean {
+  return (
+    telemetry.allowDischarge !== false &&
+    telemetry.soc > scheduledMinSoc(ctx, payload)
+  );
 }
 
 function readBooleanRule(

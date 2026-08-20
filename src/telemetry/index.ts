@@ -19,7 +19,11 @@ export {
   adaptTelemetryTemplateToReadProfile,
   resolveTelemetryTemplate,
 } from "./templateAdapter";
-export { buildConfiguredEgaugeTemplate } from "./egaugeConfigTemplate";
+export {
+  buildConfiguredEgaugeTemplate,
+  buildConfiguredEgaugeTemplates,
+} from "./egaugeConfigTemplate";
+export { buildSiteTelemetryEquipmentConfig } from "./siteEquipmentConfig";
 export {
   buildAmpaceBcu42kEquipmentConfig,
   buildAmpaceBcu42kTemplate,
@@ -36,6 +40,8 @@ export {
   buildSs40kFixedPayloads,
   buildSs40kLookup,
   DEFAULT_SS40K_MODEL_INDEX_MAP,
+  type Ss40kEnergyAccumulatorOptions,
+  type Ss40kEnergyAccumulatorState,
 } from "./ss40k";
 export {
   filterSs40kPayloadsForReporting,

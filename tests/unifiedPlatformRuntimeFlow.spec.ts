@@ -50,4 +50,29 @@ describe("unified platform runtime flow", () => {
       expect(body).not.toContain("global.get('telemetry')");
     }
   });
+
+  test("uses Nano PCS defaults for telemetry and writers", () => {
+    const telemetrySetup = functionBody("platform_setup_telemetry");
+    const writerSetup = functionBody("platform_setup_writers");
+
+    expect(telemetrySetup).toContain("192.168.1.7");
+    expect(telemetrySetup).toContain("NANO_Hybrid_PCS_ss40k");
+
+    expect(writerSetup).toContain("192.168.1.7");
+    expect(writerSetup).toContain("const isNano = /^NANO");
+    expect(writerSetup).toContain("NANO_Hybrid_PCS_ss40k");
+    expect(writerSetup).toContain("isNano ? ['PCS']");
+  });
+
+  test("uses the V1.6 EdgeScheduler handler on the unified /api/esr route", () => {
+    const body = functionBody("platform_sched_api_esr_handler");
+
+    expect(body).toContain("endpointKey === 'edgescheduler'");
+    expect(body).toContain("jobFromData");
+    expect(body).toContain("data.job");
+    expect(body).toContain("payloadJson");
+    expect(body).toContain("durationSec / 60");
+    expect(body).toContain("time: isCron ? undefined");
+    expect(body).toContain("jobListItem");
+  });
 });

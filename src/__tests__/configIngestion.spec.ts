@@ -977,6 +977,62 @@ describe("Cloud SiteConfig ingestion", () => {
     );
   });
 
+  test("validates site-configured meter register maps", () => {
+    const valid = makeBaseConfig();
+    valid.metering.meters = [
+      {
+        id: "Meter2",
+        meterType: "eGauge",
+        baseProfile: "eGauge_Mission_Energy_Meter2_ss40k",
+        ip: "192.168.1.65",
+        route: "Meter2",
+        registerMap: [
+          {
+            signal: "acCoupledPvKw",
+            tagID: "Meter2.Solar",
+            register: 9004,
+            function: "IRF",
+            scale: 0.001,
+          },
+        ],
+      },
+    ];
+
+    expect(validateSiteConfig(valid)).toEqual([]);
+
+    const invalid = makeBaseConfig();
+    invalid.metering.meters = [
+      {
+        id: "",
+        meterType: "eGauge",
+        ip: "",
+        port: 70000,
+        unitId: 300,
+        registerMap: [
+          {
+            signal: "custom",
+            tagID: "Meter.Bad",
+            register: -1,
+            function: "" as any,
+            scale: Number.NaN,
+          },
+        ],
+      },
+    ];
+
+    expect(validateSiteConfig(invalid)).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ path: "metering.meters.0.id" }),
+        expect.objectContaining({ path: "metering.meters.0.ip" }),
+        expect.objectContaining({ path: "metering.meters.0.port" }),
+        expect.objectContaining({ path: "metering.meters.0.unitId" }),
+        expect.objectContaining({ path: "metering.meters.0.registerMap.0.register" }),
+        expect.objectContaining({ path: "metering.meters.0.registerMap.0.function" }),
+        expect.objectContaining({ path: "metering.meters.0.registerMap.0.scale" }),
+      ])
+    );
+  });
+
   test("validates battery cell voltage policy ordering", () => {
     const invalid = makeBaseConfig();
     invalid.battery.cellVoltagePolicy = {

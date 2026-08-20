@@ -2,14 +2,18 @@ import type {
   MeteringConfig,
   MeteringRegisterMapping,
   MeteringRegisterSignalKey,
+  SiteMeterConfig,
 } from "../config";
+import type { Ss40kEquipmentConfigEntry } from "./ss40k";
 import type {
   TelemetryTemplateDocument,
   TelemetryTemplateEntry,
 } from "./templateAdapter";
+import { resolveTelemetryTemplate } from "./templateAdapter";
 
 const DEFAULT_TAG_IDS: Record<MeteringRegisterSignalKey, string> = {
   utilityPowerKw: "Utility_Total_Power",
+  acCoupledPvKw: "AC_Coupled_PV_Power",
   gridImportPowerKw: "Utility_Import_Power",
   gridExportPowerKw: "Utility_Export_Power",
   siteLoadKw: "Load_Active_Power",
@@ -24,6 +28,13 @@ const DEFAULT_TAG_IDS: Record<MeteringRegisterSignalKey, string> = {
   voltageL3L1: "MTR_V_GRID_L3L1",
   energyImportKwh: "Energy_Import",
   energyExportKwh: "Energy_Export",
+  gridImportEnergyKwh: "Utility_Import_Energy",
+  gridExportEnergyKwh: "Utility_Export_Energy",
+  gridNetEnergyKwh: "Utility_Energy",
+  loadEnergyKwh: "Load_Energy",
+  pvEnergyKwh: "PV_Energy",
+  acCoupledPvEnergyKwh: "AC_Coupled_PV_Energy",
+  generatorEnergyKwh: "Generator_Energy",
   custom: "Custom",
 };
 
@@ -32,6 +43,7 @@ const DEFAULT_SS40K: Partial<Record<MeteringRegisterSignalKey, string>> = {
   gridExportPowerKw: "pGridExpTot",
   siteLoadKw: "pLoad",
   pvKw: "pPvTotal",
+  acCoupledPvKw: "pAcCplTot",
   backupLoadKw: "pBkupTot",
   frequencyHz: "fGrid",
   voltageL1N: "vGridL1N",
@@ -40,6 +52,14 @@ const DEFAULT_SS40K: Partial<Record<MeteringRegisterSignalKey, string>> = {
   voltageL1L2: "vGridL1L2",
   voltageL2L3: "vGridL2L3",
   voltageL3L1: "vGridL3L1",
+  energyImportKwh: "eGridImpTot",
+  energyExportKwh: "eGridExpTot",
+  gridImportEnergyKwh: "eGridImpTot",
+  gridExportEnergyKwh: "eGridExpTot",
+  loadEnergyKwh: "eLoadTot",
+  pvEnergyKwh: "ePvTot",
+  acCoupledPvEnergyKwh: "eAcCplTot",
+  generatorEnergyKwh: "eGenTot",
 };
 
 const POWER_SIGNALS = new Set<MeteringRegisterSignalKey>([
@@ -48,20 +68,90 @@ const POWER_SIGNALS = new Set<MeteringRegisterSignalKey>([
   "gridExportPowerKw",
   "siteLoadKw",
   "pvKw",
+  "acCoupledPvKw",
   "backupLoadKw",
 ]);
+
+const ENERGY_SIGNALS = new Set<MeteringRegisterSignalKey>([
+  "energyImportKwh",
+  "energyExportKwh",
+  "gridImportEnergyKwh",
+  "gridExportEnergyKwh",
+  "gridNetEnergyKwh",
+  "loadEnergyKwh",
+  "pvEnergyKwh",
+  "acCoupledPvEnergyKwh",
+  "generatorEnergyKwh",
+]);
+
+export type ConfiguredEgaugeEquipmentConfig = Record<
+  string,
+  Ss40kEquipmentConfigEntry
+>;
 
 export function buildConfiguredEgaugeTemplate(
   metering: MeteringConfig,
   profileName = "configured_eGauge"
 ): TelemetryTemplateDocument | null {
-  const registerMap = Array.isArray(metering.registerMap)
-    ? metering.registerMap.filter(isUsableMapping)
-    : [];
+  return buildConfiguredEgaugeTemplateFromRegisterMap(
+    Array.isArray(metering.registerMap) ? metering.registerMap : [],
+    profileName
+  );
+}
 
+export function buildConfiguredEgaugeTemplates(
+  metering: MeteringConfig,
+  profilePrefix = "configured_eGauge"
+): ConfiguredEgaugeEquipmentConfig {
+  const meters = Array.isArray(metering.meters) ? metering.meters : [];
+  if (meters.length) {
+    const equipmentConfig: ConfiguredEgaugeEquipmentConfig = {};
+    for (const meter of meters) {
+      const equipmentId = sanitizeEquipmentId(meter.id);
+      const profileName = meter.modbusProfile || `${profilePrefix}_${equipmentId}`;
+      const template = buildConfiguredEgaugeTemplateFromRegisterMap(
+        meter.registerMap,
+        profileName,
+        meter
+      );
+      if (!template) continue;
+      equipmentConfig[equipmentId] = {
+        profileName,
+        route: meter.route || equipmentId,
+        template,
+      };
+    }
+    return equipmentConfig;
+  }
+
+  const template = buildConfiguredEgaugeTemplate(metering, profilePrefix);
+  if (!template) return {};
+  return {
+    Meter: {
+      profileName: profilePrefix,
+      route: "Meter",
+      template,
+    },
+  };
+}
+
+function buildConfiguredEgaugeTemplateFromRegisterMap(
+  rawRegisterMap: MeteringRegisterMapping[] | undefined,
+  profileName: string,
+  meter?: Partial<SiteMeterConfig>
+): TelemetryTemplateDocument | null {
+  const registerMap = Array.isArray(rawRegisterMap)
+    ? rawRegisterMap.filter(isUsableMapping)
+    : [];
   if (!registerMap.length) return null;
 
-  const telemetry = registerMap.map((mapping) => toTemplateEntry(mapping));
+  const baseTelemetry = meter?.baseProfile
+    ? loadBaseTelemetryEntries(meter.baseProfile)
+    : [];
+  const telemetry = mergeTelemetryEntries(
+    baseTelemetry,
+    registerMap.map((mapping) => toTemplateEntry(mapping))
+  );
   addDerivedPowerTags(telemetry, registerMap);
 
   return {
@@ -75,10 +165,29 @@ export function buildConfiguredEgaugeTemplate(
       defaultByteOrder: "BE",
       defaultWordOrder32: "ABCD",
       notes:
-        "Generated from siteConfig.metering.registerMap. Register addresses are site-specific eGauge Modbus addresses.",
+        meter?.id
+          ? `Generated from siteConfig.metering.meters.${meter.id}.registerMap. Register addresses are site-specific eGauge Modbus addresses.`
+          : "Generated from siteConfig.metering.registerMap. Register addresses are site-specific eGauge Modbus addresses.",
     },
     telemetry,
   };
+}
+
+function loadBaseTelemetryEntries(profileName: string): TelemetryTemplateEntry[] {
+  const base = resolveTelemetryTemplate(profileName);
+  return Array.isArray(base.telemetry)
+    ? base.telemetry.map((entry) => ({ ...entry }))
+    : [];
+}
+
+function mergeTelemetryEntries(
+  base: TelemetryTemplateEntry[],
+  overlay: TelemetryTemplateEntry[]
+): TelemetryTemplateEntry[] {
+  const byId = new Map<string, TelemetryTemplateEntry>();
+  for (const entry of base) byId.set(entry.id, entry);
+  for (const entry of overlay) byId.set(entry.id, entry);
+  return Array.from(byId.values());
 }
 
 function isUsableMapping(mapping: MeteringRegisterMapping | undefined): mapping is MeteringRegisterMapping {
@@ -113,7 +222,7 @@ function toTemplateEntry(mapping: MeteringRegisterMapping): TelemetryTemplateEnt
   if (ss40kName && mapping.signal !== "utilityPowerKw") {
     entry.ss40k = {
       name: ss40kName,
-      model: "40101",
+      model: ss40kModelForSignal(mapping.signal),
       exportMultiplier: POWER_SIGNALS.has(mapping.signal) ? 1000 : undefined,
     };
     entry.supportingTag = mapping.supportingTag ?? false;
@@ -154,6 +263,12 @@ function addDerivedPowerTags(
     const tagId = normalizeTagId(pv);
     addCalcIfMissing(telemetry, "PV_Total_Power", "pPvTotal", { pv: tagId }, "pv");
   }
+
+  const acCoupledPv = registerMap.find((mapping) => mapping.signal === "acCoupledPvKw");
+  if (acCoupledPv) {
+    const tagId = normalizeTagId(acCoupledPv);
+    addCalcIfMissing(telemetry, "AC_Coupled_PV_Power", "pAcCplTot", { pv: tagId }, "pv");
+  }
 }
 
 function addCalcIfMissing(
@@ -180,4 +295,13 @@ function normalizeTagId(mapping: MeteringRegisterMapping): string {
   const raw = mapping.tagID || DEFAULT_TAG_IDS[mapping.signal] || mapping.signal;
   const withoutEquipment = raw.includes(".") ? raw.split(".").slice(1).join(".") : raw;
   return withoutEquipment.replace(/[^A-Za-z0-9_]/g, "_");
+}
+
+function ss40kModelForSignal(signal: MeteringRegisterSignalKey): "40101" | "40102" {
+  return ENERGY_SIGNALS.has(signal) ? "40102" : "40101";
+}
+
+function sanitizeEquipmentId(id: string | undefined): string {
+  const text = String(id || "Meter").trim();
+  return text.replace(/[^A-Za-z0-9_]/g, "_") || "Meter";
 }
