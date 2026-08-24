@@ -306,10 +306,14 @@ export function buildSs40kFixedPayloads(
   applySiteSignalOverrides(groups, telemetry, signalMapping, version);
   applyEnergyAccumulatorOverrides(groups, telemetry, version, options.energyAccumulator);
   applyDailyEnergyOverrides(groups, version, options.energyAccumulator);
-  applyPerEquipmentIdentity(groups, lookup, telemetry);
+  const identityTelemetry = rawTelemetry || telemetry;
+  applyPerEquipmentIdentity(groups, lookup, identityTelemetry);
+  applyMiniBatteryFaultIdentity(groups, lookup, identityTelemetry);
   applyFixedSerialNumberToSystemModels(
     groups,
-    fixedSerialNumber || findSystemSerialNumber(lookup, telemetry)
+    fixedSerialNumber ||
+      findSystemSerialNumber(lookup, identityTelemetry) ||
+      findSystemSerialNumber(lookup, telemetry)
   );
 
   return Object.values(groups)
@@ -429,6 +433,56 @@ function applyPerEquipmentIdentity(
     if (identity.SN) group.fixed.SN = identity.SN;
     if (identity.Md) group.fixed.Md = identity.Md;
   }
+}
+
+function applyMiniBatteryFaultIdentity(
+  groups: Record<string, Ss40kPayloadGroup>,
+  lookup: Record<string, Ss40kLookupEntry>,
+  telemetry: Ss40kTelemetryStore
+) {
+  const identityByEquipment = findIdentityByEquipment(lookup, telemetry);
+  const entries = Object.entries(identityByEquipment)
+    .filter(([, identity]) => !!identity.SN)
+    .sort(([a], [b]) => a.localeCompare(b));
+
+  if (!entries.length) return;
+
+  for (const [groupKey, group] of Object.entries({ ...groups })) {
+    if (group.model !== "52103" || group.fixed.SN) continue;
+
+    const candidates = batteryFaultIdentityCandidates(group.equipment, entries);
+    if (!candidates.length) continue;
+
+    delete groups[groupKey];
+    for (const [equipment, identity] of candidates) {
+      groups[`${equipment}::${group.model}`] = {
+        ...group,
+        equipment,
+        fixed: {
+          ...group.fixed,
+          SN: identity.SN,
+          ...(identity.Md !== undefined ? { Md: identity.Md } : {}),
+        },
+      };
+    }
+  }
+}
+
+function batteryFaultIdentityCandidates(
+  parentEquipment: string,
+  entries: Array<[string, { SN?: string; Md?: unknown }]>
+): Array<[string, { SN?: string; Md?: unknown }]> {
+  const parent = entries.filter(([equipment]) => equipment === parentEquipment);
+  if (parent.length) return parent;
+
+  const parentPrefix =
+    parentEquipment === "AMPACE"
+      ? "AMPACE_BCU_"
+      : `${parentEquipment.replace(/_Battery$/i, "")}_BCU_`;
+  const prefixed = entries.filter(([equipment]) => equipment.startsWith(parentPrefix));
+  if (prefixed.length) return prefixed;
+
+  return entries.filter(([equipment]) => /(?:^|_)(?:BCU|SBMU)_\d+$/i.test(equipment));
 }
 
 function findIdentityByEquipment(

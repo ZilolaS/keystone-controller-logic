@@ -2212,4 +2212,84 @@ describe("SS40K export helpers", () => {
       vGridL1N: 277.1,
     });
   });
+
+  test("system model SN can come from startup identity outside freshness window", () => {
+    const { lookup } = buildSs40kLookup({
+      PCS: "Sinexcel_Mini_PCS_ss40k",
+    });
+    const nowMs = Date.parse("2026-08-24T18:30:00.000Z");
+
+    const messages = buildSs40kFixedPayloads({
+      lookup,
+      merge40kByModelIndex: true,
+      maxSampleAgeMs: 600000,
+      nowMs,
+      telemetry: {
+        PCS: [
+          {
+            tagID: "PCS.SerialNumber",
+            value: "SH2C662355112411180050",
+            timestamp: "2026-08-22T02:23:42.019Z",
+          },
+          {
+            tagID: "PCS.GridFrequency",
+            value: 60.01,
+            timestamp: "2026-08-24T18:29:59.000Z",
+          },
+        ],
+      },
+      topic: "fort/v1/things/test/telem",
+    });
+
+    const model40101 = messages.find((message) => message.ss40k.model === "40101");
+    expect(model40101?.payload["0"].fixed).toMatchObject({
+      ID: 40101,
+      fGrid: 60.01,
+      SN: "SH2C662355112411180050",
+    });
+    expect(messages.some((message) => message.ss40k.model === "40100")).toBe(false);
+  });
+
+  test("Mini parent battery fault model is stamped once per BCU serial", () => {
+    const { lookup: parentLookup } = buildSs40kLookup({
+      AMPACE: "AMPACE_Mini_ss40k",
+    });
+    const { lookup: bcuLookup } = buildSs40kLookup(
+      buildAmpaceBcu42kEquipmentConfig({ count: 2, route: "AMPACE" })
+    );
+
+    const messages = buildSs40kFixedPayloads({
+      lookup: { ...parentLookup, ...bcuLookup },
+      telemetry: {
+        AMPACE: [
+          { tagID: "AMPACE.batteryProtectionWarningWord", value: 1 },
+          { tagID: "AMPACE.batteryHardwareErrorWord", value: 8 },
+        ],
+        AMPACE_BCU_1: [
+          { tagID: "AMPACE_BCU_1.SerialNumber", value: "2350317571" },
+        ],
+        AMPACE_BCU_2: [
+          { tagID: "AMPACE_BCU_2.SerialNumber", value: "2350321667" },
+        ],
+      },
+      topic: "fort/v1/things/test/telem",
+    });
+
+    const faultMessages = messages.filter((message) => message.ss40k.model === "52103");
+    expect(faultMessages).toHaveLength(2);
+    expect(faultMessages.map((message) => message.ss40k.equipment).sort()).toEqual([
+      "AMPACE_BCU_1",
+      "AMPACE_BCU_2",
+    ]);
+    expect(
+      faultMessages.map((message) => message.payload["0"].fixed.SN).sort()
+    ).toEqual(["2350317571", "2350321667"]);
+    for (const message of faultMessages) {
+      expect(message.payload["0"].fixed).toMatchObject({
+        ID: 52103,
+        batteryProtectionWarningWord: 1,
+        batteryHardwareErrorWord: 8,
+      });
+    }
+  });
 });
