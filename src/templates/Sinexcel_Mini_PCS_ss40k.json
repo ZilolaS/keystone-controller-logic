@@ -26,11 +26,31 @@
     },
     {
       "id": "SystemStatusMap",
+      "description": "Sinexcel PCS system status bitfield. Bit 4 = grid-tied, bit 5 = off-grid.",
       "pollClass": "normal",
       "function": "HRUS",
       "address": 32,
+      "bitfieldStatus": {
+        "0": "Fault",
+        "2": "Derating",
+        "3": "Booting",
+        "4": "Grid-tied",
+        "5": "Off-grid",
+        "9": "Failed"
+      }
+    },
+    {
+      "id": "InverterOperationStatus",
+      "description": "Calculated SS40K run/stop status from Sinexcel PCS system status. Reports running when grid-tied or off-grid.",
+      "pollClass": "normal",
+      "calc": {
+        "inputs": {
+          "status": "SystemStatusMap"
+        },
+        "expr": "(bit(status, 4) || bit(status, 5)) ? 1 : 0"
+      },
       "ss40k": {
-        "name": "invMode",
+        "name": "invOpStatus",
         "model": "40101"
       }
     },

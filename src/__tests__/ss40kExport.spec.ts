@@ -1127,12 +1127,18 @@ describe("SS40K export helpers", () => {
       name: "SN",
       model: "40101",
     });
+    expect(lookup["PCS.InverterOperationStatus"]).toMatchObject({
+      name: "invOpStatus",
+      model: "40101",
+    });
+    expect(lookup["PCS.SystemStatusMap"]).toBeUndefined();
 
     const messages = buildSs40kFixedPayloads({
       lookup,
       telemetry: {
         PCS: [
           { tagID: "PCS.SerialNumber", value: "SH0P600458852403070035" },
+          { tagID: "PCS.InverterOperationStatus", value: 1 },
           { tagID: "PCS.ACBusTotalActivePower", value: 44.4 },
           { tagID: "PCS.pcsFault", value: 8 },
           { tagID: "PCS.SinexcelFaultWord106", value: 1 },
@@ -1153,6 +1159,12 @@ describe("SS40K export helpers", () => {
       "40103",
       "50103",
     ]));
+    const model40101 = modelsWithPcsSn.find(
+      (message) => message.ss40k.equipment === "PCS" && message.ss40k.model === "40101"
+    );
+    expect(model40101?.payload["0"].fixed).toMatchObject({
+      invOpStatus: 1,
+    });
     for (const message of modelsWithPcsSn) {
       const modelPayload = Object.values(message.payload)[0];
       expect(modelPayload.fixed.SN).toBe("SH0P600458852403070035");

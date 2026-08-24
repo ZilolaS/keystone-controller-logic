@@ -1285,6 +1285,24 @@ describe("Telemetry baseline lock", () => {
           pollClass: "startup",
         }),
         expect.objectContaining({
+          name: "SystemStatusMap",
+          function: "HRUS",
+          address: 32,
+          bitfieldStatus: expect.objectContaining({
+            "4": "Grid-tied",
+            "5": "Off-grid",
+          }),
+        }),
+        expect.objectContaining({
+          name: "InverterOperationStatus",
+          calc: {
+            inputs: {
+              status: "SystemStatusMap",
+            },
+            expr: "(bit(status, 4) || bit(status, 5)) ? 1 : 0",
+          },
+        }),
+        expect.objectContaining({
           name: "UnderVoltRegion1Boundary",
           function: "HRUS",
           address: 1345,
