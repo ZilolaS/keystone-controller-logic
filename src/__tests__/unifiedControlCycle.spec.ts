@@ -1877,7 +1877,7 @@ describe("unified control cycle", () => {
     expect(result.pipeline.blocked).toBe(true);
   });
 
-  test("Mini self-consumption correction adjusts DC PV passthrough from battery power feedback", () => {
+  test("Mini neutral PV hunt adjusts DC PV passthrough from battery power feedback", () => {
     const state = {};
     const result = runUnifiedControlCycle(makeMiniConfig(), {
       state,
@@ -1900,13 +1900,16 @@ describe("unified control cycle", () => {
     });
 
     expect(result.command.reasons).toEqual(
-      expect.arrayContaining(["mini-self-consumption-correction"])
+      expect.arrayContaining([
+        "mini-neutral-pv-hunt-reduce-discharge",
+        "mini-neutral-pv-hunt",
+      ])
     );
     expect(result.command.batteryActivePowerKw).toBe(0);
-    expect(result.command.pcsActivePowerKw).toBe(18.6);
+    expect(result.command.pcsActivePowerKw).toBe(16.8);
     expect(result.writerEnvelopes[0].payload[0]).toEqual({
       tagID: "ActivePowerSetpoint",
-      value: -18.6,
+      value: -16.8,
     });
   });
 

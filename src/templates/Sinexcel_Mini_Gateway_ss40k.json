@@ -1,0 +1,343 @@
+{
+  "version": "2",
+  "device": {
+    "vendor": "Sinexcel",
+    "model": "Mini Gateway",
+    "protocol": "modbus-tcp",
+    "defaultByteOrder": "BE",
+    "defaultWordOrder32": "ABCD",
+    "name": "udt_Sinexcel_Gateway_A_V2",
+    "sourceFormat": "legacy-gateway"
+  },
+  "telemetry": [
+    {
+      "id": "GatewayPcs1SummaryWord",
+      "description": "Gateway summary status for PCS 1",
+      "pollClass": "normal",
+      "function": "HRUS",
+      "address": 5980,
+      "alarm": true,
+      "supportingTag": true,
+      "bitfieldStatus": {
+        "0": "PCS 1 online",
+        "1": "PCS 1 total fault",
+        "2": "PCS 1 total alarm"
+      },
+      "ss40k": {
+        "name": "gatewayPcs1SummaryWord",
+        "model": "50103"
+      }
+    },
+    {
+      "id": "GatewayPcs2SummaryWord",
+      "description": "Gateway summary status for PCS 2",
+      "pollClass": "normal",
+      "function": "HRUS",
+      "address": 5981,
+      "alarm": true,
+      "supportingTag": true,
+      "bitfieldStatus": {
+        "0": "PCS 2 online",
+        "1": "PCS 2 total fault",
+        "2": "PCS 2 total alarm"
+      },
+      "ss40k": {
+        "name": "gatewayPcs2SummaryWord",
+        "model": "50103"
+      }
+    },
+    {
+      "id": "GatewayAirConditioner1SummaryWord",
+      "description": "Gateway summary status for air conditioner 1",
+      "pollClass": "normal",
+      "function": "HRUS",
+      "address": 5985,
+      "alarm": true,
+      "supportingTag": true,
+      "bitfieldStatus": {
+        "0": "Air conditioner 1 online",
+        "1": "Air conditioner 1 total fault",
+        "2": "Air conditioner 1 total alarm"
+      },
+      "ss40k": {
+        "name": "gatewayAirConditioner1SummaryWord",
+        "model": "50103"
+      }
+    },
+    {
+      "id": "GatewayDryContactSummaryWord",
+      "description": "Gateway summary status for dry-contact device",
+      "pollClass": "normal",
+      "function": "HRUS",
+      "address": 5990,
+      "alarm": true,
+      "supportingTag": true,
+      "bitfieldStatus": {
+        "0": "Dry-contact device online",
+        "1": "Dry-contact device total fault",
+        "2": "Dry-contact device total alarm"
+      },
+      "ss40k": {
+        "name": "gatewayDryContactSummaryWord",
+        "model": "50103"
+      }
+    },
+    {
+      "id": "GatewayBms1SummaryWord",
+      "description": "Gateway summary status for BMS 1",
+      "pollClass": "normal",
+      "function": "HRUS",
+      "address": 5991,
+      "alarm": true,
+      "supportingTag": true,
+      "bitfieldStatus": {
+        "0": "BMS 1 online",
+        "1": "BMS 1 total fault",
+        "2": "BMS 1 total alarm"
+      },
+      "ss40k": {
+        "name": "gatewayBms1SummaryWord",
+        "model": "50103"
+      }
+    },
+    {
+      "id": "GatewayBms2SummaryWord",
+      "description": "Gateway summary status for BMS 2",
+      "pollClass": "normal",
+      "function": "HRUS",
+      "address": 5992,
+      "alarm": true,
+      "supportingTag": true,
+      "bitfieldStatus": {
+        "0": "BMS 2 online",
+        "1": "BMS 2 total fault",
+        "2": "BMS 2 total alarm"
+      },
+      "ss40k": {
+        "name": "gatewayBms2SummaryWord",
+        "model": "50103"
+      }
+    },
+    {
+      "id": "GatewaySummaryWord",
+      "description": "Gateway cabinet summary fault and alarm status",
+      "pollClass": "normal",
+      "function": "HRUS",
+      "address": 5999,
+      "alarm": true,
+      "supportingTag": true,
+      "bitfieldStatus": {
+        "0": "Summary fault status",
+        "1": "Summary alarm status"
+      },
+      "ss40k": {
+        "name": "gatewaySummaryWord",
+        "model": "50103"
+      }
+    },
+    {
+      "id": "GatewayAirConditionerStatusWord",
+      "description": "Air conditioner status summary",
+      "pollClass": "normal",
+      "function": "HRUS",
+      "address": 50000,
+      "alarm": true,
+      "supportingTag": true,
+      "bitfieldStatus": {
+        "0": "Power on",
+        "1": "Air conditioner total fault",
+        "2": "Air conditioner total alarm"
+      },
+      "ss40k": {
+        "name": "gatewayAirConditionerStatusWord",
+        "model": "50103"
+      }
+    },
+    {
+      "id": "GatewayIoStatusWord",
+      "description": "Cabinet IO device status",
+      "pollClass": "normal",
+      "function": "HRUS",
+      "address": 64000,
+      "supportingTag": true,
+      "bitfieldStatus": {
+        "0": "IO device online"
+      },
+      "ss40k": {
+        "name": "gatewayIoStatusWord",
+        "model": "50103"
+      }
+    },
+    {
+      "id": "CabinetSingleFireAlarm",
+      "description": "Cabinet single fire alarm",
+      "pollClass": "normal",
+      "function": "HRUS",
+      "address": 64002,
+      "alarm": true,
+      "supportingTag": true,
+      "ss40k": {
+        "name": "cabinetSingleFireAlarmWord",
+        "model": "50103"
+      }
+    },
+    {
+      "id": "CabinetCompositeFireAlarm",
+      "description": "Cabinet composite fire alarm",
+      "pollClass": "normal",
+      "function": "HRUS",
+      "address": 64003,
+      "alarm": true,
+      "supportingTag": true,
+      "ss40k": {
+        "name": "cabinetCompositeFireAlarmWord",
+        "model": "50103"
+      }
+    },
+    {
+      "id": "CabinetFireControlFault",
+      "description": "Cabinet fire control fault",
+      "pollClass": "normal",
+      "function": "HRUS",
+      "address": 64004,
+      "alarm": true,
+      "supportingTag": true,
+      "ss40k": {
+        "name": "cabinetFireControlFaultWord",
+        "model": "50103"
+      }
+    },
+    {
+      "id": "CabinetSmokeOrGasAlarm",
+      "description": "Cabinet smoke or excess gas alarm",
+      "pollClass": "normal",
+      "function": "HRUS",
+      "address": 64005,
+      "alarm": true,
+      "supportingTag": true,
+      "ss40k": {
+        "name": "cabinetSmokeOrGasAlarmWord",
+        "model": "50103"
+      }
+    },
+    {
+      "id": "CabinetEpoFault",
+      "description": "Cabinet EPO fault",
+      "pollClass": "normal",
+      "function": "HRUS",
+      "address": 64006,
+      "alarm": true,
+      "supportingTag": true,
+      "ss40k": {
+        "name": "cabinetEpoFaultWord",
+        "model": "50103"
+      }
+    },
+    {
+      "id": "CabinetDoorAlarm",
+      "description": "Cabinet door alarm",
+      "pollClass": "normal",
+      "function": "HRUS",
+      "address": 64007,
+      "alarm": true,
+      "supportingTag": true,
+      "ss40k": {
+        "name": "cabinetDoorAlarmWord",
+        "model": "50103"
+      }
+    },
+    {
+      "id": "CabinetTransformerOverTempFault",
+      "description": "Cabinet transformer overtemperature fault",
+      "pollClass": "normal",
+      "function": "HRUS",
+      "address": 64008,
+      "alarm": true,
+      "supportingTag": true,
+      "ss40k": {
+        "name": "cabinetTransformerOverTempFaultWord",
+        "model": "50103"
+      }
+    },
+    {
+      "id": "cabinetGatewayFaultWord",
+      "description": "Calculated cloud-safe SS50K cabinet gateway fault word",
+      "pollClass": "normal",
+      "calc": {
+        "inputs": {
+          "summary": "GatewaySummaryWord",
+          "pcs1": "GatewayPcs1SummaryWord",
+          "pcs2": "GatewayPcs2SummaryWord",
+          "air1": "GatewayAirConditioner1SummaryWord",
+          "dry": "GatewayDryContactSummaryWord",
+          "bms1": "GatewayBms1SummaryWord",
+          "bms2": "GatewayBms2SummaryWord",
+          "airStatus": "GatewayAirConditionerStatusWord",
+          "singleFire": "CabinetSingleFireAlarm",
+          "compositeFire": "CabinetCompositeFireAlarm",
+          "smokeGas": "CabinetSmokeOrGasAlarm",
+          "epo": "CabinetEpoFault",
+          "transformerTemp": "CabinetTransformerOverTempFault"
+        },
+        "expr": "((bit(summary, 0)) << 0) | ((bit(pcs1, 1)) << 1) | ((bit(pcs2, 1)) << 2) | ((bit(air1, 1)) << 3) | ((bit(dry, 1)) << 4) | ((bit(bms1, 1)) << 5) | ((bit(bms2, 1)) << 6) | ((bit(airStatus, 1)) << 7) | (((singleFire ? 1 : 0)) << 8) | (((compositeFire ? 1 : 0)) << 9) | (((smokeGas ? 1 : 0)) << 10) | (((epo ? 1 : 0)) << 11) | (((transformerTemp ? 1 : 0)) << 12)"
+      },
+      "alarm": true,
+      "bitfieldStatus": {
+        "0": "Cabinet summary fault",
+        "1": "PCS 1 total fault reported by cabinet gateway",
+        "2": "PCS 2 total fault reported by cabinet gateway",
+        "3": "Air conditioner 1 total fault reported by cabinet gateway",
+        "4": "Cabinet dry-contact total fault",
+        "5": "BMS 1 total fault reported by cabinet gateway",
+        "6": "BMS 2 total fault reported by cabinet gateway",
+        "7": "Air conditioner total fault",
+        "8": "Cabinet single fire alarm",
+        "9": "Cabinet composite fire alarm",
+        "10": "Cabinet smoke or excess gas alarm",
+        "11": "Cabinet EPO",
+        "12": "Cabinet transformer overtemperature"
+      },
+      "ss40k": {
+        "name": "cabinetGatewayFaultWord",
+        "model": "50103"
+      }
+    },
+    {
+      "id": "cabinetGatewayWarningWord",
+      "description": "Calculated cloud-safe SS50K cabinet gateway warning word",
+      "pollClass": "normal",
+      "calc": {
+        "inputs": {
+          "summary": "GatewaySummaryWord",
+          "pcs1": "GatewayPcs1SummaryWord",
+          "pcs2": "GatewayPcs2SummaryWord",
+          "air1": "GatewayAirConditioner1SummaryWord",
+          "dry": "GatewayDryContactSummaryWord",
+          "bms1": "GatewayBms1SummaryWord",
+          "bms2": "GatewayBms2SummaryWord",
+          "airStatus": "GatewayAirConditionerStatusWord",
+          "fireControl": "CabinetFireControlFault",
+          "door": "CabinetDoorAlarm"
+        },
+        "expr": "((bit(summary, 1)) << 0) | ((bit(pcs1, 2)) << 1) | ((bit(pcs2, 2)) << 2) | ((bit(air1, 2)) << 3) | ((bit(dry, 2)) << 4) | ((bit(bms1, 2)) << 5) | ((bit(bms2, 2)) << 6) | ((bit(airStatus, 2)) << 7) | (((fireControl ? 1 : 0)) << 8) | (((door ? 1 : 0)) << 9)"
+      },
+      "alarm": true,
+      "bitfieldStatus": {
+        "0": "Cabinet summary alarm",
+        "1": "PCS 1 total alarm reported by cabinet gateway",
+        "2": "PCS 2 total alarm reported by cabinet gateway",
+        "3": "Air conditioner 1 total alarm reported by cabinet gateway",
+        "4": "Cabinet dry-contact total alarm",
+        "5": "BMS 1 total alarm reported by cabinet gateway",
+        "6": "BMS 2 total alarm reported by cabinet gateway",
+        "7": "Air conditioner total alarm",
+        "8": "Cabinet fire control fault",
+        "9": "Cabinet door alarm"
+      },
+      "ss40k": {
+        "name": "cabinetGatewayWarningWord",
+        "model": "50103"
+      }
+    }
+  ]
+}

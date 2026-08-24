@@ -73,7 +73,7 @@ describe("SS40K reporting strategy", () => {
     const first = filterSs40kPayloadsForReporting({
       messages: [
         message("50103", { pcsFaultWord106: 0 }),
-        message("52103", { batteryProtectionAlarmWord: 0 }),
+        message("52103", { batteryProtectionWarningWord: 0 }),
       ],
       state,
       nowMs: 0,
@@ -88,7 +88,7 @@ describe("SS40K reporting strategy", () => {
     const unchanged = filterSs40kPayloadsForReporting({
       messages: [
         message("50103", { pcsFaultWord106: 0 }),
-        message("52103", { batteryProtectionAlarmWord: 0 }),
+        message("52103", { batteryProtectionWarningWord: 0 }),
       ],
       state,
       nowMs: 300_000,
@@ -98,7 +98,7 @@ describe("SS40K reporting strategy", () => {
     const changed = filterSs40kPayloadsForReporting({
       messages: [
         message("50103", { pcsFaultWord106: 1 }),
-        message("52103", { batteryProtectionAlarmWord: 2 }),
+        message("52103", { batteryProtectionWarningWord: 2 }),
       ],
       state,
       nowMs: 305_000,

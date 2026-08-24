@@ -197,6 +197,7 @@ export interface CoreControlState {
     }
   >;
   miniSelfConsumptionCorrectionKw?: number;
+  miniNeutralPcsSetpointKw?: number;
 }
 
 export type ControlPipelineStageId =
@@ -1200,25 +1201,21 @@ function resolveScheduledCommandPayloadKw(
     .filter((value) => value !== undefined && value !== null)
     .map((value) => String(value))
     .join(".");
-  const command = normalizeScheduledCommandName(commandText);
+  const command = String(commandText);
 
-  if (command === "discharge" || command.endsWith("discharge")) {
+  if (command === "discharge") {
     return resolveScheduledFixedCommandKw(ctx, telemetry, source, "discharge", reasons);
   }
 
-  if (command === "charge" || command.endsWith("charge")) {
+  if (command === "charge") {
     return resolveScheduledFixedCommandKw(ctx, telemetry, source, "charge", reasons);
   }
 
-  if (command.includes("peakshaving")) {
+  if (command === "peakShaving") {
     return resolveScheduledPeakShavingPayloadKw(ctx, telemetry, source, reasons);
   }
 
-  if (
-    command.includes("maximizepvselfconsumption") ||
-    command.includes("pvselfconsumption") ||
-    command.includes("selfconsumption")
-  ) {
+  if (command === "maximizePvSelfConsumption") {
     return resolveScheduledSelfConsumptionPayloadKw(ctx, telemetry, source, reasons);
   }
 
@@ -1233,18 +1230,7 @@ function resolveScheduledFixedCommandKw(
   direction: "charge" | "discharge",
   reasons: string[]
 ): number | undefined {
-  const activePowerKw =
-    readPayloadNumber(payload, "activePowerKw", "activePowerKW", "powerKw", "powerKW") ??
-    wattsToKw(
-      readPayloadNumber(
-        payload,
-        "activePowerW",
-        "activePower",
-        "powerW",
-        "pW",
-        "realPowerW"
-      )
-    );
+  const activePowerKw = wattsToKw(readPayloadNumber(payload, "activePowerW"));
   if (activePowerKw == null) {
     reasons.push(`scheduled-command-${direction}-missing-power`);
     return undefined;
@@ -1287,28 +1273,13 @@ function resolveScheduledPeakShavingPayloadKw(
     return undefined;
   }
 
-  const dischargeThresholdKw = readPayloadNumber(
-    payload,
-    "dischargeThresholdKw",
-    "dischargeThresholdKW",
-    "dischargeThreshold",
-    "DischargeThresholdKw",
-    "DischargeThreshold"
-  );
-  const chargeThresholdKw = readPayloadNumber(
-    payload,
-    "chargeThresholdKw",
-    "chargeThresholdKW",
-    "chargeThreshold",
-    "ChargeThresholdKw",
-    "ChargeThreshold"
-  );
-  const deadbandKw =
-    readPayloadNumber(payload, "deadbandKw", "deadbandKW", "deadband") ?? 0.5;
+  const dischargeThresholdKw = readPayloadNumber(payload, "dischargeThresholdKw");
+  const chargeThresholdKw = readPayloadNumber(payload, "chargeThresholdKw");
+  const deadbandKw = readPayloadNumber(payload, "deadbandKw") ?? 0.5;
   const bessPowerKw = resolveMeasuredBatteryActivePowerKw(ctx, telemetry);
   const baselineUtilityKw = utilityPowerKw + bessPowerKw;
   const holdAtThreshold =
-    readPayloadBoolean(payload, "holdAtThreshold", "hold_at_threshold") ?? true;
+    readPayloadBoolean(payload, "holdAtThreshold") ?? true;
 
   if (
     dischargeThresholdKw != null &&
@@ -1389,15 +1360,8 @@ function resolveScheduledSelfConsumptionPayloadKw(
     return undefined;
   }
 
-  const targetImportKw =
-    readPayloadNumber(
-      payload,
-      "targetImportKw",
-      "targetImportKW",
-      "targetImport"
-    ) ?? 0.5;
-  const deadbandKw =
-    readPayloadNumber(payload, "deadbandKw", "deadbandKW", "deadband") ?? 0.8;
+  const targetImportKw = readPayloadNumber(payload, "targetImportKw") ?? 0.5;
+  const deadbandKw = readPayloadNumber(payload, "deadbandKw") ?? 0.8;
   const baseAlpha = readPayloadNumber(payload, "baseAlpha", "base_alpha") ?? 0.15;
   const baseStickEpsKw =
     readPayloadNumber(payload, "baseStickEpsKw", "base_stick_eps_kw") ?? 1;
@@ -1728,10 +1692,6 @@ function readPayloadBoolean(
   return undefined;
 }
 
-function normalizeScheduledCommandName(value: string): string {
-  return value.toLowerCase().replace(/[^a-z0-9]/g, "");
-}
-
 function wattsToKw(value: number | undefined): number | undefined {
   return value == null ? undefined : value / 1000;
 }
@@ -1753,7 +1713,7 @@ function scheduledMinSoc(
   payload: Record<string, unknown>
 ): number {
   return (
-    readPayloadPercentAsFraction(payload, "minSocPct", "minSocPercent", "minSoc") ??
+    readPayloadPercentAsFraction(payload, "minSocPct") ??
     ctx.config.battery.minSoc
   );
 }
@@ -1763,7 +1723,7 @@ function scheduledMaxSoc(
   payload: Record<string, unknown>
 ): number {
   return (
-    readPayloadPercentAsFraction(payload, "maxSocPct", "maxSocPercent", "maxSoc") ??
+    readPayloadPercentAsFraction(payload, "maxSocPct") ??
     ctx.config.battery.maxSoc
   );
 }
@@ -1774,12 +1734,7 @@ function scheduledMaxChargeKw(
 ): number {
   return (
     ctx.design.limits.pcs.maxChargeKw *
-    (readPayloadPercentAsFraction(
-      payload,
-      "maxChargePowerPct",
-      "maxChargePowerPercent",
-      "maxChargePower"
-    ) ?? 1)
+    (readPayloadPercentAsFraction(payload, "maxChargePowerPct") ?? 1)
   );
 }
 
@@ -1789,12 +1744,7 @@ function scheduledMaxDischargeKw(
 ): number {
   return (
     ctx.design.limits.pcs.maxDischargeKw *
-    (readPayloadPercentAsFraction(
-      payload,
-      "maxDischargePowerPct",
-      "maxDischargePowerPercent",
-      "maxDischargePower"
-    ) ?? 1)
+    (readPayloadPercentAsFraction(payload, "maxDischargePowerPct") ?? 1)
   );
 }
 
@@ -1966,11 +1916,11 @@ function applySocPolicy(
 
 const DEFAULT_BATT_HEADROOM_KW = 2;
 const DEFAULT_BATT_RAMP_KW_PER_S = 25;
-const DEFAULT_SOC_LOW = 0.3;
+const DEFAULT_SOC_LOW = 0.07;
 const DEFAULT_SOC_HIGH = 0.95;
-const DEFAULT_SOC_LOW_RECOVER = 0.22;
+const DEFAULT_SOC_LOW_RECOVER = 0.1;
 const DEFAULT_SOC_HIGH_RECOVER = 0.92;
-const DEFAULT_FORCE_GRID_CHARGE_SOC = 0.15;
+const DEFAULT_FORCE_GRID_CHARGE_SOC = 0.07;
 const DEFAULT_FORCE_GRID_CHARGE_VMIN = 2.95;
 const DEFAULT_FORCE_GRID_CHARGE_KW = 10;
 const SITE_NO_EXPORT_PV_UPDATE_MS = 8_000;
@@ -1993,6 +1943,18 @@ const MINI_VCELL_MAX_BLOCK_CHG_ON = 3.57;
 const MINI_VCELL_MAX_BLOCK_CHG_OFF = 3.33;
 const MINI_VCELL_MIN_BLOCK_DIS_ON = 2.92;
 const MINI_VCELL_MIN_BLOCK_DIS_OFF = 3.2;
+const MINI_BATTERY_TARGET_NEAR_ZERO_KW = 1;
+const MINI_NEUTRAL_BATTERY_POWER_DEADBAND_KW = 0.7;
+const MINI_NEUTRAL_RAMP_UP_KW = 1;
+const MINI_NEUTRAL_DISCHARGE_BACKOFF_GAIN = 0.8;
+const MINI_NEUTRAL_CHARGE_RECOVERY_GAIN = 0.4;
+const MINI_NEUTRAL_MAX_STEP_DOWN_KW = 15;
+const MINI_NEUTRAL_MAX_STEP_UP_KW = 5;
+const MINI_NEUTRAL_MIN_PV_KW = 1;
+const MINI_SELF_CONSUMPTION_MAX_CORRECTION_KW = 15;
+const MINI_SELF_CONSUMPTION_DEADBAND_KW = 0.2;
+const MINI_SELF_CONSUMPTION_INTEGRAL_GAIN = 0.35;
+const MINI_SELF_CONSUMPTION_DECAY_GAIN = 0.02;
 
 interface BatteryControlPolicy {
   socLow: number;
@@ -2555,11 +2517,12 @@ function resolveMiniDispatch(
       : "mini-ac-pv-battery-setpoint"
   );
 
-  pcsActivePowerKw = applyMiniSelfConsumptionCorrection(
+  pcsActivePowerKw = applyMiniPvSetpointAdjustment(
     ctx,
     telemetry,
     batteryActivePowerKw,
     pcsActivePowerKw,
+    maxCurrents,
     reasons
   );
 
@@ -2570,34 +2533,115 @@ function resolveMiniDispatch(
   };
 }
 
-function applyMiniSelfConsumptionCorrection(
+function applyMiniPvSetpointAdjustment(
   ctx: CoreControlContext,
   telemetry: TelemetrySnapshot,
   batteryActivePowerKw: number,
   pcsActivePowerKw: number,
+  maxCurrents: Pick<MiniDispatchResult, "maxChargeCurrentA" | "maxDischargeCurrentA">,
   reasons: string[]
 ): number {
   if (!hasMiniDcPvConverter(ctx)) return pcsActivePowerKw;
   if (telemetry.gridStatus !== "normal") return pcsActivePowerKw;
+
   const actualBatteryPowerKw = finiteNumber(
     telemetry.machineStatus?.actualBatteryPowerKw
   );
+  const dcPvKw = Number.isFinite(telemetry.pvKw) ? telemetry.pvKw || 0 : 0;
+  const acOutputLimitKw = resolveMiniAcOutputLimit(ctx, telemetry);
+  const targetNearZero =
+    Math.abs(batteryActivePowerKw) <= MINI_BATTERY_TARGET_NEAR_ZERO_KW;
+  const neutralBlockedBySoc =
+    ctx.state?.socState?.allowDischarge === false ||
+    maxCurrents.maxDischargeCurrentA === 0;
+  const neutralBlockedByPv = dcPvKw <= MINI_NEUTRAL_MIN_PV_KW;
+  const neutralBlockedByLoadFollow = reasons.includes(
+    "mini-no-export-pv-load-follow"
+  );
+  const neutralMode =
+    targetNearZero &&
+    !neutralBlockedBySoc &&
+    !neutralBlockedByPv &&
+    !neutralBlockedByLoadFollow;
+
+  let neutralPcsSetpointKw = finiteNumber(ctx.state?.miniNeutralPcsSetpointKw);
+
+  if (neutralMode) {
+    const pvFeedForwardKw = clamp(dcPvKw, 0, acOutputLimitKw);
+    if (neutralPcsSetpointKw == null) {
+      neutralPcsSetpointKw = pvFeedForwardKw;
+    }
+    if (pvFeedForwardKw > neutralPcsSetpointKw) {
+      neutralPcsSetpointKw = pvFeedForwardKw;
+    }
+
+    let proposedNeutralKw = neutralPcsSetpointKw;
+
+    if (actualBatteryPowerKw != null) {
+      if (actualBatteryPowerKw > MINI_NEUTRAL_BATTERY_POWER_DEADBAND_KW) {
+        const reductionKw = clamp(
+          actualBatteryPowerKw * MINI_NEUTRAL_DISCHARGE_BACKOFF_GAIN,
+          0,
+          MINI_NEUTRAL_MAX_STEP_DOWN_KW
+        );
+        proposedNeutralKw = neutralPcsSetpointKw - reductionKw;
+        reasons.push("mini-neutral-pv-hunt-reduce-discharge");
+      } else if (
+        actualBatteryPowerKw < -MINI_NEUTRAL_BATTERY_POWER_DEADBAND_KW
+      ) {
+        const increaseKw = clamp(
+          Math.abs(actualBatteryPowerKw) * MINI_NEUTRAL_CHARGE_RECOVERY_GAIN,
+          MINI_NEUTRAL_RAMP_UP_KW,
+          MINI_NEUTRAL_MAX_STEP_UP_KW
+        );
+        proposedNeutralKw = neutralPcsSetpointKw + increaseKw;
+        reasons.push("mini-neutral-pv-hunt-increase-charge");
+      } else {
+        proposedNeutralKw = neutralPcsSetpointKw + MINI_NEUTRAL_RAMP_UP_KW;
+        reasons.push("mini-neutral-pv-hunt-ramp");
+      }
+    } else {
+      proposedNeutralKw = pvFeedForwardKw;
+      reasons.push("mini-neutral-pv-hunt-pv-fallback");
+    }
+
+    proposedNeutralKw = clamp(proposedNeutralKw, 0, acOutputLimitKw);
+    proposedNeutralKw = clamp(
+      proposedNeutralKw,
+      neutralPcsSetpointKw - MINI_NEUTRAL_MAX_STEP_DOWN_KW,
+      neutralPcsSetpointKw + MINI_NEUTRAL_MAX_STEP_UP_KW
+    );
+
+    const finalNeutralKw = round2(proposedNeutralKw);
+    if (ctx.state) {
+      ctx.state.miniNeutralPcsSetpointKw = finalNeutralKw;
+      ctx.state.miniSelfConsumptionCorrectionKw = 0;
+    }
+    reasons.push("mini-neutral-pv-hunt");
+    return finalNeutralKw;
+  }
+
+  if (ctx.state && neutralPcsSetpointKw != null) {
+    neutralPcsSetpointKw *= 0.95;
+    ctx.state.miniNeutralPcsSetpointKw =
+      Math.abs(neutralPcsSetpointKw) < 0.5 ? 0 : round2(neutralPcsSetpointKw);
+  }
+
   if (actualBatteryPowerKw == null) return pcsActivePowerKw;
 
-  const targetNearZero = Math.abs(batteryActivePowerKw) <= 1;
-  const maxCorrectionKw = 15;
-  const deadbandKw = 0.2;
-  const gain = 0.35;
-  const decay = 0.02;
   let correction = ctx.state?.miniSelfConsumptionCorrectionKw ?? 0;
 
   if (targetNearZero) {
     let errorKw = actualBatteryPowerKw - batteryActivePowerKw;
-    if (Math.abs(errorKw) < deadbandKw) errorKw = 0;
-    correction = clamp(correction + errorKw * gain, -maxCorrectionKw, maxCorrectionKw);
+    if (Math.abs(errorKw) < MINI_SELF_CONSUMPTION_DEADBAND_KW) errorKw = 0;
+    correction = clamp(
+      correction + errorKw * MINI_SELF_CONSUMPTION_INTEGRAL_GAIN,
+      -MINI_SELF_CONSUMPTION_MAX_CORRECTION_KW,
+      MINI_SELF_CONSUMPTION_MAX_CORRECTION_KW
+    );
     reasons.push("mini-self-consumption-correction");
   } else {
-    correction *= 1 - decay;
+    correction *= 1 - MINI_SELF_CONSUMPTION_DECAY_GAIN;
     if (Math.abs(correction) < 0.1) correction = 0;
   }
 
@@ -2608,12 +2652,31 @@ function applyMiniSelfConsumptionCorrection(
   return clamp(
     pcsActivePowerKw - correction,
     -ctx.design.limits.pcs.maxChargeKw,
-    ctx.design.limits.pcs.maxDischargeKw
+    acOutputLimitKw
   );
 }
 
 function hasMiniDcPvConverter(ctx: CoreControlContext): boolean {
   return ctx.design.productLine === "Mini" && ctx.design.pv.dcCoupledToMiniPcs;
+}
+
+function resolveMiniAcOutputLimit(
+  ctx: CoreControlContext,
+  telemetry: TelemetrySnapshot
+): number {
+  if (
+    (ctx.config.operation.crdMode === "no-export" ||
+      ctx.config.operation.crdMode === "no-exchange") &&
+    Number.isFinite(telemetry.siteLoadKw)
+  ) {
+    return clamp(
+      telemetry.siteLoadKw || 0,
+      0,
+      ctx.design.limits.pcs.maxDischargeKw
+    );
+  }
+
+  return ctx.design.limits.pcs.maxDischargeKw;
 }
 
 function resolveMiniCurrentLimits(
@@ -2996,4 +3059,8 @@ function clamp(value: number, min: number, max: number): number {
   if (value < min) return min;
   if (value > max) return max;
   return value;
+}
+
+function round2(value: number): number {
+  return Math.round(value * 100) / 100;
 }

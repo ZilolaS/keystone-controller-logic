@@ -9,7 +9,7 @@ import {
 const monthlyPlans: SchedulePlan[] = [
   {
     planID: "april",
-    cron: "0 0 * APR MON,TUE,WED,THU,FRI,SAT,SUN",
+    cron: "0 0 0 * APR MON,TUE,WED,THU,FRI,SAT,SUN",
     duration: { unit: "minutes", value: 1439 },
     start: "2026-04-01T00:00:00",
     until: "2026-04-30T23:59:59",
@@ -23,7 +23,7 @@ const monthlyPlans: SchedulePlan[] = [
   },
   {
     planID: "may",
-    cron: "0 0 * MAY MON,TUE,WED,THU,FRI,SAT,SUN",
+    cron: "0 0 0 * MAY MON,TUE,WED,THU,FRI,SAT,SUN",
     duration: { unit: "minutes", value: 1439 },
     start: "2026-05-01T00:00:00",
     until: "2026-05-31T23:59:59",
@@ -37,7 +37,7 @@ const monthlyPlans: SchedulePlan[] = [
   },
   {
     planID: "june",
-    cron: "0 0 * JUN MON,TUE,WED,THU,FRI,SAT,SUN",
+    cron: "0 0 0 * JUN MON,TUE,WED,THU,FRI,SAT,SUN",
     duration: { unit: "minutes", value: 1439 },
     start: "2026-06-01T00:00:00",
     until: "2026-06-30T23:59:59",
@@ -56,7 +56,7 @@ const nodeRedSchedulePlanGroups = [
     timed: [
       {
         planID: "5_off_peak_weekday",
-        cron: "0 0 * MAY MON,TUE,WED,THU,FRI",
+        cron: "0 0 0 * MAY MON,TUE,WED,THU,FRI",
         default: false,
         description: "5_off-peak_weekday_strategy",
         duration: { unit: "minutes", value: 959 },
@@ -87,7 +87,7 @@ const nodeRedSchedulePlanGroups = [
     timed: [
       {
         planID: "5_peak_weekday",
-        cron: "0 16 * MAY MON,TUE,WED,THU,FRI",
+        cron: "0 0 16 * MAY MON,TUE,WED,THU,FRI",
         default: false,
         description: "5_peak_weekday_strategy",
         duration: { unit: "minutes", value: 299 },
@@ -118,7 +118,7 @@ const nodeRedSchedulePlanGroups = [
     timed: [
       {
         planID: "5_post_peak_weekday",
-        cron: "0 21 * MAY MON,TUE,WED,THU,FRI",
+        cron: "0 0 21 * MAY MON,TUE,WED,THU,FRI",
         default: false,
         description: "5_post-peak_weekday_strategy",
         duration: { unit: "minutes", value: 179 },
@@ -147,7 +147,7 @@ const nodeRedSchedulePlanGroups = [
   },
   {
     planID: "default_command",
-    cron: "0 0 * * *",
+    cron: "0 0 0 * * *",
     default: true,
     description: "Default command configuration",
     duration: { unit: "minutes", value: "" },
@@ -232,7 +232,7 @@ describe("scheduler", () => {
     const plans: SchedulePlan[] = [
       {
         planID: "night",
-        cron: "30 23 * MAY MON,TUE,WED,THU,FRI,SAT,SUN",
+        cron: "0 30 23 * MAY MON,TUE,WED,THU,FRI,SAT,SUN",
         duration: { unit: "minutes", value: 120 },
       },
     ];
@@ -251,7 +251,7 @@ describe("scheduler", () => {
     const plans: SchedulePlan[] = [
       {
         planID: "morning",
-        cron: "0 8 * MAY MON,TUE,WED,THU,FRI",
+        cron: "0 0 8 * MAY MON,TUE,WED,THU,FRI",
         duration: { unit: "hours", value: 2 },
       },
       {
@@ -363,7 +363,7 @@ describe("scheduler", () => {
       [
         {
           planID: "fixed",
-          cron: "0 0 * MAY *",
+          cron: "0 0 0 * MAY *",
           duration: 1439,
           activePowerKwSetpoint: 50,
           strategy: { fixed: true },
@@ -418,7 +418,7 @@ describe("scheduler", () => {
           planID: "local",
           owner: "LocalSchedule",
           priority: 50,
-          cron: "0 0 * MAY *",
+          cron: "0 0 0 * MAY *",
           duration: 1439,
           payload: { command: "peakShaving", dischargeThresholdKw: 100 },
         },
@@ -426,7 +426,7 @@ describe("scheduler", () => {
           planID: "vpp",
           owner: "Vpp",
           priority: 200,
-          cron: "0 0 * MAY *",
+          cron: "0 0 0 * MAY *",
           duration: 1439,
           payload: { command: "peakShaving", dischargeThresholdKw: 40 },
         },

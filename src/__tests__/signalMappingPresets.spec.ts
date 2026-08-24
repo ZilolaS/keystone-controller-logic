@@ -19,6 +19,7 @@ describe("Mini signal mapping presets", () => {
 
     expect(Object.keys(mapping.sources || {}).sort()).toEqual([
       "AMPACE",
+      "Gateway",
       "Load",
       "PCS",
       "PVDC1",
@@ -27,6 +28,12 @@ describe("Mini signal mapping presets", () => {
     expect(mapping.signals?.pvPowerKw?.expr).toBe(
       "PVDC1.PVBusSidePower + PVDC2.PVBusSidePower"
     );
+    expect(mapping.sources?.Gateway).toMatchObject({
+      profile: "Sinexcel_Mini_Gateway_ss40k",
+      ip: "192.168.1.101",
+      port: 502,
+      unitId: 1,
+    });
 
     const result = evaluateSignalMapping(mapping, {
       PCS: [
@@ -61,6 +68,7 @@ describe("Mini signal mapping presets", () => {
 
     expect(Object.keys(mapping.sources || {}).sort()).toEqual([
       "AMPACE",
+      "Gateway",
       "Meter",
       "PCS",
       "PVDC1",
@@ -71,6 +79,12 @@ describe("Mini signal mapping presets", () => {
       profile: "configured_eGauge",
       ip: "192.168.1.88",
       role: "siteMeter",
+    });
+    expect(mapping.sources?.Gateway).toMatchObject({
+      profile: "Sinexcel_Mini_Gateway_ss40k",
+      ip: "192.168.1.101",
+      port: 502,
+      unitId: 1,
     });
     expect(mapping.signals?.pvPowerKw?.expr).toBe(
       "PVDC1.PVBusSidePower + PVDC2.PVBusSidePower + PVDC3.PVBusSidePower"

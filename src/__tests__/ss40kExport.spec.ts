@@ -288,27 +288,47 @@ describe("SS40K export helpers", () => {
       exportMultiplier: 1,
     });
     expect(DEFAULT_SS40K_MODEL_INDEX_MAP["52103"]).toBe("0");
-    expect(lookup["BMS.BamsProtAlarm0_8"]).toMatchObject({
-      name: "batteryProtectionAlarmWord",
+    expect(lookup["BMS.BamsProtAlarm0_8"]).toBeUndefined();
+    expect(lookup["BMS.BamsSysFaultCode0_8"]).toBeUndefined();
+    expect(lookup["BMS.BamsOtherErrCode0_8"]).toBeUndefined();
+    expect(lookup["BMS.BamsHwErrCode0_8"]).toBeUndefined();
+    expect(lookup["BMS.BamsHwStaCode0_8"]).toBeUndefined();
+    expect(lookup["BMS.batteryProtectionWarningWord"]).toMatchObject({
+      name: "batteryProtectionWarningWord",
       model: "52103",
       modelIndex: "0",
     });
-    expect(lookup["BMS.BamsSysFaultCode0_8"]).toMatchObject({
-      name: "batterySystemFaultWord",
+    expect(lookup["BMS.batteryProtectionFaultWord"]).toMatchObject({
+      name: "batteryProtectionFaultWord",
       model: "52103",
       modelIndex: "0",
     });
-    expect(lookup["BMS.BamsOtherErrCode0_8"]).toMatchObject({
-      name: "batteryOtherErrorWord",
+    expect(lookup["BMS.batterySystemFaultWordA"]).toMatchObject({
+      name: "batterySystemFaultWordA",
       model: "52103",
       modelIndex: "0",
     });
-    expect(lookup["BMS.BamsHwErrCode0_8"]).toMatchObject({
+    expect(lookup["BMS.batterySystemFaultWordB"]).toMatchObject({
+      name: "batterySystemFaultWordB",
+      model: "52103",
+      modelIndex: "0",
+    });
+    expect(lookup["BMS.batteryOtherErrorWordA"]).toMatchObject({
+      name: "batteryOtherErrorWordA",
+      model: "52103",
+      modelIndex: "0",
+    });
+    expect(lookup["BMS.batteryOtherErrorWordB"]).toMatchObject({
+      name: "batteryOtherErrorWordB",
+      model: "52103",
+      modelIndex: "0",
+    });
+    expect(lookup["BMS.batteryHardwareErrorWord"]).toMatchObject({
       name: "batteryHardwareErrorWord",
       model: "52103",
       modelIndex: "0",
     });
-    expect(lookup["BMS.BamsHwStaCode0_8"]).toMatchObject({
+    expect(lookup["BMS.batteryHardwareStatusWord"]).toMatchObject({
       name: "batteryHardwareStatusWord",
       model: "52103",
       modelIndex: "0",
@@ -333,6 +353,14 @@ describe("SS40K export helpers", () => {
           { tagID: "BMS.BamsOtherErrCode0_8", value: 4 },
           { tagID: "BMS.BamsHwErrCode0_8", value: 8 },
           { tagID: "BMS.BamsHwStaCode0_8", value: 16 },
+          { tagID: "BMS.batteryProtectionWarningWord", value: 1 },
+          { tagID: "BMS.batteryProtectionFaultWord", value: 0 },
+          { tagID: "BMS.batterySystemFaultWordA", value: 1 },
+          { tagID: "BMS.batterySystemFaultWordB", value: 0 },
+          { tagID: "BMS.batteryOtherErrorWordA", value: 4 },
+          { tagID: "BMS.batteryOtherErrorWordB", value: 0 },
+          { tagID: "BMS.batteryHardwareErrorWord", value: 8 },
+          { tagID: "BMS.batteryHardwareStatusWord", value: 16 },
         ],
       },
       topic: "fort/v1/things/test/telem",
@@ -398,9 +426,12 @@ describe("SS40K export helpers", () => {
           id: 52103,
           fixed: {
             ID: 52103,
-            batteryProtectionAlarmWord: 1,
-            batterySystemFaultWord: 2,
-            batteryOtherErrorWord: 4,
+            batteryProtectionWarningWord: 1,
+            batteryProtectionFaultWord: 0,
+            batterySystemFaultWordA: 1,
+            batterySystemFaultWordB: 0,
+            batteryOtherErrorWordA: 4,
+            batteryOtherErrorWordB: 0,
             batteryHardwareErrorWord: 8,
             batteryHardwareStatusWord: 16,
           },
@@ -757,6 +788,7 @@ describe("SS40K export helpers", () => {
   test("Sinexcel Mini PCS raw fault words export into product-neutral 50103", () => {
     const { lookup } = buildSs40kLookup({
       PCS: "Sinexcel_Mini_PCS_ss40k",
+      Gateway: "Sinexcel_Mini_Gateway_ss40k",
     });
 
     expect(DEFAULT_SS40K_MODEL_INDEX_MAP["50103"]).toBe("0");
@@ -782,9 +814,30 @@ describe("SS40K export helpers", () => {
       model: "50103",
       modelIndex: "0",
     });
+    expect(lookup["Gateway.GatewaySummaryWord"]).toMatchObject({
+      name: "gatewaySummaryWord",
+      model: "50103",
+      modelIndex: "0",
+    });
+    expect(lookup["Gateway.CabinetEpoFault"]).toMatchObject({
+      name: "cabinetEpoFaultWord",
+      model: "50103",
+      modelIndex: "0",
+    });
+    expect(lookup["Gateway.cabinetGatewayFaultWord"]).toMatchObject({
+      name: "cabinetGatewayFaultWord",
+      model: "50103",
+      modelIndex: "0",
+    });
+    expect(lookup["Gateway.cabinetGatewayWarningWord"]).toMatchObject({
+      name: "cabinetGatewayWarningWord",
+      model: "50103",
+      modelIndex: "0",
+    });
 
     const messages = buildSs40kFixedPayloads({
       lookup,
+      merge40kByModelIndex: true,
       telemetry: {
         PCS: [
           { tagID: "PCS.SerialNumber", value: "SH0P600458852403070035" },
@@ -792,6 +845,13 @@ describe("SS40K export helpers", () => {
           { tagID: "PCS.SinexcelStatusWord37", value: 775 },
           { tagID: "PCS.SinexcelFaultWord106", value: 1 },
           { tagID: "PCS.SinexcelFaultWord121", value: 384 },
+        ],
+        Gateway: [
+          { tagID: "Gateway.GatewaySummaryWord", value: 2 },
+          { tagID: "Gateway.GatewayAirConditionerStatusWord", value: 4 },
+          { tagID: "Gateway.CabinetEpoFault", value: 1 },
+          { tagID: "Gateway.cabinetGatewayFaultWord", value: 2048 },
+          { tagID: "Gateway.cabinetGatewayWarningWord", value: 129 },
         ],
       },
       topic: "fort/v1/things/test/telem",
@@ -810,14 +870,19 @@ describe("SS40K export helpers", () => {
             pcsStatusWord37: 775,
             pcsFaultWord106: 1,
             pcsFaultWord121: 384,
+            gatewaySummaryWord: 2,
+            gatewayAirConditionerStatusWord: 4,
+            cabinetEpoFaultWord: 1,
+            cabinetGatewayFaultWord: 2048,
+            cabinetGatewayWarningWord: 129,
           },
         },
       },
       ss40k: expect.objectContaining({
-        equipment: "PCS",
+        equipment: "site",
         model: "50103",
         modelIndex: "0",
-        pointCount: 6,
+        pointCount: 11,
       }),
     });
   });
@@ -1835,6 +1900,77 @@ describe("SS40K export helpers", () => {
       eGridExpTdy: 0,
       eLoadTot: 10000,
       eLoadTdy: 0,
+    });
+  });
+
+  test("energy accumulator holds last good lifetime totals during zero dropouts", () => {
+    const state = {};
+    const baseOptions = {
+      lookup: {
+        "PCS.PVGeneratedEnergy": {
+          equipment: "PCS",
+          sourceTagID: "PCS.PVGeneratedEnergy",
+          profileName: "Sinexcel_Mini_PCS_ss40k",
+          name: "ePvTot",
+          model: "40102",
+          modelIndex: "0",
+          exportMultiplier: 1000,
+        },
+      },
+      mergeByModelIndex: true,
+      topic: "fort/v1/things/test/telem",
+      energyAccumulator: {
+        state,
+        outputMultiplier: 1000,
+        timezone: "America/New_York",
+      },
+    };
+
+    buildSs40kFixedPayloads({
+      ...baseOptions,
+      energyAccumulator: {
+        ...baseOptions.energyAccumulator,
+        nowMs: Date.UTC(2026, 7, 21, 3, 55, 0),
+      },
+      telemetry: {
+        PCS: [{ tagID: "PCS.PVGeneratedEnergy", value: 28337.2 }],
+      },
+    });
+
+    const zeroDropout = buildSs40kFixedPayloads({
+      ...baseOptions,
+      energyAccumulator: {
+        ...baseOptions.energyAccumulator,
+        nowMs: Date.UTC(2026, 7, 21, 4, 5, 0),
+      },
+      telemetry: {
+        PCS: [{ tagID: "PCS.PVGeneratedEnergy", value: 0 }],
+      },
+    });
+
+    const zeroDropout40102 = zeroDropout.find((message) => message.ss40k.model === "40102");
+    expect(zeroDropout40102?.payload["0"].fixed).toMatchObject({
+      ID: 40102,
+      ePvTot: 28337200,
+      ePvTdy: 0,
+    });
+
+    const recovered = buildSs40kFixedPayloads({
+      ...baseOptions,
+      energyAccumulator: {
+        ...baseOptions.energyAccumulator,
+        nowMs: Date.UTC(2026, 7, 21, 10, 10, 0),
+      },
+      telemetry: {
+        PCS: [{ tagID: "PCS.PVGeneratedEnergy", value: 28585.7 }],
+      },
+    });
+
+    const recovered40102 = recovered.find((message) => message.ss40k.model === "40102");
+    expect(recovered40102?.payload["0"].fixed).toMatchObject({
+      ID: 40102,
+      ePvTot: 28585700,
+      ePvTdy: 248500,
     });
   });
 

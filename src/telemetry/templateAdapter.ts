@@ -29,6 +29,7 @@ export interface TelemetryTemplateSs40k {
 export interface TelemetryTemplateEntry {
   id: string;
   description?: string;
+  notes?: string;
   function?: string | null;
   address?: number | null;
   length?: number;
@@ -162,6 +163,10 @@ const TEMPLATE_FILE_ALIASES: Record<string, string> = {
   udt_Sinexcel_Mini_PCS: "Sinexcel_Mini_PCS_ss40k.json",
   mini_pcs: "Sinexcel_Mini_PCS_ss40k.json",
   Sinexcel_Mini_ss40k: "Sinexcel_Mini_PCS_ss40k.json",
+  Sinexcel_Mini_Gateway_ss40k: "Sinexcel_Mini_Gateway_ss40k.json",
+  Sinexcel_Mini_Gateway: "Sinexcel_Mini_Gateway_ss40k.json",
+  udt_Sinexcel_Gateway_A_V2: "Sinexcel_Mini_Gateway_ss40k.json",
+  mini_gateway: "Sinexcel_Mini_Gateway_ss40k.json",
   Sinexcel_Mini_Load: "Sinexcel_Mini_Load_ss40k.json",
   udt_Sinexcel_Mini_Load: "Sinexcel_Mini_Load_ss40k.json",
   mini_load: "Sinexcel_Mini_Load_ss40k.json",

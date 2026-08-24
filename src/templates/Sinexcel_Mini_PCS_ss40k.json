@@ -2433,13 +2433,27 @@
       "id": "MaxChgCurrent",
       "function": "HR",
       "address": 1626,
-      "readback": true
+      "readback": true,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 10,
+        "scaledLow": 0,
+        "scaledHigh": 1
+      }
     },
     {
       "id": "MaxDsgCurrent",
       "function": "HR",
       "address": 1627,
-      "readback": true
+      "readback": true,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 10,
+        "scaledLow": 0,
+        "scaledHigh": 1
+      }
     },
     {
       "id": "PvDcdcConverterEnable",

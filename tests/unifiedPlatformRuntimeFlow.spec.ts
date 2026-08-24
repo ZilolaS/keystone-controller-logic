@@ -64,15 +64,17 @@ describe("unified platform runtime flow", () => {
     expect(writerSetup).toContain("isNano ? ['PCS']");
   });
 
-  test("uses the V1.6 EdgeScheduler handler on the unified /api/esr route", () => {
+  test("uses the V2.0 EdgeScheduler handler on the unified /api/esr route", () => {
     const body = functionBody("platform_sched_api_esr_handler");
 
-    expect(body).toContain("endpointKey === 'edgescheduler'");
+    expect(body).toContain("endpoint === 'EdgeScheduler'");
     expect(body).toContain("jobFromData");
-    expect(body).toContain("data.job");
+    expect(body).toContain("const job = jobFromData(data)");
     expect(body).toContain("payloadJson");
     expect(body).toContain("durationSec / 60");
     expect(body).toContain("time: isCron ? undefined");
     expect(body).toContain("jobListItem");
+    expect(body).toContain("method === 'CreateJob'");
+    expect(body).toContain("edgeResponse");
   });
 });

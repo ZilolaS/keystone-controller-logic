@@ -85,6 +85,7 @@ export interface Ss40kPayloadMessage {
 export interface Ss40kEnergyAccumulatorState {
   counters?: Record<string, number>;
   lastRaw?: Record<string, number>;
+  lastGoodEnergyTotals?: Record<string, number>;
   daily?: {
     dateKey?: string;
     baselines?: Record<string, number>;
@@ -92,6 +93,7 @@ export interface Ss40kEnergyAccumulatorState {
   lastMs?: number | null;
   updatedAt?: string;
   lastInputs?: Record<string, unknown>;
+  energyTotalGuards?: Record<string, unknown>;
 }
 
 export interface Ss40kEnergyAccumulatorSourceTags {
@@ -264,7 +266,9 @@ export function buildSs40kFixedPayloads(
 
       for (const meta of metas) {
         const shouldMergeByModelIndex =
-          mergeByModelIndex || (merge40kByModelIndex && meta.model.startsWith("40"));
+          mergeByModelIndex ||
+          (merge40kByModelIndex &&
+            (meta.model.startsWith("40") || meta.model === "50103"));
         const groupKey = shouldMergeByModelIndex
           ? `${meta.modelIndex}::${meta.model}`
           : `${meta.equipment}::${meta.model}`;
@@ -803,11 +807,37 @@ function applyDailyEnergyOverrides(
   const previousDaily = state.daily || {};
   const sameDay = previousDaily.dateKey === dateKey;
   const baselines = sameDay ? { ...(previousDaily.baselines || {}) } : {};
+  const lastGoodEnergyTotals = { ...(state.lastGoodEnergyTotals || {}) };
+  const energyTotalGuards: Record<string, unknown> = {};
   let foundEnergy = false;
 
   for (const [totalPoint, todayPoint] of Object.entries(SS40K_DAILY_ENERGY_POINTS)) {
-    const current = finiteNumber(energy40102.fixed[totalPoint]);
-    if (current === null) continue;
+    const rawCurrent = finiteNumber(energy40102.fixed[totalPoint]);
+    if (rawCurrent === null) continue;
+
+    const previousGood = finiteNumber(lastGoodEnergyTotals[totalPoint]);
+    const guarded = guardMonotonicEnergyTotal(rawCurrent, previousGood);
+    if (guarded.action === "skip") {
+      energyTotalGuards[totalPoint] = {
+        action: "skip",
+        raw: rawCurrent,
+        previousGood,
+      };
+      continue;
+    }
+
+    const current = guarded.value;
+    if (guarded.action === "hold") {
+      energy40102.fixed[totalPoint] = current;
+      energyTotalGuards[totalPoint] = {
+        action: "hold",
+        raw: rawCurrent,
+        previousGood,
+        value: current,
+      };
+    } else {
+      lastGoodEnergyTotals[totalPoint] = current;
+    }
 
     foundEnergy = true;
     const previousBaseline = baselines[totalPoint];
@@ -820,11 +850,32 @@ function applyDailyEnergyOverrides(
 
   if (!foundEnergy) return;
   state.daily = { dateKey, baselines };
+  state.lastGoodEnergyTotals = lastGoodEnergyTotals;
+  state.energyTotalGuards = energyTotalGuards;
   state.updatedAt = new Date(nowMs).toISOString();
 
   if (!energy40102.latestTimestamp) {
     energy40102.latestTimestamp = new Date(nowMs).toISOString();
   }
+}
+
+function guardMonotonicEnergyTotal(
+  current: number,
+  previousGood: number | null
+): { action: "accept" | "hold" | "skip"; value: number } {
+  if (current > 0 && (previousGood === null || current >= previousGood)) {
+    return { action: "accept", value: current };
+  }
+
+  if (previousGood !== null && previousGood > 0) {
+    return { action: "hold", value: previousGood };
+  }
+
+  if (current >= 0) {
+    return { action: "accept", value: current };
+  }
+
+  return { action: "skip", value: current };
 }
 
 function firstGroupForModel(

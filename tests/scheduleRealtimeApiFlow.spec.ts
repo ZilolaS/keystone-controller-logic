@@ -42,39 +42,43 @@ describe("schedule realtime API flow", () => {
     expect(body.length).toBeGreaterThan(1000);
     expect(body).toContain("EdgeScheduler");
     expect(body).toContain("commandId");
-    expect(body).toContain("methodKey === 'createjob'");
-    expect(body).toContain("methodKey === 'startjob'");
-    expect(body).toContain("methodKey === 'stopjob'");
-    expect(body).toContain("methodKey === 'deletejob'");
-    expect(body).toContain("methodKey === 'getjob'");
-    expect(body).toContain("methodKey === 'getjoblist'");
+    expect(body).toContain("endpoint === 'EdgeScheduler'");
+    expect(body).toContain("method === 'CreateJob'");
+    expect(body).toContain("method === 'StartJob'");
+    expect(body).toContain("method === 'StopJob'");
+    expect(body).toContain("method === 'DeleteJob'");
+    expect(body).toContain("method === 'GetJob'");
+    expect(body).toContain("method === 'GetJobList'");
     expect(body).toContain("edgeSchedulerJobs");
     expect(body).toContain("schedulePlans");
   });
 
-  test("accepts V1.6 job envelopes and adapts them into controller schedules", () => {
+  test("accepts V2.0 direct job data and adapts it into controller schedules", () => {
     const body = node("sched_api_esr_handler").func || "";
 
     expect(body).toContain("jobFromData");
-    expect(body).toContain("data.job");
+    expect(body).toContain("const job = jobFromData(data)");
     expect(body).toContain("payloadJson");
     expect(body).toContain("durationSec / 60");
     expect(body).toContain("time: isCron ? undefined");
     expect(body).toContain("jobListItem");
+    expect(body).toContain("intervalSec is reserved");
   });
 
   test("keeps VPP scheduling payloads as canonical EdgeScheduler command plans", () => {
     const body = node("sched_api_esr_handler").func || "";
 
-    expect(body).toContain("edgeSchedulerScheduleInfoFromPayload");
-    expect(body).toContain("peakshaving");
-    expect(body).toContain("maximizepvselfconsumption");
+    expect(body).toContain("edgeSchedulerStrategyFromPayload");
+    expect(body).toContain("command === 'peakShaving'");
+    expect(body).toContain("command === 'maximizePvSelfConsumption'");
     expect(body).toContain("command === 'charge' || command === 'discharge'");
     expect(body).toContain("payload: job.payload");
     expect(body).toContain("payloadJson");
     expect(body).toContain("minSocPct");
     expect(body).toContain("maxDischargePowerPct");
     expect(body).toContain("constraints");
+    expect(body).toContain("unsupported payload field");
+    expect(body).toContain("holdAtThreshold");
   });
 
   test("supports Keystone CGI discovery commands used by FMP equipment refresh", () => {

@@ -1430,6 +1430,74 @@ describe("Telemetry baseline lock", () => {
     });
   });
 
+  test("Sinexcel Mini Gateway template exports cabinet alarms into product-neutral 50103", () => {
+    const template = resolveTelemetryTemplate("mini_gateway");
+
+    expect(template.device.name).toBe("udt_Sinexcel_Gateway_A_V2");
+    expect(
+      template.telemetry.find((tag) => tag.id === "GatewaySummaryWord")
+    ).toMatchObject({
+      function: "HRUS",
+      address: 5999,
+      alarm: true,
+      bitfieldStatus: expect.objectContaining({
+        "0": "Summary fault status",
+        "1": "Summary alarm status",
+      }),
+      ss40k: {
+        name: "gatewaySummaryWord",
+        model: "50103",
+      },
+    });
+    expect(
+      template.telemetry.find((tag) => tag.id === "GatewayAirConditionerStatusWord")
+    ).toMatchObject({
+      function: "HRUS",
+      address: 50000,
+      alarm: true,
+      ss40k: {
+        name: "gatewayAirConditionerStatusWord",
+        model: "50103",
+      },
+    });
+    expect(
+      template.telemetry.find((tag) => tag.id === "CabinetEpoFault")?.ss40k
+    ).toEqual({
+      name: "cabinetEpoFaultWord",
+      model: "50103",
+    });
+    expect(
+      template.telemetry.find((tag) => tag.id === "cabinetGatewayFaultWord")
+    ).toMatchObject({
+      alarm: true,
+      calc: {
+        inputs: expect.objectContaining({
+          summary: "GatewaySummaryWord",
+          epo: "CabinetEpoFault",
+        }),
+      },
+      ss40k: {
+        name: "cabinetGatewayFaultWord",
+        model: "50103",
+      },
+    });
+    expect(
+      template.telemetry.find((tag) => tag.id === "cabinetGatewayWarningWord")
+    ).toMatchObject({
+      alarm: true,
+      calc: {
+        inputs: expect.objectContaining({
+          summary: "GatewaySummaryWord",
+          door: "CabinetDoorAlarm",
+        }),
+      },
+      ss40k: {
+        name: "cabinetGatewayWarningWord",
+        model: "50103",
+      },
+    });
+  });
+
   test("Sinexcel Mini PVDC module templates apply supplier address offsets", () => {
     const modules = [
       {
@@ -1564,7 +1632,7 @@ describe("Telemetry baseline lock", () => {
         expect.objectContaining({
           name: "Utility_Total_Power",
           function: "IRF",
-          address: 9020,
+          address: 9006,
           supportingTag: "Yes",
         }),
         expect.objectContaining({
@@ -1574,7 +1642,13 @@ describe("Telemetry baseline lock", () => {
         }),
         expect.objectContaining({
           name: "Load_Active_Power",
-          virtual: true,
+          calc: {
+            inputs: {
+              utility: "Utility_Total_Power",
+              bess: "BESS_Total_Power",
+            },
+            expr: "utility + bess",
+          },
         }),
         expect.objectContaining({
           name: "Utility_Import_Power",
@@ -1893,30 +1967,70 @@ describe("Telemetry baseline lock", () => {
     expect(batFault?.calc?.expr).toContain("<< 1");
     expect(
       template.telemetry.find((tag) => tag.id === "BamsProtAlarm0_8")?.ss40k
-    ).toEqual({
-      name: "batteryProtectionAlarmWord",
-      model: "52103",
-    });
+    ).toBeUndefined();
     expect(
       template.telemetry.find((tag) => tag.id === "BamsSysFaultCode0_8")?.ss40k
-    ).toEqual({
-      name: "batterySystemFaultWord",
-      model: "52103",
-    });
+    ).toBeUndefined();
     expect(
       template.telemetry.find((tag) => tag.id === "BamsOtherErrCode0_8")?.ss40k
+    ).toBeUndefined();
+    expect(
+      template.telemetry.find((tag) => tag.id === "BamsHwErrCode0_8")?.ss40k
+    ).toBeUndefined();
+    expect(
+      template.telemetry.find((tag) => tag.id === "BamsHwStaCode0_8")?.ss40k
+    ).toBeUndefined();
+
+    expect(
+      template.telemetry.find((tag) => tag.id === "batteryProtectionWarningWord")?.ss40k
     ).toEqual({
-      name: "batteryOtherErrorWord",
+      name: "batteryProtectionWarningWord",
       model: "52103",
     });
     expect(
-      template.telemetry.find((tag) => tag.id === "BamsHwErrCode0_8")?.ss40k
+      template.telemetry.find((tag) => tag.id === "batteryProtectionFaultWord")?.ss40k
+    ).toEqual({
+      name: "batteryProtectionFaultWord",
+      model: "52103",
+    });
+    expect(
+      template.telemetry.find((tag) => tag.id === "batterySystemFaultWordA")?.ss40k
+    ).toEqual({
+      name: "batterySystemFaultWordA",
+      model: "52103",
+    });
+    expect(
+      template.telemetry.find((tag) => tag.id === "batterySystemFaultWordA")?.notes
+    ).toContain("Do not pack any alarm into output bit 31");
+    expect(
+      template.telemetry.find((tag) => tag.id === "batterySystemFaultWordB")?.ss40k
+    ).toEqual({
+      name: "batterySystemFaultWordB",
+      model: "52103",
+    });
+    expect(
+      template.telemetry.find((tag) => tag.id === "batteryOtherErrorWordA")?.ss40k
+    ).toEqual({
+      name: "batteryOtherErrorWordA",
+      model: "52103",
+    });
+    expect(
+      template.telemetry.find((tag) => tag.id === "batteryOtherErrorWordA")?.notes
+    ).toContain("Do not pack any alarm into output bit 31");
+    expect(
+      template.telemetry.find((tag) => tag.id === "batteryOtherErrorWordB")?.ss40k
+    ).toEqual({
+      name: "batteryOtherErrorWordB",
+      model: "52103",
+    });
+    expect(
+      template.telemetry.find((tag) => tag.id === "batteryHardwareErrorWord")?.ss40k
     ).toEqual({
       name: "batteryHardwareErrorWord",
       model: "52103",
     });
     expect(
-      template.telemetry.find((tag) => tag.id === "BamsHwStaCode0_8")?.ss40k
+      template.telemetry.find((tag) => tag.id === "batteryHardwareStatusWord")?.ss40k
     ).toEqual({
       name: "batteryHardwareStatusWord",
       model: "52103",

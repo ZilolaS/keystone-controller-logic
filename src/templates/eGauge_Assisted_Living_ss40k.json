@@ -12,9 +12,37 @@
   },
   "telemetry": [
     {
+      "id": "Usage",
+      "function": "IRF",
+      "address": 6000,
+      "pollClass": "fast",
+      "supporting": true,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 1000,
+        "scaledLow": 0,
+        "scaledHigh": 1
+      }
+    },
+    {
+      "id": "Generation",
+      "function": "IRF",
+      "address": 6002,
+      "pollClass": "fast",
+      "supporting": true,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 1000,
+        "scaledLow": 0,
+        "scaledHigh": 1
+      }
+    },
+    {
       "id": "L1_Voltage",
       "function": "IRF",
-      "address": 9002,
+      "address": 9000,
       "pollClass": "fast",
       "ss40k": {
         "name": "vGridL1N",
@@ -24,7 +52,7 @@
     {
       "id": "L2_Voltage",
       "function": "IRF",
-      "address": 9004,
+      "address": 9002,
       "pollClass": "fast",
       "ss40k": {
         "name": "vGridL2N",
@@ -34,7 +62,7 @@
     {
       "id": "L3_Voltage",
       "function": "IRF",
-      "address": 9006,
+      "address": 9004,
       "pollClass": "fast",
       "ss40k": {
         "name": "vGridL3N",
@@ -98,7 +126,21 @@
     {
       "id": "Utility_Total_Power",
       "function": "IRF",
-      "address": 9020,
+      "address": 9006,
+      "pollClass": "fast",
+      "supporting": true,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 1000,
+        "scaledLow": 0,
+        "scaledHigh": 1
+      }
+    },
+    {
+      "id": "BESS_Total_Power",
+      "function": "IRF",
+      "address": 9008,
       "pollClass": "fast",
       "supporting": true,
       "scale": {
@@ -214,6 +256,13 @@
     {
       "id": "Load_Active_Power",
       "pollClass": "fast",
+      "calc": {
+        "inputs": {
+          "utility": "Utility_Total_Power",
+          "bess": "BESS_Total_Power"
+        },
+        "expr": "utility + bess"
+      },
       "ss40k": {
         "name": "pLoad",
         "model": "40101",
