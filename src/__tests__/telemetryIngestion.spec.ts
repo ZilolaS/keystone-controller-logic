@@ -2062,6 +2062,41 @@ describe("Telemetry baseline lock", () => {
     });
   });
 
+  test("AMPACE Mini BAMS other-error U64 uses vendor byte order for SS52K alarms", () => {
+    const template = resolveTelemetryTemplate("AMPACE_Mini_ss40k");
+    const profile = adaptTelemetryTemplateToReadProfile("BMS", template);
+    const readPlan = buildReadPlan(profile, instance, compilerEnv);
+    const blockIdx = readPlan.blocks.findIndex((block: any) =>
+      block.map.some((item: any) => item.name === "BamsOtherErrCode0_8")
+    );
+
+    expect(blockIdx).toBeGreaterThanOrEqual(0);
+    expect(readPlan.blocks[blockIdx]).toMatchObject({
+      function: "HRUI_64",
+      start: 62130,
+      quantity: 4,
+    });
+
+    const result = simulateReply(readPlan, blockIdx, [0, 0, 0, 0x0040]);
+
+    expect(result.out2).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          tagID: "BamsOtherErrCode0_8",
+          value: "0x0000000000000040",
+        }),
+        expect.objectContaining({
+          tagID: "batteryOtherErrorWordA",
+          value: 0,
+        }),
+        expect.objectContaining({
+          tagID: "batteryOtherErrorWordB",
+          value: 2,
+        }),
+      ])
+    );
+  });
+
   test("Ampace BCU 42K JSON template shifts by BCU index and inverts current", () => {
     const baseTemplate = resolveTelemetryTemplate("AMPACE_Mini_BCU_42k");
     expect(baseTemplate.telemetry.find((tag) => tag.id === "SerialNumber")).toMatchObject({

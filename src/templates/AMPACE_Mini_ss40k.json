@@ -852,7 +852,7 @@
     },
     {
       "id": "batteryOtherErrorWordA",
-      "description": "Calculated cloud-safe SS52K other error word A from BamsOtherErrCode0_8 bits",
+      "description": "Calculated cloud-safe SS52K other error word A from BamsOtherErrCode0_8 bits using vendor byte order",
       "category": "Faults",
       "pollClass": "slow",
       "notes": "Cloud alarm bitfields are interpreted as signed 32-bit values. Do not pack any alarm into output bit 31; use word B for overflow conditions.",
@@ -860,7 +860,7 @@
         "inputs": {
           "o": "BamsOtherErrCode0_8"
         },
-        "expr": "(bit(o, 0) ? pow(2, 0) : 0) + (bit(o, 1) ? pow(2, 1) : 0) + (bit(o, 2) ? pow(2, 2) : 0) + (bit(o, 3) ? pow(2, 3) : 0) + (bit(o, 4) ? pow(2, 4) : 0) + (bit(o, 5) ? pow(2, 5) : 0) + (bit(o, 6) ? pow(2, 6) : 0) + (bit(o, 7) ? pow(2, 7) : 0) + (bit(o, 8) ? pow(2, 8) : 0) + (bit(o, 9) ? pow(2, 9) : 0) + (bit(o, 10) ? pow(2, 10) : 0) + (bit(o, 11) ? pow(2, 11) : 0) + (bit(o, 12) ? pow(2, 12) : 0) + (bit(o, 13) ? pow(2, 13) : 0) + (bit(o, 14) ? pow(2, 14) : 0) + (bit(o, 15) ? pow(2, 15) : 0) + (bit(o, 16) ? pow(2, 16) : 0) + (bit(o, 17) ? pow(2, 17) : 0) + (bit(o, 18) ? pow(2, 18) : 0) + (bit(o, 19) ? pow(2, 19) : 0) + (bit(o, 20) ? pow(2, 20) : 0) + (bit(o, 21) ? pow(2, 21) : 0) + (bit(o, 22) ? pow(2, 22) : 0) + (bit(o, 23) ? pow(2, 23) : 0) + (bit(o, 30) ? pow(2, 24) : 0) + (bit(o, 31) ? pow(2, 25) : 0) + (bit(o, 37) ? pow(2, 26) : 0) + (bit(o, 38) ? pow(2, 27) : 0) + (bit(o, 39) ? pow(2, 28) : 0) + (bit(o, 48) ? pow(2, 29) : 0) + (bit(o, 49) ? pow(2, 30) : 0)"
+        "expr": "(bit(o, 56) ? pow(2, 0) : 0) + (bit(o, 57) ? pow(2, 1) : 0) + (bit(o, 58) ? pow(2, 2) : 0) + (bit(o, 59) ? pow(2, 3) : 0) + (bit(o, 60) ? pow(2, 4) : 0) + (bit(o, 61) ? pow(2, 5) : 0) + (bit(o, 62) ? pow(2, 6) : 0) + (bit(o, 63) ? pow(2, 7) : 0) + (bit(o, 48) ? pow(2, 8) : 0) + (bit(o, 49) ? pow(2, 9) : 0) + (bit(o, 50) ? pow(2, 10) : 0) + (bit(o, 51) ? pow(2, 11) : 0) + (bit(o, 52) ? pow(2, 12) : 0) + (bit(o, 53) ? pow(2, 13) : 0) + (bit(o, 54) ? pow(2, 14) : 0) + (bit(o, 55) ? pow(2, 15) : 0) + (bit(o, 40) ? pow(2, 16) : 0) + (bit(o, 41) ? pow(2, 17) : 0) + (bit(o, 42) ? pow(2, 18) : 0) + (bit(o, 43) ? pow(2, 19) : 0) + (bit(o, 44) ? pow(2, 20) : 0) + (bit(o, 45) ? pow(2, 21) : 0) + (bit(o, 46) ? pow(2, 22) : 0) + (bit(o, 47) ? pow(2, 23) : 0) + (bit(o, 38) ? pow(2, 24) : 0) + (bit(o, 39) ? pow(2, 25) : 0) + (bit(o, 29) ? pow(2, 26) : 0) + (bit(o, 30) ? pow(2, 27) : 0) + (bit(o, 31) ? pow(2, 28) : 0) + (bit(o, 8) ? pow(2, 29) : 0) + (bit(o, 9) ? pow(2, 30) : 0)"
       },
       "alarm": true,
       "supportingTag": true,
@@ -872,14 +872,14 @@
     },
     {
       "id": "batteryOtherErrorWordB",
-      "description": "Calculated cloud-safe SS52K other error word B from BamsOtherErrCode0_8 bits",
+      "description": "Calculated cloud-safe SS52K other error word B from BamsOtherErrCode0_8 bits using vendor byte order",
       "category": "Faults",
       "pollClass": "slow",
       "calc": {
         "inputs": {
           "o": "BamsOtherErrCode0_8"
         },
-        "expr": "(bit(o, 50) ? pow(2, 0) : 0) + (bit(o, 62) ? pow(2, 1) : 0) + (bit(o, 63) ? pow(2, 2) : 0)"
+        "expr": "(bit(o, 10) ? pow(2, 0) : 0) + (bit(o, 6) ? pow(2, 1) : 0) + (bit(o, 7) ? pow(2, 2) : 0)"
       },
       "alarm": true,
       "supportingTag": true,
