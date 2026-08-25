@@ -1555,6 +1555,41 @@
     "wires": []
   },
   {
+    "id": "platform_products_http",
+    "type": "http in",
+    "z": "unified_platform_tab",
+    "name": "GET /api/products",
+    "url": "/api/products",
+    "method": "get",
+    "upload": false,
+    "x": 160,
+    "y": 1010,
+    "wires": [
+      [
+        "platform_products_request"
+      ]
+    ]
+  },
+  {
+    "id": "platform_products_request",
+    "type": "function",
+    "z": "unified_platform_tab",
+    "name": "Build Product.GetList request",
+    "func": "msg.payload = {\n  endPoint: 'Product',\n  method: 'GetList',\n  version: '2.0',\n  requestId: 0,\n  data: {}\n};\nif (msg.req) msg.req.body = msg.payload;\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": [],
+    "x": 430,
+    "y": 1010,
+    "wires": [
+      [
+        "platform_sched_api_esr_handler"
+      ]
+    ]
+  },
+  {
     "id": "platform_realtime_http",
     "type": "http in",
     "z": "unified_platform_tab",

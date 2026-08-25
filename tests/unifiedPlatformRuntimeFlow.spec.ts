@@ -4,6 +4,8 @@ import path from "path";
 type FlowNode = {
   id?: string;
   type?: string;
+  url?: string;
+  method?: string;
   func?: string;
 };
 
@@ -76,5 +78,35 @@ describe("unified platform runtime flow", () => {
     expect(body).toContain("jobListItem");
     expect(body).toContain("method === 'CreateJob'");
     expect(body).toContain("edgeResponse");
+  });
+});
+
+describe("standalone unified platform runtime flow", () => {
+  const flow = JSON.parse(
+    readFileSync(
+      path.resolve(__dirname, "../flows/unified_platform_runtime_flow.json"),
+      "utf8"
+    )
+  ) as FlowNode[];
+
+  function node(id: string): FlowNode {
+    const found = flow.find((item) => item.id === id);
+    expect(found).toBeDefined();
+    return found || {};
+  }
+
+  test("exposes products API for AWS shadow publishing", () => {
+    expect(node("platform_products_http")).toMatchObject({
+      type: "http in",
+      url: "/api/products",
+      method: "get",
+    });
+
+    expect(node("platform_products_request").func).toContain(
+      "endPoint: 'Product'"
+    );
+    expect(node("platform_products_request").func).toContain(
+      "msg.req.body = msg.payload"
+    );
   });
 });
