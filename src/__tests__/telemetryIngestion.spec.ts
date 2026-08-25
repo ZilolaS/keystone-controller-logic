@@ -1189,6 +1189,34 @@ describe("Telemetry baseline lock", () => {
     );
   });
 
+  test("SEL751 template resolves relay word and RB01 points", () => {
+    const template = resolveTelemetryTemplate("udt_SEL751_v1");
+    const profile = adaptTelemetryTemplateToReadProfile("SEL751", template);
+
+    expect(template.device.vendor).toBe("SEL");
+    expect(profile.tags).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          name: "ROW_19",
+          function: "HRUS",
+          address: 1779,
+          status: "Yes",
+        }),
+        expect.objectContaining({
+          name: "ROW_44",
+          function: "HRUS",
+          address: 1804,
+          status: "Yes",
+        }),
+        expect.objectContaining({
+          name: "RB_1",
+          function: "C",
+          address: 27,
+        }),
+      ])
+    );
+  });
+
   test("Mission Energy eGauge template uses live telemetry addresses and derived power tags", () => {
     const template = resolveTelemetryTemplate("eGauge_Mission_Energy");
     const profile = adaptTelemetryTemplateToReadProfile(
