@@ -1544,6 +1544,22 @@
     ]
   },
   {
+    "id": "platform_control_command_http",
+    "type": "http in",
+    "z": "unified_platform_tab",
+    "name": "POST /api/control/command",
+    "url": "/api/control/command",
+    "method": "post",
+    "upload": false,
+    "x": 180,
+    "y": 1010,
+    "wires": [
+      [
+        "platform_sched_api_esr_handler"
+      ]
+    ]
+  },
+  {
     "id": "platform_esr_response",
     "type": "http response",
     "z": "unified_platform_tab",
@@ -1563,7 +1579,7 @@
     "method": "get",
     "upload": false,
     "x": 160,
-    "y": 1010,
+    "y": 1040,
     "wires": [
       [
         "platform_products_request"
@@ -1582,7 +1598,7 @@
     "finalize": "",
     "libs": [],
     "x": 430,
-    "y": 1010,
+    "y": 1040,
     "wires": [
       [
         "platform_sched_api_esr_handler"

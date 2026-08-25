@@ -109,4 +109,12 @@ describe("standalone unified platform runtime flow", () => {
       "msg.req.body = msg.payload"
     );
   });
+
+  test("exposes CGI command API for AWSFeed RPC requests", () => {
+    expect(node("platform_control_command_http")).toMatchObject({
+      type: "http in",
+      url: "/api/control/command",
+      method: "post",
+    });
+  });
 });
