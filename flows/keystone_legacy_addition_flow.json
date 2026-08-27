@@ -177,6 +177,56 @@
     "info": "Production unified platform flow: site-config-driven telemetry, scheduler/API, unified control, writer runtime, fixed Modbus slots, and cloud/feed output."
   },
   {
+    "id": "platform_load_lib_once",
+    "type": "inject",
+    "z": "unified_platform_tab",
+    "name": "Boot: load repo library",
+    "props": [
+      {
+        "p": "payload"
+      }
+    ],
+    "repeat": "",
+    "crontab": "",
+    "once": true,
+    "onceDelay": "1",
+    "topic": "",
+    "payload": "{}",
+    "payloadType": "json",
+    "x": 170,
+    "y": 40,
+    "wires": [
+      [
+        "platform_load_lib"
+      ]
+    ]
+  },
+  {
+    "id": "platform_load_lib",
+    "type": "function",
+    "z": "unified_platform_tab",
+    "name": "Load keystone-controller-logic lib",
+    "func": "if (!kc || !kc.telemetry || !kc.writer || !kc.coreControl) {\n  node.status({ fill: 'red', shape: 'ring', text: 'library incomplete' });\n  msg.payload = { error: 'KEYSTONE_LIBRARY_INCOMPLETE', keys: kc ? Object.keys(kc) : [] };\n  return msg;\n}\nglobal.set('lib', kc);\ntry { global.set('libLoadedAt', new Date().toISOString(), 'file'); } catch (error) { global.set('libLoadedAt', new Date().toISOString()); }\nnode.status({ fill: 'green', shape: 'dot', text: 'lib loaded' });\nmsg.payload = { state: 'lib-loaded', keys: Object.keys(kc), loadedAt: new Date().toISOString() };\nreturn msg;",
+    "outputs": 1,
+    "timeout": 0,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": [
+      {
+        "var": "kc",
+        "module": "/data-internal/dist"
+      }
+    ],
+    "x": 440,
+    "y": 40,
+    "wires": [
+      [
+        "platform_errors"
+      ]
+    ]
+  },
+  {
     "id": "platform_errors",
     "type": "debug",
     "z": "unified_platform_tab",
@@ -255,7 +305,7 @@
     "repeat": "",
     "crontab": "",
     "once": true,
-    "onceDelay": "5",
+    "onceDelay": "8",
     "topic": "",
     "payload": "{}",
     "payloadType": "json",
@@ -540,7 +590,7 @@
     "repeat": "60",
     "crontab": "",
     "once": true,
-    "onceDelay": "20",
+    "onceDelay": "24",
     "topic": "",
     "payload": "{}",
     "payloadType": "json",
@@ -565,7 +615,7 @@
     "repeat": "",
     "crontab": "",
     "once": true,
-    "onceDelay": "8",
+    "onceDelay": "12",
     "topic": "",
     "payload": "{}",
     "payloadType": "json",
@@ -1641,7 +1691,7 @@
     "repeat": "1",
     "crontab": "",
     "once": true,
-    "onceDelay": "12",
+    "onceDelay": "16",
     "topic": "",
     "payload": "{}",
     "payloadType": "json",
