@@ -345,7 +345,7 @@ describe("configured eGauge register map template", () => {
     });
   });
 
-  test("can model Assisted Living eGauge rows from site config", () => {
+  test("can model configured eGauge site-meter rows from site config", () => {
     const template = buildConfiguredEgaugeTemplate({
       meterType: "eGauge",
       modbusProfile: "configured_eGauge",

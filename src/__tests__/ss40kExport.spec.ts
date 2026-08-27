@@ -170,7 +170,7 @@ describe("SS40K export helpers", () => {
         profileName: "AMPACE_Mini_BCU_42k",
         template: buildAmpaceBcu42kTemplate({ bcuIndex: 0 }),
       },
-      Meter: "eGauge_Assisted_Living",
+      Meter: "eGauge_Site_Meter",
     });
 
     const messages = buildSs40kFixedPayloads({
@@ -1273,9 +1273,9 @@ describe("SS40K export helpers", () => {
     ]);
   });
 
-  test("Assisted Living eGauge profile maps signed utility and backup load into SS40K", () => {
+  test("configured eGauge site-meter profile maps signed utility and backup load into SS40K", () => {
     const { lookup } = buildSs40kLookup({
-      Meter: "eGauge_Assisted_Living",
+      Meter: "eGauge_Site_Meter",
     });
 
     expect(lookup["Meter.Utility_Import_Power"]).toMatchObject({
@@ -1576,7 +1576,7 @@ describe("SS40K export helpers", () => {
   test("site signal mapping overrides Mini site-level SS40K fields", () => {
     const { lookup } = buildSs40kLookup(
       {
-        Meter: "eGauge_Assisted_Living",
+        Meter: "eGauge_Site_Meter",
         BMS: "AMPACE_Mini_ss40k",
         PVDC1: "pvdc_module_1",
         PVDC2: "pvdc_module_2",
@@ -2184,7 +2184,7 @@ describe("SS40K export helpers", () => {
   test("site signal mapping can override SS40K grid points from meter telemetry", () => {
     const { lookup } = buildSs40kLookup({
       PCS: "Sinexcel_Mini_PCS_ss40k",
-      Meter: "eGauge_Assisted_Living",
+      Meter: "eGauge_Site_Meter",
     });
 
     const messages = buildSs40kFixedPayloads({

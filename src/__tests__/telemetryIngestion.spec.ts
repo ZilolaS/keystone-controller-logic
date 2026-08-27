@@ -1665,14 +1665,15 @@ describe("Telemetry baseline lock", () => {
     }
   });
 
-  test("site-specific Assisted Living eGauge template maps useful SS40K readings", () => {
-    const template = resolveTelemetryTemplate("eGauge_Assisted_Living");
+  test("configured eGauge site-meter template maps useful SS40K readings", () => {
+    const template = resolveTelemetryTemplate("eGauge_Site_Meter");
     const profile = adaptTelemetryTemplateToReadProfile(
-      "eGauge_Assisted_Living",
+      "eGauge_Site_Meter",
       template
     );
 
-    expect(template.device.name).toBe("udt_eGauge_Assisted_Living_V1");
+    expect(template.device.name).toBe("udt_eGauge_Site_Meter_V1");
+    expect(resolveTelemetryTemplate("eGauge_Assisted_Living")).toEqual(template);
     expect(profile.tags).toEqual(
       expect.arrayContaining([
         expect.objectContaining({

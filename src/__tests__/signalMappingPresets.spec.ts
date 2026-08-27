@@ -115,11 +115,11 @@ describe("Mini signal mapping presets", () => {
   test("maps eGauge grid with PCS load and PVDC production", () => {
     const mapping = buildMiniSignalMappingPreset("mini_egauge_grid_pcs_load_pvdc", {
       systemProfile: "MINI-60-90-246",
-      meterProfile: "eGauge_Assisted_Living",
+      meterProfile: "eGauge_Site_Meter",
     });
 
     expect(mapping.sources?.Meter).toMatchObject({
-      profile: "eGauge_Assisted_Living",
+      profile: "eGauge_Site_Meter",
       role: "siteMeter",
     });
     expect(mapping.sources?.Load).toMatchObject({

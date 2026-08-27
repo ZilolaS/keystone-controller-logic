@@ -73,7 +73,7 @@
       {
         "id": "Meter",
         "role": "meter",
-        "profileName": "eGauge_Assisted_Living_ss40k",
+        "profileName": "eGauge_Site_Meter_ss40k",
         "ip": "192.168.1.88",
         "port": 502,
         "unitId": 1
@@ -116,7 +116,7 @@
   },
   "metering": {
     "meterType": "eGauge",
-    "modbusProfile": "eGauge_Assisted_Living_ss40k",
+    "modbusProfile": "eGauge_Site_Meter_ss40k",
     "ip": "192.168.1.88",
     "port": 502,
     "unitId": 1,
@@ -176,7 +176,7 @@
     },
     {
       "equipmentId": "Meter",
-      "profileName": "eGauge_Assisted_Living_ss40k",
+      "profileName": "eGauge_Site_Meter_ss40k",
       "ip": "192.168.1.88",
       "port": 502,
       "unitId": 1,
@@ -237,7 +237,7 @@
         "route": "PVDC2"
       },
       "Meter": {
-        "profileName": "eGauge_Assisted_Living_ss40k",
+        "profileName": "eGauge_Site_Meter_ss40k",
         "role": "meter",
         "ip": "192.168.1.88",
         "port": 502,

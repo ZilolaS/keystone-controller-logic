@@ -2,13 +2,13 @@
   "version": "2",
   "device": {
     "vendor": "eGauge",
-    "model": "Assisted Living site eGauge",
+    "model": "Configured site eGauge",
     "protocol": "modbus-tcp",
     "defaultByteOrder": "BE",
     "defaultWordOrder32": "ABCD",
-    "name": "udt_eGauge_Assisted_Living_V1",
+    "name": "udt_eGauge_Site_Meter_V1",
     "sourceFormat": "legacy-site-specific",
-    "notes": "Site-specific eGauge layout from production Node-RED. Do not use as a generic udt_eGauge_V1 replacement; eGauge virtual registers are site-configured."
+    "notes": "Configured eGauge site-meter layout from production Node-RED. Do not use as a generic udt_eGauge_V1 replacement; eGauge virtual registers are site-configured per site."
   },
   "telemetry": [
     {
