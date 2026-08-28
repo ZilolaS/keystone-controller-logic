@@ -3,6 +3,8 @@ import {
   isLegacyTelemetrySource,
   legacySourceAllowsBcuTelemetry,
   legacyTelemetryAdaptersFromConfig,
+  publishUnifiedTelemetryToLegacy,
+  unifiedToLegacyTelemetryBridgesFromConfig,
 } from "../telemetry/legacyAdapter";
 
 describe("legacy telemetry adapter", () => {
@@ -158,6 +160,116 @@ describe("legacy telemetry adapter", () => {
       expect.arrayContaining([
         expect.objectContaining({ tagID: "Battery.BamsSoc", value: 72 }),
         expect.objectContaining({ tagID: "Battery.BamsPower", value: 9.4 }),
+      ])
+    );
+  });
+
+  test("detects configured unified-to-legacy bridge", () => {
+    const bridgeConfig = {
+      ...config,
+      signalMapping: {
+        sources: {
+          AMPACE: {
+            profileName: "AMPACE_Mini_ss40k",
+            publishToLegacy: {
+              enabled: true,
+              legacyEquipment: "Battery_A",
+            },
+          },
+        },
+      },
+    };
+
+    expect(unifiedToLegacyTelemetryBridgesFromConfig(bridgeConfig)).toEqual([
+      {
+        equipmentId: "AMPACE",
+        legacyEquipment: "Battery_A",
+        tagMap: undefined,
+      },
+    ]);
+  });
+
+  test("publishes unified BMS telemetry into legacy Battery_A tags", () => {
+    const bridgeConfig = {
+      ...config,
+      signalMapping: {
+        sources: {
+          AMPACE: {
+            profileName: "AMPACE_Mini_ss40k",
+            publishToLegacy: {
+              enabled: true,
+              legacyEquipment: "Battery_A",
+            },
+          },
+        },
+      },
+    };
+
+    const result = publishUnifiedTelemetryToLegacy({
+      config: bridgeConfig,
+      nowMs: Date.parse("2026-08-28T00:01:00.000Z"),
+      telemetry: {
+        AMPACE: [
+          {
+            tagID: "AMPACE.BamsSoc",
+            value: 0.82,
+            timestamp: "2026-08-28T00:00:59.000Z",
+          },
+          {
+            tagID: "AMPACE.BamsPower",
+            value: 12.4,
+            timestamp: "2026-08-28T00:00:59.000Z",
+          },
+          {
+            tagID: "AMPACE.BamsPermitDsgCurrent",
+            value: 96,
+            timestamp: "2026-08-28T00:00:59.000Z",
+          },
+        ],
+      },
+      legacyTelemetry: {
+        Battery_A: [
+          {
+            tagID: "Battery_A.LegacyOnlyTag",
+            value: "keep-me",
+            timestamp: "2026-08-28T00:00:00.000Z",
+          },
+          {
+            tagID: "Battery_A.BamsSoc",
+            value: 0.5,
+            timestamp: "2026-08-28T00:00:00.000Z",
+          },
+        ],
+      },
+    });
+
+    expect(result.applied).toEqual([
+      {
+        equipmentId: "AMPACE",
+        legacyEquipment: "Battery_A",
+        count: 3,
+      },
+    ]);
+    expect(result.legacyTelemetry.Battery_A).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          tagID: "Battery_A.BamsSoc",
+          value: 0.82,
+          source: "unifiedTelemetry",
+          sourceEquipment: "AMPACE",
+        }),
+        expect.objectContaining({
+          tagID: "Battery_A.BamsPower",
+          value: 12.4,
+        }),
+        expect.objectContaining({
+          tagID: "Battery_A.BamsPermitDsgCurrent",
+          value: 96,
+        }),
+        expect.objectContaining({
+          tagID: "Battery_A.LegacyOnlyTag",
+          value: "keep-me",
+        }),
       ])
     );
   });

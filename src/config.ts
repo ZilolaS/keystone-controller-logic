@@ -483,6 +483,17 @@ export interface SignalMappingSourceConfig {
       pollMs?: number;
     };
   };
+  /**
+   * Optional compatibility bridge for migrated Node-RED sites. When enabled,
+   * samples read by unified telemetry are republished into the legacy
+   * global.telemetry equipment name expected by older control/Azure flows.
+   */
+  publishToLegacy?: {
+    enabled?: boolean;
+    legacyEquipment?: string;
+    legacyKey?: string;
+    tagMap?: Record<string, string | string[]>;
+  };
   role?: string;
   ip?: string;
   host?: string;
@@ -529,6 +540,20 @@ export interface SignalMappingConfig {
   energyAccumulator?: EnergyAccumulatorConfig;
 }
 
+export interface UnifiedToLegacyTelemetryBridgeConfig {
+  equipmentId: string;
+  legacyEquipment?: string;
+  legacyKey?: string;
+  enabled?: boolean;
+  tagMap?: Record<string, string | string[]>;
+}
+
+export interface TelemetryCompatibilityConfig {
+  publishUnifiedToLegacy?:
+    | UnifiedToLegacyTelemetryBridgeConfig[]
+    | Record<string, Omit<UnifiedToLegacyTelemetryBridgeConfig, "equipmentId">>;
+}
+
 // ---- Generator ----
 
 export interface GeneratorConfig {
@@ -553,5 +578,6 @@ export interface SiteConfig {
   islanding?: IslandingConfig;
   metering: MeteringConfig;
   signalMapping?: SignalMappingConfig;
+  telemetryCompatibility?: TelemetryCompatibilityConfig;
   generator?: GeneratorConfig;
 }

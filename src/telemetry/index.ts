@@ -52,8 +52,12 @@ export {
   isLegacyTelemetrySource,
   legacySourceAllowsBcuTelemetry,
   legacyTelemetryAdaptersFromConfig,
+  publishUnifiedTelemetryToLegacy,
+  unifiedToLegacyTelemetryBridgesFromConfig,
   type LegacyTelemetryAdapter,
   type LegacyTelemetryAdapterResult,
+  type UnifiedToLegacyTelemetryBridge,
+  type UnifiedToLegacyTelemetryBridgeResult,
 } from "./legacyAdapter";
 
 export function initTelemetry(config: SiteConfig): {

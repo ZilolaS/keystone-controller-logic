@@ -29,6 +29,22 @@ export interface LegacyTelemetryAdapterResult {
   errors: Array<{ equipmentId: string; message: string }>;
 }
 
+export interface UnifiedToLegacyTelemetryBridge {
+  equipmentId: string;
+  legacyEquipment: string;
+  tagMap?: Record<string, string | string[]>;
+}
+
+export interface UnifiedToLegacyTelemetryBridgeResult {
+  legacyTelemetry: Ss40kTelemetryStore;
+  applied: Array<{
+    equipmentId: string;
+    legacyEquipment: string;
+    count: number;
+  }>;
+  errors: Array<{ equipmentId: string; message: string }>;
+}
+
 const MINI_AMPACE_DEFAULT_TAG_MAP: Record<string, string | string[]> = {
   BcuCount: ["BcuCount", "BMSCount", "BcuQty"],
   BamsVoltage: ["BamsVoltage", "BamsTotalVol", "bamsVoltage(V)"],
@@ -195,6 +211,159 @@ export function applyLegacyTelemetryAdapters(options: {
   return { telemetry, applied, errors };
 }
 
+export function unifiedToLegacyTelemetryBridgesFromConfig(
+  config: LegacyAdapterConfig
+): UnifiedToLegacyTelemetryBridge[] {
+  const bridges: UnifiedToLegacyTelemetryBridge[] = [];
+
+  const pushBridge = (
+    equipmentId: string,
+    raw: Record<string, unknown> | undefined
+  ) => {
+    if (!equipmentId || !raw || raw.enabled === false) return;
+    const legacyEquipment =
+      readString(raw.legacyEquipment) ||
+      readString(raw.legacyKey) ||
+      defaultLegacyEquipment(equipmentId);
+    if (!legacyEquipment) return;
+    if (bridges.some((bridge) => bridge.equipmentId === equipmentId)) return;
+    bridges.push({
+      equipmentId,
+      legacyEquipment,
+      tagMap: readTagMap(raw.tagMap),
+    });
+  };
+
+  const compatibility = readRecord(config.telemetryCompatibility);
+  const configured = compatibility?.publishUnifiedToLegacy;
+  if (Array.isArray(configured)) {
+    for (const item of configured) {
+      const raw = readRecord(item);
+      const equipmentId = readString(raw?.equipmentId);
+      pushBridge(equipmentId, raw);
+    }
+  } else {
+    const record = readRecord(configured);
+    if (record) {
+      for (const [equipmentId, value] of Object.entries(record)) {
+        pushBridge(equipmentId, readRecord(value));
+      }
+    }
+  }
+
+  const sourceBlocks = [
+    readRecord(config.equipmentSources),
+    readRecord(config.telemetrySources),
+    readRecord(config.signalMapping?.sources),
+  ];
+  for (const block of sourceBlocks) {
+    if (!block) continue;
+    for (const [equipmentId, value] of Object.entries(block)) {
+      const source = readRecord(value);
+      if (!source) continue;
+      const bridge =
+        readRecord(source.publishToLegacy) ||
+        readRecord(source.legacyPublish) ||
+        readRecord(source.publishUnifiedToLegacy);
+      pushBridge(equipmentId, bridge);
+    }
+  }
+
+  return bridges;
+}
+
+export function publishUnifiedTelemetryToLegacy(options: {
+  telemetry?: Ss40kTelemetryStore;
+  legacyTelemetry?: Ss40kTelemetryStore | Record<string, unknown>;
+  config?: LegacyAdapterConfig;
+  nowMs?: number;
+}): UnifiedToLegacyTelemetryBridgeResult {
+  const telemetry = readRecord(options.telemetry) || {};
+  const legacyTelemetry = cloneReadableStore(options.legacyTelemetry || {});
+  const config = options.config || {};
+  const nowMs = options.nowMs ?? Date.now();
+  const applied: UnifiedToLegacyTelemetryBridgeResult["applied"] = [];
+  const errors: UnifiedToLegacyTelemetryBridgeResult["errors"] = [];
+
+  for (const bridge of unifiedToLegacyTelemetryBridgesFromConfig(config)) {
+    const sourceSamples = readLegacySamples(telemetry, bridge.equipmentId);
+    if (!sourceSamples.length) {
+      errors.push({
+        equipmentId: bridge.equipmentId,
+        message: `unified equipment ${bridge.equipmentId} not found`,
+      });
+      continue;
+    }
+
+    const converted = convertUnifiedSamplesToLegacy(
+      sourceSamples,
+      bridge.equipmentId,
+      bridge.legacyEquipment,
+      bridge.tagMap || defaultUnifiedToLegacyTagMap(bridge.equipmentId),
+      nowMs
+    );
+    if (!converted.length) {
+      errors.push({
+        equipmentId: bridge.equipmentId,
+        message: `unified equipment ${bridge.equipmentId} had no matching samples`,
+      });
+      continue;
+    }
+
+    const existing = readLegacySamples(
+      legacyTelemetry,
+      bridge.legacyEquipment
+    );
+    legacyTelemetry[bridge.legacyEquipment] = mergeSamples(
+      existing,
+      converted
+    );
+    applied.push({
+      equipmentId: bridge.equipmentId,
+      legacyEquipment: bridge.legacyEquipment,
+      count: converted.length,
+    });
+  }
+
+  return { legacyTelemetry, applied, errors };
+}
+
+function convertUnifiedSamplesToLegacy(
+  sourceSamples: Ss40kTelemetrySample[],
+  equipmentId: string,
+  legacyEquipment: string,
+  tagMap: Record<string, string | string[]> | undefined,
+  nowMs: number
+): Ss40kTelemetrySample[] {
+  const bySuffix = new Map<string, Ss40kTelemetrySample>();
+  const byFull = new Map<string, Ss40kTelemetrySample>();
+  for (const sample of sourceSamples) {
+    const tagID = readString(sample.tagID);
+    if (!tagID) continue;
+    byFull.set(tagID, sample);
+    bySuffix.set(stripEquipment(tagID), sample);
+  }
+
+  const specs =
+    tagMap ||
+    Object.fromEntries(Array.from(bySuffix.keys()).map((key) => [key, key]));
+  const out: Ss40kTelemetrySample[] = [];
+
+  for (const [targetTag, rawSources] of Object.entries(specs)) {
+    const sample = firstMappedSample(rawSources, bySuffix, byFull, equipmentId);
+    if (!sample) continue;
+    out.push({
+      ...sample,
+      tagID: `${legacyEquipment}.${targetTag}`,
+      timestamp: normalizeTimestamp(sample.timestamp, nowMs),
+      source: "unifiedTelemetry",
+      sourceEquipment: equipmentId,
+    });
+  }
+
+  return out;
+}
+
 function convertLegacySamples(
   legacySamples: Ss40kTelemetrySample[],
   equipmentId: string,
@@ -300,6 +469,17 @@ function cloneStore(store: Ss40kTelemetryStore): Ss40kTelemetryStore {
   return out;
 }
 
+function cloneReadableStore(
+  store: Ss40kTelemetryStore | Record<string, unknown>
+): Ss40kTelemetryStore {
+  const out: Ss40kTelemetryStore = {};
+  const record = readRecord(store) || {};
+  for (const key of Object.keys(record)) {
+    out[key] = readLegacySamples(record, key);
+  }
+  return out;
+}
+
 function sourceKind(source: Record<string, unknown>): "modbus" | "legacyGlobal" {
   const value = readString(source.source) || readString(source.sourceType);
   return value === "legacyGlobal" ? "legacyGlobal" : "modbus";
@@ -316,6 +496,21 @@ function isMiniAmpace(adapter: LegacyTelemetryAdapter): boolean {
     adapter.profileName === "AMPACE_Mini_ss40k" ||
     adapter.profileName === "Battery_Mini"
   );
+}
+
+function defaultUnifiedToLegacyTagMap(
+  equipmentId: string
+): Record<string, string | string[]> | undefined {
+  if (
+    equipmentId === "AMPACE" ||
+    equipmentId === "Battery" ||
+    equipmentId.endsWith("_Battery")
+  ) {
+    return Object.fromEntries(
+      Object.keys(MINI_AMPACE_DEFAULT_TAG_MAP).map((key) => [key, key])
+    );
+  }
+  return undefined;
 }
 
 function stripEquipment(tagID: string): string {
