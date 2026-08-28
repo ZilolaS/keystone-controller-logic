@@ -47,6 +47,14 @@ export {
   filterSs40kPayloadsForReporting,
   type Ss40kReportingState,
 } from "./reportingStrategy";
+export {
+  applyLegacyTelemetryAdapters,
+  isLegacyTelemetrySource,
+  legacySourceAllowsBcuTelemetry,
+  legacyTelemetryAdaptersFromConfig,
+  type LegacyTelemetryAdapter,
+  type LegacyTelemetryAdapterResult,
+} from "./legacyAdapter";
 
 export function initTelemetry(config: SiteConfig): {
   caps: SiteCapabilities;

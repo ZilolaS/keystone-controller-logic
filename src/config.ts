@@ -465,6 +465,24 @@ export interface SignalMappingSourceConfig {
   profile?: string;
   profileName?: string;
   modbusProfile?: string;
+  /**
+   * Defaults to direct Modbus. Use "legacyGlobal" only as a transition bridge
+   * for existing Node-RED sites where another flow already owns the device
+   * connection.
+   */
+  source?: "modbus" | "legacyGlobal";
+  sourceType?: "modbus" | "legacyGlobal";
+  legacyEquipment?: string;
+  legacyKey?: string;
+  staleMs?: number;
+  tagMap?: Record<string, string | string[]>;
+  supplements?: {
+    bcuTelemetry?: {
+      enabled?: boolean;
+      source?: "modbus";
+      pollMs?: number;
+    };
+  };
   role?: string;
   ip?: string;
   host?: string;
