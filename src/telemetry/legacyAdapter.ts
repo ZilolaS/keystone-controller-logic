@@ -226,7 +226,15 @@ export function unifiedToLegacyTelemetryBridgesFromConfig(
       readString(raw.legacyKey) ||
       defaultLegacyEquipment(equipmentId);
     if (!legacyEquipment) return;
-    if (bridges.some((bridge) => bridge.equipmentId === equipmentId)) return;
+    if (
+      bridges.some(
+        (bridge) =>
+          bridge.equipmentId === equipmentId &&
+          bridge.legacyEquipment === legacyEquipment
+      )
+    ) {
+      return;
+    }
     bridges.push({
       equipmentId,
       legacyEquipment,
@@ -262,10 +270,16 @@ export function unifiedToLegacyTelemetryBridgesFromConfig(
       const source = readRecord(value);
       if (!source) continue;
       const bridge =
-        readRecord(source.publishToLegacy) ||
+        source.publishToLegacy ||
         readRecord(source.legacyPublish) ||
         readRecord(source.publishUnifiedToLegacy);
-      pushBridge(equipmentId, bridge);
+      if (Array.isArray(bridge)) {
+        for (const item of bridge) {
+          pushBridge(equipmentId, readRecord(item));
+        }
+      } else {
+        pushBridge(equipmentId, readRecord(bridge));
+      }
     }
   }
 

@@ -273,4 +273,65 @@ describe("legacy telemetry adapter", () => {
       ])
     );
   });
+
+  test("publishes one unified BMS source into multiple legacy battery buckets", () => {
+    const bridgeConfig = {
+      ...config,
+      signalMapping: {
+        sources: {
+          AMPACE: {
+            profileName: "AMPACE_Mini_ss40k",
+            publishToLegacy: [
+              {
+                enabled: true,
+                legacyEquipment: "Battery_A",
+              },
+              {
+                enabled: true,
+                legacyEquipment: "Battery_B",
+                tagMap: {
+                  BamsSysFaultCode0_8: "BamsSysFaultCode0_8",
+                },
+              },
+            ],
+          },
+        },
+      },
+    };
+
+    const result = publishUnifiedTelemetryToLegacy({
+      config: bridgeConfig,
+      telemetry: {
+        AMPACE: [
+          {
+            tagID: "AMPACE.BamsSoc",
+            value: 81,
+            timestamp: "2026-08-28T00:00:59.000Z",
+          },
+          {
+            tagID: "AMPACE.BamsSysFaultCode0_8",
+            value: "0x0",
+            timestamp: "2026-08-28T00:00:59.000Z",
+          },
+        ],
+      },
+      legacyTelemetry: {},
+    });
+
+    expect(result.legacyTelemetry.Battery_A).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ tagID: "Battery_A.BamsSoc", value: 81 }),
+      ])
+    );
+    expect(result.legacyTelemetry.Battery_B).toEqual([
+      expect.objectContaining({
+        tagID: "Battery_B.BamsSysFaultCode0_8",
+        value: "0x0",
+      }),
+    ]);
+    expect(result.applied.map((item) => item.legacyEquipment).sort()).toEqual([
+      "Battery_A",
+      "Battery_B",
+    ]);
+  });
 });

@@ -493,7 +493,12 @@ export interface SignalMappingSourceConfig {
     legacyEquipment?: string;
     legacyKey?: string;
     tagMap?: Record<string, string | string[]>;
-  };
+  } | Array<{
+    enabled?: boolean;
+    legacyEquipment?: string;
+    legacyKey?: string;
+    tagMap?: Record<string, string | string[]>;
+  }>;
   role?: string;
   ip?: string;
   host?: string;
