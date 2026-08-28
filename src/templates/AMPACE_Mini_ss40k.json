@@ -24,7 +24,7 @@
       "category": "Telemetry",
       "function": "HRUI",
       "address": 62000,
-      "pollClass": "normal",
+      "pollClass": "fast",
       "scale": {
         "mode": "Linear",
         "rawLow": 0,
@@ -43,7 +43,7 @@
       "category": "Telemetry",
       "function": "HRI",
       "address": 62002,
-      "pollClass": "normal",
+      "pollClass": "fast",
       "scale": {
         "mode": "Linear",
         "rawLow": 0,
@@ -63,7 +63,7 @@
       "category": "Telemetry",
       "function": "HRI",
       "address": 62004,
-      "pollClass": "normal",
+      "pollClass": "fast",
       "scale": {
         "mode": "Linear",
         "rawLow": 0,
@@ -152,7 +152,7 @@
       "category": "read",
       "function": "HRUS",
       "address": 62006,
-      "pollClass": "normal",
+      "pollClass": "fast",
       "scale": {
         "mode": "Linear",
         "rawLow": 0,
@@ -192,7 +192,7 @@
       "category": "Telemetry",
       "function": "HRUI",
       "address": 62008,
-      "pollClass": "normal",
+      "pollClass": "fast",
       "scale": {
         "mode": "Linear",
         "rawLow": 0,
@@ -207,7 +207,7 @@
       "category": "Telemetry",
       "function": "HRUI",
       "address": 62010,
-      "pollClass": "normal",
+      "pollClass": "fast",
       "scale": {
         "mode": "Linear",
         "rawLow": 0,
@@ -222,7 +222,7 @@
       "category": "Telemetry",
       "function": "HRUI",
       "address": 62012,
-      "pollClass": "normal",
+      "pollClass": "fast",
       "scale": {
         "mode": "Linear",
         "rawLow": 0,
@@ -242,7 +242,7 @@
       "category": "Telemetry",
       "function": "HRUI",
       "address": 62014,
-      "pollClass": "normal",
+      "pollClass": "fast",
       "scale": {
         "mode": "Linear",
         "rawLow": 0,

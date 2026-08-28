@@ -420,29 +420,7 @@ describe("SS40K export helpers", () => {
         },
       },
     });
-    expect(byModel["52103"]).toMatchObject({
-      payload: {
-        "0": {
-          id: 52103,
-          fixed: {
-            ID: 52103,
-            batteryProtectionWarningWord: 1,
-            batteryProtectionFaultWord: 0,
-            batterySystemFaultWordA: 1,
-            batterySystemFaultWordB: 0,
-            batteryOtherErrorWordA: 4,
-            batteryOtherErrorWordB: 0,
-            batteryHardwareErrorWord: 8,
-            batteryHardwareStatusWord: 16,
-          },
-        },
-      },
-      ss40k: {
-        equipment: "BMS",
-        model: "52103",
-        modelIndex: "0",
-      },
-    });
+    expect(byModel["52103"]).toBeUndefined();
   });
 
   test("generated AMPACE BCU readers map each BCU into SS42K battery models", () => {
@@ -571,6 +549,28 @@ describe("SS40K export helpers", () => {
       expect(fixed).not.toHaveProperty("Model");
       expect(fixed).not.toHaveProperty("ModelName");
     }
+  });
+
+  test("SS42K AMPACE BCU payloads are skipped when the BCU SN is missing", () => {
+    const { lookup } = buildSs40kLookup(
+      buildAmpaceBcu42kEquipmentConfig({ count: 1, route: "AMPACE" })
+    );
+
+    const messages = buildSs40kFixedPayloads({
+      lookup,
+      telemetry: {
+        AMPACE_BCU_1: [
+          { tagID: "AMPACE_BCU_1.Manufacturer", value: "fortress" },
+          { tagID: "AMPACE_BCU_1.ProductModel", value: "eSpire-Mini-BMS" },
+          { tagID: "AMPACE_BCU_1.BatteryType", value: 4 },
+          { tagID: "AMPACE_BCU_1.BcuPower", value: 0 },
+        ],
+      },
+      topic: "fort/v1/things/test/telem",
+      fixedSerialNumber: "PCS-SN",
+    });
+
+    expect(messages).toEqual([]);
   });
 
   test("generated CATL SBMU readers map each SBMU into SS42K battery models", () => {

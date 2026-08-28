@@ -317,6 +317,7 @@ export function buildSs40kFixedPayloads(
   );
 
   return Object.values(groups)
+    .filter(shouldEmitPayloadGroup)
     .sort((a, b) =>
       `${a.equipment}.${a.model}`.localeCompare(`${b.equipment}.${b.model}`)
     )
@@ -337,6 +338,15 @@ export function buildSs40kFixedPayloads(
         pointCount: Object.keys(group.fixed).length,
       },
     }));
+}
+
+function shouldEmitPayloadGroup(group: Ss40kPayloadGroup): boolean {
+  if (!group.model.startsWith("42") && !group.model.startsWith("52")) {
+    return true;
+  }
+
+  const sn = normalizeSerialNumber(group.fixed.SN);
+  return !!sn;
 }
 
 function filterTelemetryBySampleAge(
