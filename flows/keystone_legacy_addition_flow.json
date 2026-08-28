@@ -1920,5 +1920,54 @@
     "x": 1010,
     "y": 180,
     "wires": []
+  },
+  {
+    "id": "platform_unified_to_legacy_tick",
+    "type": "inject",
+    "z": "unified_platform_tab",
+    "name": "15s unified to legacy telemetry bridge",
+    "props": [
+      {
+        "p": "payload"
+      },
+      {
+        "p": "topic",
+        "vt": "str"
+      }
+    ],
+    "repeat": "15",
+    "crontab": "",
+    "once": true,
+    "onceDelay": "12",
+    "topic": "unified-to-legacy-telemetry-bridge",
+    "payload": "",
+    "payloadType": "date",
+    "x": 190,
+    "y": 460,
+    "wires": [
+      [
+        "platform_unified_to_legacy_bridge"
+      ]
+    ]
+  },
+  {
+    "id": "platform_unified_to_legacy_bridge",
+    "type": "function",
+    "z": "unified_platform_tab",
+    "name": "Bridge unified BMS to legacy telemetry",
+    "func": "function getAnyContext(ctx, key) {\n  let value = ctx.get(key);\n  if (value !== undefined && value !== null) return value;\n  try { return ctx.get(key, 'file'); } catch (error) { return value; }\n}\nfunction setBothContext(ctx, key, value) {\n  ctx.set(key, value);\n  try { ctx.set(key, value, 'file'); } catch (error) {}\n}\n\nconst lib = global.get('lib');\nif (!lib || !lib.telemetry || typeof lib.telemetry.publishUnifiedTelemetryToLegacy !== 'function') {\n  node.status({ fill: 'red', shape: 'ring', text: 'bridge library missing' });\n  return null;\n}\n\nconst config =\n  getAnyContext(flow, 'controlConfig') ||\n  getAnyContext(global, 'controlConfig') ||\n  getAnyContext(global, 'unifiedControlConfig') ||\n  getAnyContext(global, 'siteConfig') ||\n  {};\nconst unifiedTelemetry = getAnyContext(global, 'unifiedTelemetry') || getAnyContext(global, 'NEW_telemetry') || {};\nconst legacyTelemetry = getAnyContext(global, 'telemetry') || {};\n\nconst bridged = lib.telemetry.publishUnifiedTelemetryToLegacy({\n  telemetry: unifiedTelemetry,\n  legacyTelemetry,\n  config,\n  nowMs: Date.now()\n});\n\nconst status = { applied: bridged.applied, errors: bridged.errors, at: new Date().toISOString() };\nif (bridged.applied && bridged.applied.length) {\n  setBothContext(global, 'telemetry', bridged.legacyTelemetry || legacyTelemetry);\n  setBothContext(flow, 'unifiedToLegacyTelemetryBridgeStatus', status);\n  setBothContext(global, 'unifiedToLegacyTelemetryBridgeStatus', status);\n  node.status({\n    fill: 'green',\n    shape: 'dot',\n    text: 'bridged ' + bridged.applied.map((item) => item.equipmentId + '->' + item.legacyEquipment).join(', ')\n  });\n} else {\n  setBothContext(flow, 'unifiedToLegacyTelemetryBridgeStatus', status);\n  setBothContext(global, 'unifiedToLegacyTelemetryBridgeStatus', status);\n  node.status({ fill: bridged.errors && bridged.errors.length ? 'yellow' : 'grey', shape: 'ring', text: bridged.errors && bridged.errors[0] ? bridged.errors[0].message : 'no bridge configured' });\n}\n\nmsg.payload = status;\nreturn msg;",
+    "outputs": 1,
+    "timeout": 0,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": [],
+    "x": 500,
+    "y": 460,
+    "wires": [
+      [
+        "platform_debug"
+      ]
+    ]
   }
 ]
