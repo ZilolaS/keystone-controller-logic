@@ -1807,6 +1807,45 @@ describe("SS40K export helpers", () => {
     });
   });
 
+  test("energy accumulator integrates AC-coupled PV power when no AC PV kWh tag is available", () => {
+    const state = {};
+    const baseOptions = {
+      lookup: {},
+      mergeByModelIndex: true,
+      signalMapping: {
+        ss40k: {
+          pAcCplTot: { expr: "Meter.AC_PV_Power" },
+        },
+      },
+      topic: "fort/v1/things/test/telem",
+      energyAccumulator: {
+        state,
+      },
+    };
+
+    buildSs40kFixedPayloads({
+      ...baseOptions,
+      energyAccumulator: { ...baseOptions.energyAccumulator, nowMs: 1000 },
+      telemetry: {
+        Meter: [{ tagID: "Meter.AC_PV_Power", value: 12 }],
+      },
+    });
+
+    const second = buildSs40kFixedPayloads({
+      ...baseOptions,
+      energyAccumulator: { ...baseOptions.energyAccumulator, nowMs: 61000 },
+      telemetry: {
+        Meter: [{ tagID: "Meter.AC_PV_Power", value: 12 }],
+      },
+    });
+
+    const second40102 = second.find((message) => message.ss40k.model === "40102");
+    expect(second40102?.payload["0"].fixed).toMatchObject({
+      ID: 40102,
+      eAcCplTot: 0.2,
+    });
+  });
+
   test("energy accumulator preserves device totals and derives daily 40102 energy fields", () => {
     const state = {};
     const baseOptions = {

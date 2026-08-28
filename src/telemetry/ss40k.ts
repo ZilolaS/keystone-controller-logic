@@ -794,15 +794,26 @@ function applyEnergyAccumulatorOverrides(
     }
   }
 
+  const acCoupledPvKwhTag = sourceTags.acCoupledPvKwh || "Meter2.PV_Energy";
   accumulatePositiveRawKwh(
     telemetry,
-    sourceTags.acCoupledPvKwh || "Meter2.PV_Energy",
+    acCoupledPvKwhTag,
     counters,
     lastRaw,
     fixed40102,
     "eAcCplTot",
     outputMultiplier
   );
+  if (!hasFiniteFixedValue(fixed40102, "eAcCplTot")) {
+    seedCounter(counters, fixed40102, "eAcCplTot", outputMultiplier);
+    if (dtHours > 0) {
+      const acCoupledPvWatts = positiveNumber(fixed40101.pAcCplTot);
+      counters.eAcCplTot = roundEnergyKwh(
+        positiveCounter(counters.eAcCplTot) + (acCoupledPvWatts / 1000) * dtHours
+      );
+    }
+    fixed40102.eAcCplTot = formatEnergyCounter(counters.eAcCplTot, outputMultiplier);
+  }
   accumulatePositiveRawKwh(
     telemetry,
     sourceTags.generatorKwh || "Meter.Generator_Energy",
@@ -846,7 +857,8 @@ function applyEnergyAccumulatorOverrides(
   state.updatedAt = new Date(nowMs).toISOString();
   state.lastInputs = {
     utilityEnergy,
-    acCoupledPvEnergy: valueFromTelemetry(telemetry, sourceTags.acCoupledPvKwh || "Meter2.PV_Energy"),
+    acCoupledPvEnergy: valueFromTelemetry(telemetry, acCoupledPvKwhTag),
+    acCoupledPvWatts: fixed40101.pAcCplTot,
     generatorEnergy: valueFromTelemetry(telemetry, sourceTags.generatorKwh || "Meter.Generator_Energy"),
     loadWatts,
     batteryKw,

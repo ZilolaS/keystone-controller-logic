@@ -498,7 +498,10 @@
     },
     "ss40k": {
       "pPvTotal": {
-        "expr": "PVDC1.PVSideTotalPower + PVDC2.PVSideTotalPower + Meter.AC_PV_Power"
+        "expr": "PVDC1.PVSideTotalPower + PVDC2.PVSideTotalPower"
+      },
+      "pAcCplTot": {
+        "expr": "Meter.AC_PV_Power"
       },
       "pLoad": {
         "expr": "Meter.Utility_Active_Power + Meter.AC_PV_Power - PCS.ACBusTotalActivePower"
