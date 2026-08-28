@@ -304,6 +304,7 @@ export function buildSs40kFixedPayloads(
   }
 
   applySiteSignalOverrides(groups, telemetry, signalMapping, version);
+  applyDerivedFmpFlowFields(groups, telemetry, version);
   applyEnergyAccumulatorOverrides(groups, telemetry, version, options.energyAccumulator);
   applyDailyEnergyOverrides(groups, version, options.energyAccumulator);
   const identityTelemetry = rawTelemetry || telemetry;
@@ -589,6 +590,62 @@ function applySiteSignalOverrides(
   }
 
   applyDirectSs40kOverrides(groups, telemetry, signalMapping, version);
+}
+
+function applyDerivedFmpFlowFields(
+  groups: Record<string, Ss40kPayloadGroup>,
+  telemetry: Ss40kTelemetryStore,
+  version: string
+) {
+  const fixed40101Targets = to40101FixedTargets(groups);
+  for (const fixed of fixed40101Targets) {
+    const acPvPowerWatts = finiteNumber(fixed.pAcCplTot);
+    if (acPvPowerWatts !== null) {
+      fixed.acCplActFlg = Math.abs(acPvPowerWatts) > 100 ? 1 : 0;
+      for (const configFixed of toDirectFixedTargets(groups, "40104", version)) {
+        configFixed.ACCoupledPV = 1;
+      }
+    }
+  }
+
+  for (const group of Object.values(groups)) {
+    if (group.model !== "42101") continue;
+    const volts =
+      finiteNumber(group.fixed.V) ??
+      firstTelemetryValue(telemetry, group.equipment, [
+        "InternalSumVoltage",
+        "SumVoltage",
+        "Voltage",
+        "SBMUVoltage",
+      ]);
+    const amps =
+      finiteNumber(group.fixed.A) ??
+      firstTelemetryValue(telemetry, group.equipment, [
+        "BcuCurrent",
+        "AmpaceCurrentRaw",
+        "SBMUCurrent",
+        "Current",
+      ]);
+    if (!hasFiniteFixedValue(group.fixed, "A") && amps !== null) group.fixed.A = amps;
+    if (!hasFiniteFixedValue(group.fixed, "V") && volts !== null) group.fixed.V = volts;
+    if (hasFiniteFixedValue(group.fixed, "W") || volts === null || amps === null) continue;
+    group.fixed.W = Math.round(volts * amps * 10);
+  }
+}
+
+function firstTelemetryValue(
+  telemetry: Ss40kTelemetryStore,
+  equipment: string,
+  suffixes: string[]
+): number | null {
+  const samples = telemetry[equipment] || [];
+  if (!Array.isArray(samples)) return null;
+  for (const suffix of suffixes) {
+    const sample = samples.find((entry) => entry?.tagID === `${equipment}.${suffix}`);
+    const value = finiteNumber(sample?.value);
+    if (value !== null) return value;
+  }
+  return null;
 }
 
 function hasSitePowerSignals(

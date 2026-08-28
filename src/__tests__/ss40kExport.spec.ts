@@ -551,6 +551,35 @@ describe("SS40K export helpers", () => {
     }
   });
 
+  test("SS42K AMPACE BCU payload derives W from voltage and current when power is absent", () => {
+    const { lookup } = buildSs40kLookup(
+      buildAmpaceBcu42kEquipmentConfig({ count: 1, route: "AMPACE" })
+    );
+
+    const messages = buildSs40kFixedPayloads({
+      lookup,
+      telemetry: {
+        AMPACE_BCU_1: [
+          { tagID: "AMPACE_BCU_1.SerialNumber", value: 2350317571 },
+          { tagID: "AMPACE_BCU_1.ProductModel", value: "eSpire-Mini-BMS" },
+          { tagID: "AMPACE_BCU_1.InternalSumVoltage", value: 624.5 },
+          { tagID: "AMPACE_BCU_1.BcuCurrent", value: 27.7 },
+        ],
+      },
+      topic: "fort/v1/things/test/telem",
+    });
+
+    const bcu42101 = messages.find((message) => message.ss40k.model === "42101");
+    expect(bcu42101?.payload["0"].fixed).toMatchObject({
+      ID: 42101,
+      SN: "2350317571",
+      Md: "eSpire-Mini-BMS",
+      V: 624.5,
+      A: 27.7,
+      W: 172986,
+    });
+  });
+
   test("SS42K AMPACE BCU payloads are skipped when the BCU SN is missing", () => {
     const { lookup } = buildSs40kLookup(
       buildAmpaceBcu42kEquipmentConfig({ count: 1, route: "AMPACE" })
@@ -1477,11 +1506,53 @@ describe("SS40K export helpers", () => {
             fixed: {
               ID: 40101,
               pAcCplTot: 6500,
+              acCplActFlg: 1,
+            },
+          },
+        },
+      }),
+      expect.objectContaining({
+        payload: {
+          "10": {
+            id: 40104,
+            version: "3.0",
+            fixed: {
+              ID: 40104,
+              ACCoupledPV: 1,
             },
           },
         },
       }),
     ]);
+  });
+
+  test("AC-coupled PV power marks FMP PV inverter installed and active", () => {
+    const messages = buildSs40kFixedPayloads({
+      lookup: {},
+      telemetry: {
+        Meter: [{ tagID: "Meter.AC_PV_Power", value: 12.4 }],
+      },
+      topic: "fort/v1/things/test/telem",
+      signalMapping: {
+        ss40k: {
+          pAcCplTot: { expr: "Meter.AC_PV_Power" },
+        },
+      },
+    });
+
+    const byModel = Object.fromEntries(
+      messages.map((message) => [message.ss40k.model, message])
+    );
+
+    expect(byModel["40101"].payload["0"].fixed).toMatchObject({
+      ID: 40101,
+      pAcCplTot: 12400,
+      acCplActFlg: 1,
+    });
+    expect(byModel["40104"].payload["10"].fixed).toMatchObject({
+      ID: 40104,
+      ACCoupledPV: 1,
+    });
   });
 
   test("Sinexcel Mini PVDC telemetry exports PV power while PCS exports total PV energy", () => {
