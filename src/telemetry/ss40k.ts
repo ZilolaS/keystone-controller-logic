@@ -628,9 +628,18 @@ function applyDerivedFmpFlowFields(
       ]);
     if (!hasFiniteFixedValue(group.fixed, "A") && amps !== null) group.fixed.A = amps;
     if (!hasFiniteFixedValue(group.fixed, "V") && volts !== null) group.fixed.V = volts;
+    if (!hasFiniteFixedValue(group.fixed, "ChaSt") && amps !== null) {
+      group.fixed.ChaSt = batteryChargeStateFromCurrent(amps);
+    }
     if (hasFiniteFixedValue(group.fixed, "W") || volts === null || amps === null) continue;
     group.fixed.W = Math.round(volts * amps * 10);
   }
+}
+
+function batteryChargeStateFromCurrent(amps: number): number {
+  if (amps > 0.1) return 1;
+  if (amps < -0.1) return 2;
+  return 3;
 }
 
 function firstTelemetryValue(

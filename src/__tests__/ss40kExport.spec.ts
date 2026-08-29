@@ -576,6 +576,7 @@ describe("SS40K export helpers", () => {
       Md: "eSpire-Mini-BMS",
       V: 624.5,
       A: 27.7,
+      ChaSt: 1,
       W: 172986,
     });
   });
