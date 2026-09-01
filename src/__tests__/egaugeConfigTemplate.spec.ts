@@ -345,6 +345,68 @@ describe("configured eGauge register map template", () => {
     });
   });
 
+  test("site telemetry equipment config expands Mini BCU templates from system config", () => {
+    const config: SiteConfig = {
+      system: {
+        systemProfile: "MINI-60-90-122-480",
+        controllerTimezone: "America/Los_Angeles",
+        nominal: { voltageVll: 480, frequencyHz: 60 },
+      } as SiteConfig["system"] & { bcuCount: number },
+      network: {
+        controller: { ip: "127.0.0.1", modbusServer: { ip: "127.0.0.1", port: 502 } },
+      },
+      operation: {
+        mode: "grid-tied",
+        gridCode: "IEEE1547-2018",
+        crdMode: "no-restriction",
+        scheduledControlEnabled: false,
+      },
+      battery: { minSoc: 0.2, maxSoc: 0.95, bcuCount: 2 } as SiteConfig["battery"] & {
+        bcuCount: number;
+      },
+      pv: { acInverters: [], curtailmentMethod: "modbus" },
+      metering: {
+        meterType: "none",
+        modbusProfile: "",
+        ip: "",
+        reads: { pv: false, pvFromInverter: false, utility: false, load: false },
+      },
+      signalMapping: {
+        sources: {
+          PCS: { profile: "Sinexcel_Mini_PCS_ss40k", route: "PCS", role: "pcs" },
+          AMPACE: { profile: "AMPACE_Mini_ss40k", route: "AMPACE", role: "bms" },
+        },
+      },
+      mini: {
+        cabinets: [{ id: "Mini1", bmsEquipmentId: "AMPACE", bcuCount: 2 }],
+      },
+    } as SiteConfig;
+
+    const equipmentConfig = buildSiteTelemetryEquipmentConfig(config);
+    const lookup = buildSs40kLookup(equipmentConfig);
+
+    expect(equipmentConfig.AMPACE).toMatchObject({
+      profileName: "AMPACE_Mini_ss40k",
+      route: "AMPACE",
+    });
+    expect(Object.keys(equipmentConfig)).toEqual(
+      expect.arrayContaining(["AMPACE_BCU_1", "AMPACE_BCU_2"])
+    );
+    expect(lookup.lookup["AMPACE_BCU_1.InternalSumVoltage"]).toMatchObject({
+      equipment: "AMPACE_BCU_1",
+      model: "42101",
+      name: "V",
+    });
+    expect(lookup.lookup["AMPACE_BCU_2.BcuBatteryFault"]).toMatchObject({
+      equipment: "AMPACE_BCU_2",
+      model: "42103",
+    });
+    expect(lookup.lookup["AMPACE.batteryProtectionFaultWord"]).toMatchObject({
+      equipment: "AMPACE",
+      model: "52103",
+    });
+  });
+
   test("can model configured eGauge site-meter rows from site config", () => {
     const template = buildConfiguredEgaugeTemplate({
       meterType: "eGauge",
