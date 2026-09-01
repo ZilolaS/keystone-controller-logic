@@ -25,6 +25,40 @@
       }
     },
     {
+      "id": "ManufacturerName40100",
+      "description": "Mini PCS manufacturer identity for SS40K 40100.",
+      "category": "Identity",
+      "constant": "fortress",
+      "pollClass": "startup",
+      "ss40k": {
+        "name": "Mn",
+        "model": "40100"
+      }
+    },
+    {
+      "id": "ProductModel40100",
+      "description": "Mini PCS product identity for SS40K 40100.",
+      "category": "Identity",
+      "constant": "eSpire-Mini-PCS",
+      "pollClass": "startup",
+      "ss40k": {
+        "name": "Md",
+        "model": "40100"
+      }
+    },
+    {
+      "id": "SerialNumber40100",
+      "description": "Mini PCS serial identity for SS40K 40100.",
+      "category": "Identity",
+      "pollClass": "startup",
+      "virtual": true,
+      "ss40k": {
+        "sourceTagID": "PCS.SerialNumber",
+        "name": "SN",
+        "model": "40100"
+      }
+    },
+    {
       "id": "SystemStatusMap",
       "description": "Sinexcel PCS system status bitfield. Bit 4 = grid-tied, bit 5 = off-grid.",
       "pollClass": "normal",

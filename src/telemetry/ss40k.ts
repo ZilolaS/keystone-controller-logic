@@ -303,6 +303,13 @@ export function buildSs40kFixedPayloads(
     }
   }
 
+  applySystemIdentityModels(
+    groups,
+    lookup,
+    rawTelemetry,
+    version,
+    mergeByModelIndex || merge40kByModelIndex
+  );
   applySiteSignalOverrides(groups, telemetry, signalMapping, version);
   applyDerivedFmpFlowFields(groups, telemetry, version);
   applyEnergyAccumulatorOverrides(groups, telemetry, version, options.energyAccumulator);
@@ -348,6 +355,47 @@ function shouldEmitPayloadGroup(group: Ss40kPayloadGroup): boolean {
 
   const sn = normalizeSerialNumber(group.fixed.SN);
   return !!sn;
+}
+
+function applySystemIdentityModels(
+  groups: Record<string, Ss40kPayloadGroup>,
+  lookup: Record<string, Ss40kLookupEntry>,
+  telemetry: Ss40kTelemetryStore,
+  version: string,
+  mergeByModelIndex: boolean
+) {
+  for (const [equipment, samples] of Object.entries(telemetry || {})) {
+    if (!Array.isArray(samples)) continue;
+    for (const sample of samples) {
+      if (!sample || typeof sample.tagID !== "string" || !sample.tagID) continue;
+      const metas = lookupEntriesForSourceTag(lookup, sample.tagID).filter(
+        (meta) =>
+          meta.model === "40100" &&
+          ["Mn", "Md", "SN", "SFVER", "DSPSFVER"].includes(meta.name)
+      );
+      for (const meta of metas) {
+        const groupKey = mergeByModelIndex
+          ? `${meta.modelIndex}::${meta.model}`
+          : `${meta.equipment}::${meta.model}`;
+        if (!groups[groupKey]) {
+          groups[groupKey] = {
+            equipment: mergeByModelIndex ? "site" : meta.equipment,
+            model: meta.model,
+            modelIndex: meta.modelIndex,
+            version,
+            latestTimestamp: null,
+            fixed: { ID: Number(meta.model) },
+          };
+        }
+
+        const fixedValue =
+          meta.name === "SN"
+            ? normalizeSerialNumber(sample.value)
+            : toFixedValue(sample.value, meta.exportMultiplier);
+        setFixedValue(groups[groupKey].fixed, meta.name, fixedValue);
+      }
+    }
+  }
 }
 
 function filterTelemetryBySampleAge(

@@ -2355,6 +2355,16 @@ describe("SS40K export helpers", () => {
             timestamp: "2026-08-22T02:23:42.019Z",
           },
           {
+            tagID: "PCS.ManufacturerName40100",
+            value: "fortress",
+            timestamp: "2026-08-22T02:23:42.019Z",
+          },
+          {
+            tagID: "PCS.ProductModel40100",
+            value: "eSpire-Mini-PCS",
+            timestamp: "2026-08-22T02:23:42.019Z",
+          },
+          {
             tagID: "PCS.GridFrequency",
             value: 60.01,
             timestamp: "2026-08-24T18:29:59.000Z",
@@ -2370,7 +2380,13 @@ describe("SS40K export helpers", () => {
       fGrid: 60.01,
       SN: "SH2C662355112411180050",
     });
-    expect(messages.some((message) => message.ss40k.model === "40100")).toBe(false);
+    const model40100 = messages.find((message) => message.ss40k.model === "40100");
+    expect(model40100?.payload["0"].fixed).toMatchObject({
+      ID: 40100,
+      Mn: "fortress",
+      Md: "eSpire-Mini-PCS",
+      SN: "SH2C662355112411180050",
+    });
   });
 
   test("Mini parent battery fault model is stamped once per BCU serial", () => {
