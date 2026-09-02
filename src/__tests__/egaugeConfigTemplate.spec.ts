@@ -361,7 +361,7 @@ describe("configured eGauge register map template", () => {
         crdMode: "no-restriction",
         scheduledControlEnabled: false,
       },
-      battery: { minSoc: 0.2, maxSoc: 0.95, bcuCount: 2 } as SiteConfig["battery"] & {
+      battery: { minSoc: 0.2, maxSoc: 0.95, bcuCount: 4 } as SiteConfig["battery"] & {
         bcuCount: number;
       },
       pv: { acInverters: [], curtailmentMethod: "modbus" },
@@ -378,7 +378,7 @@ describe("configured eGauge register map template", () => {
         },
       },
       mini: {
-        cabinets: [{ id: "Mini1", bmsEquipmentId: "AMPACE", bcuCount: 2 }],
+        cabinets: [{ id: "Mini1", bmsEquipmentId: "AMPACE", bcuCount: 4 }],
       },
     } as SiteConfig;
 
@@ -392,6 +392,7 @@ describe("configured eGauge register map template", () => {
     expect(Object.keys(equipmentConfig)).toEqual(
       expect.arrayContaining(["AMPACE_BCU_1", "AMPACE_BCU_2"])
     );
+    expect(Object.keys(equipmentConfig)).not.toEqual(expect.arrayContaining(["AMPACE_BCU_3"]));
     expect(lookup.lookup["AMPACE_BCU_1.InternalSumVoltage"]).toMatchObject({
       equipment: "AMPACE_BCU_1",
       model: "42101",

@@ -469,6 +469,16 @@ describe("SS40K export helpers", () => {
     });
   });
 
+  test("generated Mini AMPACE BCU readers are capped at two BCUs", () => {
+    const equipmentConfig = buildAmpaceBcu42kEquipmentConfig({
+      count: 4,
+      route: "AMPACE",
+      modelName: "MINI-50-90-184-208",
+    });
+
+    expect(Object.keys(equipmentConfig)).toEqual(["AMPACE_BCU_1", "AMPACE_BCU_2"]);
+  });
+
   test("SS42K AMPACE BCU payloads keep per-BCU SN without PCS SN or BatteryId", () => {
     const { lookup } = buildSs40kLookup(
       buildAmpaceBcu42kEquipmentConfig({ count: 1, route: "AMPACE" })

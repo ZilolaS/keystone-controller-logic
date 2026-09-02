@@ -21,6 +21,7 @@ export interface AmpaceBcu42kEquipmentOptions {
 
 const BCU_BASE_ADDRESS = 50000;
 const BCU_ADDRESS_STRIDE = 200;
+export const MINI_MAX_BCU_COUNT = 2;
 const TEMPLATE_PROFILE = "AMPACE_Mini_BCU_42k";
 
 export function buildAmpaceBcu42kTemplate(
@@ -55,7 +56,10 @@ export function buildAmpaceBcu42kTemplate(
 export function buildAmpaceBcu42kEquipmentConfig(
   options: AmpaceBcu42kEquipmentOptions
 ): Ss40kEquipmentConfig {
-  const count = Math.max(0, Math.min(32, Math.trunc(Number(options.count) || 0)));
+  const count = Math.max(
+    0,
+    Math.min(MINI_MAX_BCU_COUNT, Math.trunc(Number(options.count) || 0))
+  );
   const prefix = options.equipmentPrefix || "AMPACE_BCU";
   const route = options.route || "AMPACE";
   const out: Ss40kEquipmentConfig = {};

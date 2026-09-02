@@ -1,5 +1,5 @@
 import type { SiteConfig } from "../config";
-import { buildAmpaceBcu42kEquipmentConfig } from "./ampaceBcu42k";
+import { MINI_MAX_BCU_COUNT, buildAmpaceBcu42kEquipmentConfig } from "./ampaceBcu42k";
 import { buildConfiguredEgaugeTemplates } from "./egaugeConfigTemplate";
 import type { Ss40kEquipmentConfig } from "./ss40k";
 
@@ -118,7 +118,7 @@ function configuredBcuCount(config: any, parentEquipment: string): number {
   );
   const batteryKwh = match ? Number(match[3]) : 0;
   if (!Number.isFinite(batteryKwh) || batteryKwh <= 0) return 0;
-  return Math.max(1, Math.min(32, Math.round(batteryKwh / 41)));
+  return Math.max(1, Math.min(MINI_MAX_BCU_COUNT, Math.round(batteryKwh / 41)));
 }
 
 function miniCabinets(config: any): any[] {
@@ -138,7 +138,7 @@ function firstPositiveNumber(...values: unknown[]): number {
   for (const value of values) {
     const n = Number(value);
     if (Number.isFinite(n) && n > 0) {
-      return Math.max(0, Math.min(32, Math.trunc(n)));
+      return Math.max(0, Math.min(MINI_MAX_BCU_COUNT, Math.trunc(n)));
     }
   }
   return 0;
