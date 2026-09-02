@@ -3,7 +3,7 @@ import {
   type TelemetryTemplateDocument,
   type TelemetryTemplateEntry,
 } from "./templateAdapter";
-import type { SignalMappingConfig } from "../config";
+import type { EquipmentIdentityConfig, SignalMappingConfig } from "../config";
 import { evaluateSignalMapping } from "../coreControl/signalMapping";
 
 export interface Ss40kEquipmentConfigEntry {
@@ -54,6 +54,7 @@ export interface Ss40kBuildPayloadOptions {
   version?: string;
   fixedSerialNumber?: string;
   signalMapping?: SignalMappingConfig;
+  equipmentIdentity?: EquipmentIdentityConfig;
   mergeByModelIndex?: boolean;
   merge40kByModelIndex?: boolean;
   energyAccumulator?: Ss40kEnergyAccumulatorOptions;
@@ -247,6 +248,7 @@ export function buildSs40kFixedPayloads(
     version = "3.0",
     fixedSerialNumber,
     signalMapping,
+    equipmentIdentity,
     mergeByModelIndex = false,
     merge40kByModelIndex = false,
   } = options;
@@ -315,11 +317,12 @@ export function buildSs40kFixedPayloads(
   applyEnergyAccumulatorOverrides(groups, telemetry, version, options.energyAccumulator);
   applyDailyEnergyOverrides(groups, version, options.energyAccumulator);
   const identityTelemetry = rawTelemetry || telemetry;
-  applyPerEquipmentIdentity(groups, lookup, identityTelemetry);
-  applyMiniBatteryFaultIdentity(groups, lookup, identityTelemetry);
+  applyPerEquipmentIdentity(groups, lookup, identityTelemetry, equipmentIdentity);
+  applyMiniBatteryFaultIdentity(groups, lookup, identityTelemetry, equipmentIdentity);
   applyFixedSerialNumberToSystemModels(
     groups,
-    fixedSerialNumber ||
+    manualPcsSerialNumber(equipmentIdentity) ||
+      fixedSerialNumber ||
       findSystemSerialNumber(lookup, identityTelemetry) ||
       findSystemSerialNumber(lookup, telemetry)
   );
@@ -482,9 +485,13 @@ function applyPerEquipmentIdentity(
     { equipment: string; model: string; fixed: Record<string, unknown> }
   >,
   lookup: Record<string, Ss40kLookupEntry>,
-  telemetry: Ss40kTelemetryStore
+  telemetry: Ss40kTelemetryStore,
+  equipmentIdentity?: EquipmentIdentityConfig
 ) {
-  const identityByEquipment = findIdentityByEquipment(lookup, telemetry);
+  const identityByEquipment = {
+    ...findIdentityByEquipment(lookup, telemetry),
+    ...manualBatteryIdentityByEquipment(equipmentIdentity),
+  };
   for (const group of Object.values(groups)) {
     if (!group.model.startsWith("42") && !group.model.startsWith("52")) continue;
     const identity = identityByEquipment[group.equipment];
@@ -497,9 +504,13 @@ function applyPerEquipmentIdentity(
 function applyMiniBatteryFaultIdentity(
   groups: Record<string, Ss40kPayloadGroup>,
   lookup: Record<string, Ss40kLookupEntry>,
-  telemetry: Ss40kTelemetryStore
+  telemetry: Ss40kTelemetryStore,
+  equipmentIdentity?: EquipmentIdentityConfig
 ) {
-  const identityByEquipment = findIdentityByEquipment(lookup, telemetry);
+  const identityByEquipment = {
+    ...findIdentityByEquipment(lookup, telemetry),
+    ...manualBatteryIdentityByEquipment(equipmentIdentity),
+  };
   const entries = Object.entries(identityByEquipment)
     .filter(([, identity]) => !!identity.SN)
     .sort(([a], [b]) => a.localeCompare(b));
@@ -587,6 +598,33 @@ function findSystemSerialNumber(
     }
   }
   return candidates[0] || null;
+}
+
+function manualSerialOverridesEnabled(
+  equipmentIdentity: EquipmentIdentityConfig | undefined
+): boolean {
+  return equipmentIdentity?.useManualSerialNumbers === true;
+}
+
+function manualPcsSerialNumber(
+  equipmentIdentity: EquipmentIdentityConfig | undefined
+): string | null {
+  if (!manualSerialOverridesEnabled(equipmentIdentity)) return null;
+  return normalizeSerialNumber(equipmentIdentity?.pcs?.serialNumber || equipmentIdentity?.pcs?.sn || equipmentIdentity?.pcs?.SN);
+}
+
+function manualBatteryIdentityByEquipment(
+  equipmentIdentity: EquipmentIdentityConfig | undefined
+): Record<string, { SN?: string; Md?: unknown }> {
+  if (!manualSerialOverridesEnabled(equipmentIdentity)) return {};
+  const out: Record<string, { SN?: string; Md?: unknown }> = {};
+  for (const [index, battery] of (equipmentIdentity?.batteries || []).entries()) {
+    const serial = normalizeSerialNumber(battery?.serialNumber || battery?.sn || battery?.SN);
+    if (!serial) continue;
+    const id = normalizeSerialNumber(battery?.id) || `AMPACE_BCU_${index + 1}`;
+    out[id] = { SN: serial };
+  }
+  return out;
 }
 
 function normalizeSerialNumber(value: unknown): string | null {

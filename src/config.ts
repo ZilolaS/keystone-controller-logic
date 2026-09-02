@@ -545,6 +545,19 @@ export interface SignalMappingConfig {
   energyAccumulator?: EnergyAccumulatorConfig;
 }
 
+export interface EquipmentSerialOverrideConfig {
+  id?: string;
+  serialNumber?: string;
+  sn?: string;
+  SN?: string;
+}
+
+export interface EquipmentIdentityConfig {
+  useManualSerialNumbers?: boolean;
+  pcs?: EquipmentSerialOverrideConfig;
+  batteries?: EquipmentSerialOverrideConfig[];
+}
+
 export interface UnifiedToLegacyTelemetryBridgeConfig {
   equipmentId: string;
   legacyEquipment?: string;
@@ -557,6 +570,25 @@ export interface TelemetryCompatibilityConfig {
   publishUnifiedToLegacy?:
     | UnifiedToLegacyTelemetryBridgeConfig[]
     | Record<string, Omit<UnifiedToLegacyTelemetryBridgeConfig, "equipmentId">>;
+}
+
+export type LegacyCompatibilityPreset =
+  | "mini_non_alarm_telemetry"
+  | "mini-non-alarm-telemetry";
+
+export interface LegacyCompatibilityConfig {
+  enabled?: boolean;
+  preset?: LegacyCompatibilityPreset;
+  /**
+   * Mini DC PV module count. If omitted, the runtime derives it from the Mini
+   * system profile, where 45/90/135 kW maps to 1/2/3 PVDC modules.
+   */
+  pvdcCount?: number;
+  includeDashboardAliases?: boolean;
+  includeMeter?: boolean;
+  includeAcPv?: boolean;
+  acPvEquipmentId?: string;
+  meterEquipmentId?: string;
 }
 
 // ---- Generator ----
@@ -583,6 +615,8 @@ export interface SiteConfig {
   islanding?: IslandingConfig;
   metering: MeteringConfig;
   signalMapping?: SignalMappingConfig;
+  equipmentIdentity?: EquipmentIdentityConfig;
   telemetryCompatibility?: TelemetryCompatibilityConfig;
+  legacyCompatibility?: LegacyCompatibilityConfig;
   generator?: GeneratorConfig;
 }

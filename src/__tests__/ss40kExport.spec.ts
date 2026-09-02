@@ -745,6 +745,46 @@ describe("SS40K export helpers", () => {
     }
   });
 
+  test("manual equipment identity overrides PCS and BCU serials when enabled", () => {
+    const { lookup } = buildSs40kLookup({
+      PCS: "Sinexcel_Mini_PCS_ss40k",
+      ...buildAmpaceBcu42kEquipmentConfig({
+        count: 1,
+        route: "AMPACE",
+        equipmentPrefix: "AMPACE_BCU",
+        modelName: "eSpire-Mini-BMS",
+        manufacturer: "fortress",
+      }),
+    });
+
+    const messages = buildSs40kFixedPayloads({
+      lookup,
+      telemetry: {
+        PCS: [
+          { tagID: "PCS.SerialNumber", value: "PCS-FROM-DEVICE" },
+          { tagID: "PCS.SystemStatus", value: 1 },
+        ],
+        AMPACE_BCU_1: [
+          { tagID: "AMPACE_BCU_1.SerialNumber", value: "BCU-FROM-DEVICE" },
+          { tagID: "AMPACE_BCU_1.USOC", value: 0.62 },
+        ],
+      },
+      topic: "fort/v1/things/test/telem",
+      equipmentIdentity: {
+        useManualSerialNumbers: true,
+        pcs: { id: "PCS", serialNumber: "PCS-MANUAL" },
+        batteries: [{ id: "AMPACE_BCU_1", serialNumber: "BCU-MANUAL" }],
+      },
+    });
+
+    const byModel = Object.fromEntries(
+      messages.map((message) => [message.ss40k.model, message])
+    );
+
+    expect(Object.values(byModel["40100"].payload)[0].fixed.SN).toBe("PCS-MANUAL");
+    expect(Object.values(byModel["42101"].payload)[0].fixed.SN).toBe("BCU-MANUAL");
+  });
+
   test("Sinexcel Mini PCS calculated faults export into SS40K 40103", () => {
     const { lookup } = buildSs40kLookup({
       PCS: "Sinexcel_Mini_PCS_ss40k",

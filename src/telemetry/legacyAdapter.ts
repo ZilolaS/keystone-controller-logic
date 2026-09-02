@@ -45,6 +45,21 @@ export interface UnifiedToLegacyTelemetryBridgeResult {
   errors: Array<{ equipmentId: string; message: string }>;
 }
 
+export interface MiniLegacyCompatibilityOptions {
+  systemProfile?: string;
+  pvdcCount?: number;
+  includeDashboardAliases?: boolean;
+  includeMeter?: boolean;
+  includeAcPv?: boolean;
+  acPvEquipmentId?: string;
+  meterEquipmentId?: string;
+}
+
+type UnifiedToLegacyBridgeInput = UnifiedToLegacyTelemetryBridge & {
+  enabled?: boolean;
+  legacyKey?: string;
+};
+
 const MINI_AMPACE_DEFAULT_TAG_MAP: Record<string, string | string[]> = {
   BcuCount: ["BcuCount", "BMSCount", "BcuQty"],
   BamsVoltage: ["BamsVoltage", "BamsTotalVol", "bamsVoltage(V)"],
@@ -91,6 +106,214 @@ const MINI_AMPACE_DEFAULT_TAG_MAP: Record<string, string | string[]> = {
   BamsAllowHvOnMap: ["BamsAllowHvOnMap"],
   ProductType: ["ProductType"],
   AirType: ["AirType"],
+};
+
+const MINI_LEGACY_PCS_TAG_MAP: Record<string, string | string[]> = {
+  SystemStatusMap: "SystemStatusMap",
+  ACBusTotalActivePower: "ACBusTotalActivePower",
+  ACBusL1ActivePower: "ACBusL1ActivePower",
+  ACBusL2ActivePower: "ACBusL2ActivePower",
+  ACBusL3ActivePower: "ACBusL3ActivePower",
+  ACBusL1Current: "ACBusL1Current",
+  ACBusL2Current: "ACBusL2Current",
+  ACBusL3Current: "ACBusL3Current",
+  ACBusFrequency: "ACBusFrequency",
+  ACBusL1L2Voltage: "ACBusL1L2Voltage",
+  ACBusL2L3Voltage: "ACBusL2L3Voltage",
+  ACBusL3L1Voltage: "ACBusL3L1Voltage",
+  ACBusL1NVoltage: "ACBusL1NVoltage",
+  ACBusL2NVoltage: "ACBusL2NVoltage",
+  ACBusL3NVoltage: "ACBusL3NVoltage",
+  OnOffGridSwitch: "OnOffGridSwitch",
+  ControlMode: "ControlMode",
+};
+
+const MINI_LEGACY_UTILITY_TAG_MAP: Record<string, string | string[]> = {
+  GridTotalActivePower: "GridTotalActivePower",
+  GridL1ActivePower: "GridL1ActivePower",
+  GridL2ActivePower: "GridL2ActivePower",
+  GridL3ActivePower: "GridL3ActivePower",
+  GridL1Current: "GridL1Current",
+  GridL2Current: "GridL2Current",
+  GridL3Current: "GridL3Current",
+  GridFrequency: "GridFrequency",
+  GridL1L2Voltage: "GridL1L2Voltage",
+  GridL2L3Voltage: "GridL2L3Voltage",
+  GridL3L1Voltage: "GridL3L1Voltage",
+  GridL1NVoltage: "GridL1NVoltage",
+  GridL2NVoltage: "GridL2NVoltage",
+  GridL3NVoltage: "GridL3NVoltage",
+};
+
+const MINI_LEGACY_LOAD_TAG_MAP: Record<string, string | string[]> = {
+  LoadTotalActivePower: "LoadTotalActivePower",
+  LoadL1ActivePower: "LoadL1ActivePower",
+  LoadL2ActivePower: "LoadL2ActivePower",
+  LoadL3ActivePower: "LoadL3ActivePower",
+  LoadL1Current: "LoadL1Current",
+  LoadL2Current: "LoadL2Current",
+  LoadL3Current: "LoadL3Current",
+  LoadFrequency: "LoadFrequency",
+  LoadL1L2Voltage: "LoadL1L2Voltage",
+  LoadL2L3Voltage: "LoadL2L3Voltage",
+  LoadL3L1Voltage: "LoadL3L1Voltage",
+  LoadL1NVoltage: "LoadL1NVoltage",
+  LoadL2NVoltage: "LoadL2NVoltage",
+  LoadL3NVoltage: "LoadL3NVoltage",
+};
+
+const MINI_LEGACY_BATTERY_A_TAG_MAP: Record<string, string | string[]> = {
+  BamsVoltage: "BamsVoltage",
+  BamsCurrent: "BamsCurrent",
+  BamsPower: "BamsPower",
+  BamsSoc: "BamsSoc",
+  BamsSoh: "BamsSoh",
+  BamsPermitChgPower: "BamsPermitChgPower",
+  BamsPermitDsgPower: "BamsPermitDsgPower",
+  BamsPermitChgCurrent: "BamsPermitChgCurrent",
+  BamsPermitDsgCurrent: "BamsPermitDsgCurrent",
+  BamsBcuSocDiff: "BamsBcuSocDiff",
+  BamsBcuMinSoc: "BamsBcuMinSoc",
+  BamsBcuMinSocNo: "BamsBcuMinSocNo",
+  BamsBcuMaxSoc: "BamsBcuMaxSoc",
+  BamsBcuMaxSocNo: "BamsBcuMaxSocNo",
+  BamsMaxCellVol: "BamsMaxCellVol",
+  BamsMaxCellVBcuBmuNo: "BamsMaxCellVBcuBmuNo",
+  BamsMaxCellVNo: "BamsMaxCellVNo",
+  BamsMinCellVol: "BamsMinCellVol",
+  BamsMinCellVBcuBmuNo: "BamsMinCellVBcuBmuNo",
+  BamsMinCellVNo: "BamsMinCellVNo",
+  BamsAvgCellVol: "BamsAvgCellVol",
+  BamsCellVolDiff: "BamsCellVolDiff",
+  BamsMaxCellT: "BamsMaxCellT",
+  BamsMaxCellTBcuBmuNo: "BamsMaxCellTBcuBmuNo",
+  BamsMaxCellTNo: "BamsMaxCellTNo",
+  BamsMinCellT: "BamsMinCellT",
+  BamsMinCellTBcuBmuNo: "BamsMinCellTBcuBmuNo",
+  BamsMinCellTNo: "BamsMinCellTNo",
+  BamsAvgCellT: "BamsAvgCellT",
+  BamsCellTDiff: "BamsCellTDiff",
+  BamsMaxBcuVol: "BamsMaxBcuVol",
+  BamsMaxBcuVNo: "BamsMaxBcuVNo",
+  BamsMinBcuVol: "BamsMinBcuVol",
+  BamsMinBcuVNo: "BamsMinBcuVNo",
+  BamsBcuAvgVol: "BamsBcuAvgVol",
+  BamsBcuVolDiff: "BamsBcuVolDiff",
+  BamsMaxBcuCurr: "BamsMaxBcuCurr",
+  BamsMaxBcuCNo: "BamsMaxBcuCNo",
+  BamsMinBcuCurr: "BamsMinBcuCurr",
+  BamsMinBcuCNo: "BamsMinBcuCNo",
+  BamsTotalInEng: "BamsTotalInEng",
+  BamsTotalOutEng: "BamsTotalOutEng",
+  BamsUsedEnergy: "BamsUsedEnergy",
+  BamsLeftEnergy: "BamsLeftEnergy",
+  BamsUsedCap: "BamsUsedCap",
+  BamsLeftCap: "BamsLeftCap",
+  BamsCtlLedState: "BamsCtlLedState",
+  BcuOnlineMap: "BcuOnlineMap",
+  MsBamsCommState: "MsBamsCommState",
+  BamsAllowHvOnMap: "BamsAllowHvOnMap",
+  ProductType: "ProductType",
+  AirType: "AirType",
+};
+
+const MINI_LEGACY_PVDC_TAG_MAP: Record<string, string | string[]> = {
+  TotalPVPower: "PVSideTotalPower",
+  PV1Power: "PV1SideTotalPower",
+  PV2Power: "PV2SideTotalPower",
+  PV3Power: "PV3SideTotalPower",
+  PV1Volt: "PV1SideVoltage",
+  PV2Volt: "PV2SideVoltage",
+  PV3Volt: "PV3SideVoltage",
+  TotalCurrent: "PVSideTotalCurrent",
+  PV1Current: "PV1SideTotalCurrent",
+  PV2Current: "PV2SideTotalCurrent",
+  PV3Current: "PV3SideTotalCurrent",
+  ExternDCVolt: "PVExternalDcBusVoltage",
+  InternDCVolt: "PVInternalDcBusVoltage",
+  BusPower: "PVBusSidePower",
+  BusCurrent: "PVBusSideCurrent",
+  Temp: "PVModuleTemperature",
+};
+
+const MINI_LEGACY_SOLAREDGE_TAG_MAP: Record<string, string | string[]> = {
+  AC_CURRENT_TOTAL_RAW: "AC_CURRENT_TOTAL_RAW",
+  AC_CURRENT_A_RAW: "AC_CURRENT_A_RAW",
+  AC_CURRENT_B_RAW: "AC_CURRENT_B_RAW",
+  AC_CURRENT_C_RAW: "AC_CURRENT_C_RAW",
+  AC_CURRENT_SF: "AC_CURRENT_SF",
+  AC_VOLTAGE_AB_RAW: "AC_VOLTAGE_AB_RAW",
+  AC_VOLTAGE_BC_RAW: "AC_VOLTAGE_BC_RAW",
+  AC_VOLTAGE_CA_RAW: "AC_VOLTAGE_CA_RAW",
+  AC_VOLTAGE_AN_RAW: "AC_VOLTAGE_AN_RAW",
+  AC_VOLTAGE_BN_RAW: "AC_VOLTAGE_BN_RAW",
+  AC_VOLTAGE_CN_RAW: "AC_VOLTAGE_CN_RAW",
+  AC_VOLTAGE_SF: "AC_VOLTAGE_SF",
+  AC_POWER_RAW: "AC_POWER_RAW",
+  AC_POWER_SF: "AC_POWER_SF",
+  AC_FREQUENCY_RAW: "AC_FREQUENCY_RAW",
+  AC_FREQUENCY_SF: "AC_FREQUENCY_SF",
+  AC_VA_RAW: "AC_VA_RAW",
+  AC_VA_SF: "AC_VA_SF",
+  AC_VAR_RAW: "AC_VAR_RAW",
+  AC_VAR_SF: "AC_VAR_SF",
+  AC_PF_RAW: "AC_PF_RAW",
+  AC_PF_SF: "AC_PF_SF",
+  AC_ENERGY_WH_RAW: "AC_ENERGY_WH_RAW",
+  AC_ENERGY_WH_SF: "AC_ENERGY_WH_SF",
+  DC_CURRENT_RAW: "DC_CURRENT_RAW",
+  DC_CURRENT_SF: "DC_CURRENT_SF",
+  DC_VOLTAGE_RAW: "DC_VOLTAGE_RAW",
+  DC_VOLTAGE_SF: "DC_VOLTAGE_SF",
+  DC_POWER_RAW: "DC_POWER_RAW",
+  DC_POWER_SF: "DC_POWER_SF",
+  TEMP_SINK_RAW: "TEMP_SINK_RAW",
+  TEMP_SINK_SF: "TEMP_SINK_SF",
+  STATUS: "STATUS",
+  STATUS_VENDOR: "STATUS_VENDOR",
+  AC_CURRENT_TOTAL: "AC_CURRENT_TOTAL",
+  AC_CURRENT_A: "AC_CURRENT_A",
+  AC_CURRENT_B: "AC_CURRENT_B",
+  AC_CURRENT_C: "AC_CURRENT_C",
+  AC_VOLTAGE_AB: "AC_VOLTAGE_AB",
+  AC_VOLTAGE_BC: "AC_VOLTAGE_BC",
+  AC_VOLTAGE_CA: "AC_VOLTAGE_CA",
+  AC_VOLTAGE_AN: "AC_VOLTAGE_AN",
+  AC_VOLTAGE_BN: "AC_VOLTAGE_BN",
+  AC_VOLTAGE_CN: "AC_VOLTAGE_CN",
+  AC_POWER: "AC_POWER",
+  AC_FREQUENCY: "AC_FREQUENCY",
+  AC_VA: "AC_VA",
+  AC_VAR: "AC_VAR",
+  AC_PF: "AC_PF",
+  AC_ENERGY_WH: "AC_ENERGY_WH",
+  DC_CURRENT: "DC_CURRENT",
+  DC_VOLTAGE: "DC_VOLTAGE",
+  DC_POWER: "DC_POWER",
+  TEMP_SINK: "TEMP_SINK",
+};
+
+const MINI_LEGACY_PCS_GATEWAY_FROM_PCS_TAG_MAP: Record<
+  string,
+  string | string[]
+> = {
+  SystemStatusMap: "SystemStatusMap",
+  ACBusTotalActivePower: "ACBusTotalActivePower",
+  ACBusL1ActivePower: "ACBusL1ActivePower",
+  ACBusL2ActivePower: "ACBusL2ActivePower",
+  ACBusL3ActivePower: "ACBusL3ActivePower",
+  ACBusL1Current: "ACBusL1Current",
+  ACBusL2Current: "ACBusL2Current",
+  ACBusL3Current: "ACBusL3Current",
+  ACBusFrequency: "ACBusFrequency",
+  ACBusL1L2Voltage: "ACBusL1L2Voltage",
+  ACBusL2L3Voltage: "ACBusL2L3Voltage",
+  ACBusL3L1Voltage: "ACBusL3L1Voltage",
+  DCPower: "DCpower",
+  DCCurrent: "DCcurrent",
+  DCInputVoltage: "DCInputVoltage",
+  OnOffGridSwitch: "OnOffGridSwitch",
+  ReactivePowerSetPoint: "ReactivePowerSetpoint",
 };
 
 export function legacyTelemetryAdaptersFromConfig(
@@ -151,6 +374,95 @@ export function legacySourceAllowsBcuTelemetry(
   );
   if (!adapter) return true;
   return adapter.supplements?.bcuTelemetry?.enabled === true;
+}
+
+export function buildMiniNonAlarmTelemetryLegacyCompatibility(
+  options: MiniLegacyCompatibilityOptions = {}
+): UnifiedToLegacyTelemetryBridge[] {
+  const bridges: UnifiedToLegacyTelemetryBridge[] = [
+    {
+      equipmentId: "PCS",
+      legacyEquipment: "PCS",
+      tagMap: MINI_LEGACY_PCS_TAG_MAP,
+    },
+    {
+      equipmentId: "PCS",
+      legacyEquipment: "Utility",
+      tagMap: MINI_LEGACY_UTILITY_TAG_MAP,
+    },
+    {
+      equipmentId: "PCS",
+      legacyEquipment: "PCS_Gateway",
+      tagMap: MINI_LEGACY_PCS_GATEWAY_FROM_PCS_TAG_MAP,
+    },
+    {
+      equipmentId: "Load",
+      legacyEquipment: "Load",
+      tagMap: MINI_LEGACY_LOAD_TAG_MAP,
+    },
+    {
+      equipmentId: "AMPACE",
+      legacyEquipment: "Battery_A",
+      tagMap: MINI_LEGACY_BATTERY_A_TAG_MAP,
+    },
+  ];
+
+  for (let index = 1; index <= resolveMiniLegacyPvdcCount(options); index += 1) {
+    bridges.push({
+      equipmentId: `PVDC${index}`,
+      legacyEquipment: `PV_${index}`,
+      tagMap: MINI_LEGACY_PVDC_TAG_MAP,
+    });
+  }
+
+  if (options.includeMeter !== false) {
+    bridges.push({
+      equipmentId: options.meterEquipmentId || "Meter",
+      legacyEquipment: "Meter",
+    });
+  }
+
+  if (options.includeAcPv !== false) {
+    bridges.push({
+      equipmentId: options.acPvEquipmentId || "ACPV",
+      legacyEquipment: "SolarEdge",
+      tagMap: MINI_LEGACY_SOLAREDGE_TAG_MAP,
+    });
+  }
+
+  if (options.includeDashboardAliases) {
+    bridges.push(
+      {
+        equipmentId: "PCS",
+        legacyEquipment: "INVERTER",
+        tagMap: {
+          ...MINI_LEGACY_PCS_TAG_MAP,
+          ...MINI_LEGACY_UTILITY_TAG_MAP,
+        },
+      },
+      {
+        equipmentId: "AMPACE",
+        legacyEquipment: "AMP_A",
+        tagMap: MINI_LEGACY_BATTERY_A_TAG_MAP,
+      }
+    );
+  }
+
+  return bridges;
+}
+
+export function buildLegacyCompatibilityPreset(
+  preset: string | undefined,
+  options: MiniLegacyCompatibilityOptions = {}
+): UnifiedToLegacyTelemetryBridge[] {
+  const normalized = String(preset || "").trim();
+  if (
+    normalized === "mini_non_alarm_telemetry" ||
+    normalized === "mini-non-alarm-telemetry"
+  ) {
+    return buildMiniNonAlarmTelemetryLegacyCompatibility(options);
+  }
+  return [];
 }
 
 export function applyLegacyTelemetryAdapters(options: {
@@ -218,7 +530,7 @@ export function unifiedToLegacyTelemetryBridgesFromConfig(
 
   const pushBridge = (
     equipmentId: string,
-    raw: Record<string, unknown> | undefined
+    raw: Record<string, unknown> | UnifiedToLegacyBridgeInput | undefined
   ) => {
     if (!equipmentId || !raw || raw.enabled === false) return;
     const legacyEquipment =
@@ -241,6 +553,25 @@ export function unifiedToLegacyTelemetryBridgesFromConfig(
       tagMap: readTagMap(raw.tagMap),
     });
   };
+
+  const legacyCompatibility = readRecord(config.legacyCompatibility);
+  if (legacyCompatibility && legacyCompatibility.enabled !== false) {
+    for (const bridge of buildLegacyCompatibilityPreset(
+      readString(legacyCompatibility.preset),
+      {
+        systemProfile: readString(readRecord(config.system)?.systemProfile),
+        pvdcCount: readNumber(legacyCompatibility.pvdcCount),
+        includeDashboardAliases:
+          legacyCompatibility.includeDashboardAliases === true,
+        includeMeter: legacyCompatibility.includeMeter !== false,
+        includeAcPv: legacyCompatibility.includeAcPv !== false,
+        acPvEquipmentId: readString(legacyCompatibility.acPvEquipmentId),
+        meterEquipmentId: readString(legacyCompatibility.meterEquipmentId),
+      }
+    )) {
+      pushBridge(bridge.equipmentId, bridge);
+    }
+  }
 
   const compatibility = readRecord(config.telemetryCompatibility);
   const configured = compatibility?.publishUnifiedToLegacy;
@@ -525,6 +856,21 @@ function defaultUnifiedToLegacyTagMap(
     );
   }
   return undefined;
+}
+
+function resolveMiniLegacyPvdcCount(options: MiniLegacyCompatibilityOptions): number {
+  if (options.pvdcCount !== undefined) {
+    return clampMiniLegacyPvdcCount(options.pvdcCount);
+  }
+  const dcPvKw = Number(String(options.systemProfile || "").split("-")[2]);
+  if (!Number.isFinite(dcPvKw) || dcPvKw <= 0) return 0;
+  return clampMiniLegacyPvdcCount(Math.round(dcPvKw / 45));
+}
+
+function clampMiniLegacyPvdcCount(value: number): number {
+  const count = Math.trunc(Number(value));
+  if (!Number.isFinite(count) || count <= 0) return 0;
+  return Math.max(0, Math.min(3, count));
 }
 
 function stripEquipment(tagID: string): string {

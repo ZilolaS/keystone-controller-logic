@@ -1,5 +1,6 @@
 import {
   applyLegacyTelemetryAdapters,
+  buildMiniNonAlarmTelemetryLegacyCompatibility,
   isLegacyTelemetrySource,
   legacySourceAllowsBcuTelemetry,
   legacyTelemetryAdaptersFromConfig,
@@ -333,5 +334,130 @@ describe("legacy telemetry adapter", () => {
       "Battery_A",
       "Battery_B",
     ]);
+  });
+
+  test("builds Mini non-alarm legacy compatibility bridges from one preset", () => {
+    const bridges = buildMiniNonAlarmTelemetryLegacyCompatibility({
+      systemProfile: "MINI-60-90-122-480",
+      includeAcPv: true,
+    });
+
+    expect(bridges.map((item) => `${item.equipmentId}->${item.legacyEquipment}`))
+      .toEqual([
+        "PCS->PCS",
+        "PCS->Utility",
+        "PCS->PCS_Gateway",
+        "Load->Load",
+        "AMPACE->Battery_A",
+        "PVDC1->PV_1",
+        "PVDC2->PV_2",
+        "Meter->Meter",
+        "ACPV->SolarEdge",
+      ]);
+    expect(bridges).not.toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ legacyEquipment: "Battery_B" }),
+        expect.objectContaining({ legacyEquipment: "Battery_C" }),
+      ])
+    );
+  });
+
+  test("resolves Mini legacy compatibility preset from site config", () => {
+    const bridges = unifiedToLegacyTelemetryBridgesFromConfig({
+      ...config,
+      system: { ...config.system, systemProfile: "MINI-60-135-122-480" },
+      legacyCompatibility: {
+        enabled: true,
+        preset: "mini_non_alarm_telemetry",
+        includeAcPv: false,
+        includeMeter: false,
+      },
+    });
+
+    expect(bridges.map((item) => `${item.equipmentId}->${item.legacyEquipment}`))
+      .toEqual([
+        "PCS->PCS",
+        "PCS->Utility",
+        "PCS->PCS_Gateway",
+        "Load->Load",
+        "AMPACE->Battery_A",
+        "PVDC1->PV_1",
+        "PVDC2->PV_2",
+        "PVDC3->PV_3",
+      ]);
+  });
+
+  test("Mini legacy compatibility publishes telemetry without alarm buckets", () => {
+    const result = publishUnifiedTelemetryToLegacy({
+      config: {
+        ...config,
+        legacyCompatibility: {
+          enabled: true,
+          preset: "mini_non_alarm_telemetry",
+          pvdcCount: 1,
+          includeAcPv: false,
+          includeMeter: false,
+        },
+      },
+      nowMs: Date.parse("2026-09-01T00:01:00.000Z"),
+      telemetry: {
+        PCS: [
+          { tagID: "PCS.ACBusTotalActivePower", value: 18.4 },
+          { tagID: "PCS.GridTotalActivePower", value: 4.2 },
+          { tagID: "PCS.pcsFault", value: 7 },
+        ],
+        Load: [{ tagID: "Load.LoadTotalActivePower", value: 22.6 }],
+        AMPACE: [
+          { tagID: "AMPACE.BamsSoc", value: 91 },
+          { tagID: "AMPACE.BamsPower", value: -8.5 },
+          { tagID: "AMPACE.BamsSysFaultCode0_8", value: "0xffff" },
+        ],
+        PVDC1: [
+          { tagID: "PVDC1.PVBusSidePower", value: 12.3 },
+          { tagID: "PVDC1.PVDCFaultWord40", value: 1 },
+        ],
+      },
+      legacyTelemetry: {},
+    });
+
+    expect(result.legacyTelemetry.PCS).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ tagID: "PCS.ACBusTotalActivePower", value: 18.4 }),
+      ])
+    );
+    expect(result.legacyTelemetry.Utility).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ tagID: "Utility.GridTotalActivePower", value: 4.2 }),
+      ])
+    );
+    expect(result.legacyTelemetry.Load).toEqual([
+      expect.objectContaining({ tagID: "Load.LoadTotalActivePower", value: 22.6 }),
+    ]);
+    expect(result.legacyTelemetry.Battery_A).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ tagID: "Battery_A.BamsSoc", value: 91 }),
+        expect.objectContaining({ tagID: "Battery_A.BamsPower", value: -8.5 }),
+      ])
+    );
+    expect(result.legacyTelemetry.PV_1).toEqual([
+      expect.objectContaining({ tagID: "PV_1.BusPower", value: 12.3 }),
+    ]);
+    expect(result.legacyTelemetry.Battery_B).toBeUndefined();
+    expect(result.legacyTelemetry.Battery_C).toBeUndefined();
+    expect(result.legacyTelemetry.PCS).not.toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ tagID: "PCS.pcsFault" }),
+      ])
+    );
+    expect(result.legacyTelemetry.Battery_A).not.toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ tagID: "Battery_A.BamsSysFaultCode0_8" }),
+      ])
+    );
+    expect(result.legacyTelemetry.PV_1).not.toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ tagID: "PV_1.PVDCFaultWord40" }),
+      ])
+    );
   });
 });

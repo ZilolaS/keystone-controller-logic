@@ -49,6 +49,8 @@ export {
 } from "./reportingStrategy";
 export {
   applyLegacyTelemetryAdapters,
+  buildLegacyCompatibilityPreset,
+  buildMiniNonAlarmTelemetryLegacyCompatibility,
   isLegacyTelemetrySource,
   legacySourceAllowsBcuTelemetry,
   legacyTelemetryAdaptersFromConfig,
@@ -56,6 +58,7 @@ export {
   unifiedToLegacyTelemetryBridgesFromConfig,
   type LegacyTelemetryAdapter,
   type LegacyTelemetryAdapterResult,
+  type MiniLegacyCompatibilityOptions,
   type UnifiedToLegacyTelemetryBridge,
   type UnifiedToLegacyTelemetryBridgeResult,
 } from "./legacyAdapter";

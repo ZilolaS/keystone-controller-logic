@@ -2,7 +2,10 @@
 
 Use this procedure when adding the unified FMP/AWS telemetry flow to an existing Mini controller while keeping the legacy Azure reporting flow online.
 
-Goal: make the unified telemetry reader the only reader for AMPACE/BMS/BCU data, then bridge unified telemetry back into the legacy `AMP_A` shape. This reduces Modbus contention on the BMS while preserving the existing Azure output path.
+Goal: make the unified telemetry reader the only reader for Mini PCS, PVDC,
+Load, Meter, AC PV, and AMPACE/BMS data where practical, then bridge unified
+telemetry back into the legacy Azure shape. This reduces Modbus contention
+while preserving the existing Azure output path.
 
 ## Rules
 
@@ -31,20 +34,36 @@ Goal: make the unified telemetry reader the only reader for AMPACE/BMS/BCU data,
 
    Verify the Mini profile, timezone, asset IPs, PVDC count, BCU count, signal mapping, and compatibility bridge.
 
-   Required compatibility shape:
+   Preferred non-alarm legacy compatibility shape:
 
    ```json
    {
-     "telemetryCompatibility": {
-       "publishUnifiedToLegacy": {
-         "PCS": { "legacyEquipment": "INVERTER" },
-         "Load": { "legacyEquipment": "INVERTER" },
-         "Meter": { "legacyEquipment": "Meter" },
-         "AMPACE": { "legacyEquipment": "AMP_A" }
-       }
+     "legacyCompatibility": {
+       "enabled": true,
+       "preset": "mini_non_alarm_telemetry"
      }
    }
    ```
+
+   The preset bridges normal telemetry only. It does not recreate old alarm
+   buckets such as `Battery_B`, `Battery_C`, PV fault/status words, or cabinet
+   alarm fields.
+
+   For old Node-RED dashboard tabs that still read `INVERTER` or `AMP_A`
+   directly, add:
+
+   ```json
+   {
+     "legacyCompatibility": {
+       "enabled": true,
+       "preset": "mini_non_alarm_telemetry",
+       "includeDashboardAliases": true
+     }
+   }
+   ```
+
+   If a site has no AC-coupled PV or no meter bridge, set `includeAcPv` or
+   `includeMeter` to `false`.
 
 4. Confirm unified readers are configured.
 
@@ -92,12 +111,17 @@ Goal: make the unified telemetry reader the only reader for AMPACE/BMS/BCU data,
 
    Check `global.telemetry` and top-level dashboard globals:
 
-   - `global.telemetry.AMP_A`
-   - `global.AMP_A`
-   - `global.telemetry.INVERTER`
-   - `global.INVERTER`
+   - `global.telemetry.PCS`
+   - `global.telemetry.Utility`
+   - `global.telemetry.Load`
+   - `global.telemetry.Battery_A`
+   - `global.telemetry.PV_1`, `PV_2`, `PV_3` as configured
+   - `global.telemetry.Meter`, when configured
+   - `global.telemetry.SolarEdge`, when configured
+   - `global.telemetry.INVERTER` and `global.telemetry.AMP_A` only when
+     `includeDashboardAliases` is enabled
 
-   `AMP_A` should now be populated by the unified bridge, not by legacy AMPACE polling.
+   Bridge-populated samples should show `source: "unifiedTelemetry"`.
 
 9. Verify battery identity.
 
