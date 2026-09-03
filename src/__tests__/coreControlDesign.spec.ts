@@ -500,8 +500,9 @@ describe("Unified core control design", () => {
       {
         soc: 0.7,
         gridStatus: "normal",
-        utilityPowerKw: 5,
+        utilityPowerKw: 50,
         pcsActivePowerKw: 10,
+        pvKw: 14,
       },
       {
         payload: {
@@ -517,8 +518,66 @@ describe("Unified core control design", () => {
     );
 
     expect(command.controlMode).toBe("scheduled");
-    expect(command.pcsActivePowerKw).toBe(14);
-    expect(command.reasons).toContain("scheduled-command-self-consumption");
+    expect(command.pcsActivePowerKw).toBe(-14);
+    expect(command.reasons).toContain("scheduled-command-self-consumption-pv-charge");
+  });
+
+  test("scheduled maximize PV self-consumption does not discharge from utility error", () => {
+    const config = makeBase280Config();
+    config.operation.crdMode = "no-restriction";
+    config.operation.scheduledControlEnabled = true;
+
+    const controller = initCoreControl(config);
+    const command = controller.evaluate(
+      {
+        soc: 0.7,
+        gridStatus: "normal",
+        utilityPowerKw: 50,
+        pcsActivePowerKw: 0,
+        pvKw: 0,
+      },
+      {
+        payload: {
+          command: "maximizePvSelfConsumption",
+          targetImportKw: 1,
+          deadbandKw: 0.5,
+          minSocPct: 20,
+          maxSocPct: 95,
+          maxChargePowerPct: 100,
+          maxDischargePowerPct: 100,
+        },
+      }
+    );
+
+    expect(command.controlMode).toBe("scheduled");
+    expect(command.pcsActivePowerKw).toBe(0);
+    expect(command.reasons).toContain("scheduled-command-self-consumption-no-pv");
+  });
+
+  test("scheduled maximize PV self-consumption stops at max SOC", () => {
+    const config = makeBase280Config();
+    config.operation.crdMode = "no-restriction";
+    config.operation.scheduledControlEnabled = true;
+
+    const controller = initCoreControl(config);
+    const command = controller.evaluate(
+      {
+        soc: 0.96,
+        gridStatus: "normal",
+        pvKw: 40,
+      },
+      {
+        payload: {
+          command: "maximizePvSelfConsumption",
+          maxSocPct: 95,
+          maxChargePowerPct: 100,
+        },
+      }
+    );
+
+    expect(command.controlMode).toBe("scheduled");
+    expect(command.pcsActivePowerKw).toBe(0);
+    expect(command.reasons).toContain("scheduled-command-self-consumption-charge-blocked");
   });
 
   test("disabled scheduled control falls back to realtime request", () => {

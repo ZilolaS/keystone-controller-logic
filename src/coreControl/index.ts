@@ -1355,49 +1355,25 @@ function resolveScheduledSelfConsumptionPayloadKw(
   payload: Record<string, unknown>,
   reasons: string[]
 ): number | undefined {
-  if (telemetry.utilityPowerKw == null || telemetry.pcsActivePowerKw == null) {
-    reasons.push("scheduled-command-self-consumption-missing-base-readings");
-    return undefined;
+  const pvPowerKw = finiteNumber(telemetry.pvKw);
+  if (pvPowerKw == null) {
+    reasons.push("scheduled-command-self-consumption-missing-pv");
+    return 0;
   }
 
-  const targetImportKw = readPayloadNumber(payload, "targetImportKw") ?? 0.5;
-  const deadbandKw = readPayloadNumber(payload, "deadbandKw") ?? 0.8;
-  const baseAlpha = readPayloadNumber(payload, "baseAlpha", "base_alpha") ?? 0.15;
-  const baseStickEpsKw =
-    readPayloadNumber(payload, "baseStickEpsKw", "base_stick_eps_kw") ?? 1;
-  const baseInstantKw = telemetry.utilityPowerKw + telemetry.pcsActivePowerKw;
-  let baseMemKw = finiteNumber(ctx.state?.baseMemKw);
-
-  if (baseMemKw == null) {
-    baseMemKw = baseInstantKw;
+  const availablePvKw = Math.max(0, pvPowerKw);
+  if (availablePvKw <= 0) {
+    reasons.push("scheduled-command-self-consumption-no-pv");
+    return 0;
   }
 
-  const delta = baseInstantKw - baseMemKw;
-  if (Math.abs(delta) > baseStickEpsKw) {
-    baseMemKw = baseMemKw + clamp(baseAlpha, 0, 1) * delta;
-    reasons.push("scheduled-command-self-consumption-base-filter");
+  if (!scheduledAllowCharge(ctx, telemetry, payload)) {
+    reasons.push("scheduled-command-self-consumption-charge-blocked");
+    return 0;
   }
 
-  if (ctx.state) {
-    ctx.state.baseMemKw = baseMemKw;
-  }
-
-  let targetKw = baseMemKw - targetImportKw;
-  const errorNowKw = telemetry.utilityPowerKw - targetImportKw;
-  if (Math.abs(errorNowKw) < deadbandKw) {
-    const holdKw = finiteNumber(ctx.state?.previousPcsActivePowerKw);
-    if (holdKw != null) {
-      targetKw = holdKw;
-      reasons.push("scheduled-command-self-consumption-deadband-hold");
-    }
-  }
-
-  reasons.push("scheduled-command-self-consumption");
-  return clamp(
-    targetKw,
-    -scheduledMaxChargeKw(ctx, payload),
-    scheduledMaxDischargeKw(ctx, payload)
-  );
+  reasons.push("scheduled-command-self-consumption-pv-charge");
+  return -Math.min(availablePvKw, scheduledMaxChargeKw(ctx, payload));
 }
 
 function resolveScheduledMeterRuleKw(
