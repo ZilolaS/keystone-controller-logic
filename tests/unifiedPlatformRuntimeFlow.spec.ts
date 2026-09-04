@@ -121,4 +121,24 @@ describe("standalone unified platform runtime flow", () => {
       method: "post",
     });
   });
+
+  test("uses the same validated EdgeScheduler implementation as the legacy addition flow", () => {
+    const legacyFlow = JSON.parse(
+      readFileSync(
+        path.resolve(__dirname, "../flows/keystone_legacy_addition_flow.json"),
+        "utf8"
+      )
+    ) as FlowNode[];
+    const legacyHandler = legacyFlow.find(
+      (item) => item.id === "sched_api_esr_handler"
+    );
+    const standaloneHandler = node("platform_sched_api_esr_handler");
+
+    expect(legacyHandler).toBeDefined();
+    expect(standaloneHandler.func).toBe(legacyHandler?.func);
+    expect(standaloneHandler.func).toContain("edgeProtocolError");
+    expect(standaloneHandler.func).toContain("rejectUnknownPayloadFields");
+    expect(standaloneHandler.func).toContain("activeRunningJobId");
+    expect(standaloneHandler.func).toContain("start: isCron ? null : startIso");
+  });
 });
