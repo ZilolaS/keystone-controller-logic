@@ -74,9 +74,13 @@ describe("unified platform runtime flow", () => {
     expect(body).toContain("const job = jobFromData(data)");
     expect(body).toContain("payloadJson");
     expect(body).toContain("durationSec / 60");
+    expect(body).toContain("start: p.start === null ? null");
+    expect(body).toContain("start: isCron ? null : startIso");
     expect(body).toContain("time: isCron ? undefined");
     expect(body).toContain("jobListItem");
     expect(body).toContain("method === 'CreateJob'");
+    expect(body).toContain("localWallMsToEpochSec");
+    expect(body).toContain("previousLocalSec");
     expect(body).toContain("edgeResponse");
   });
 });
