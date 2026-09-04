@@ -203,10 +203,15 @@ def default_writer_targets(config):
 
 
 def extract_status(status_raw):
-    status = status_raw.get("data") or status_raw.get("status") or status_raw
-    if status.get("telemetryReaderConfig") or status.get("writerTargets"):
-        return status
+    if not isinstance(status_raw, dict):
+        raise ValueError("control status must be a JSON object")
 
+    status = status_raw
+    for key in ("data", "status"):
+        candidate = status_raw.get(key)
+        if isinstance(candidate, dict):
+            status = candidate
+            break
     config = (
         status.get("controlConfig")
         or status.get("unifiedControlConfig")
@@ -218,6 +223,9 @@ def extract_status(status_raw):
         or ((config.get("system") or {}).get("systemProfile") if isinstance(config, dict) else "")
         or ""
     )
+    if status.get("telemetryReaderConfig") or status.get("writerTargets"):
+        return {**status, "systemProfile": profile}
+
     return {
         **(status if isinstance(status, dict) else {}),
         "systemProfile": profile,
