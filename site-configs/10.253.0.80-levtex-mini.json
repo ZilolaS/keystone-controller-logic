@@ -87,9 +87,9 @@
     "siteExportMode": "no-restriction",
     "siteExportTargetImportKw": 0,
     "siteExportDeadbandKw": 0.5,
-    "scheduledControlEnabled": false,
-    "controlEnabled": false,
-    "writesEnabled": false
+    "scheduledControlEnabled": true,
+    "controlEnabled": true,
+    "writesEnabled": true
   },
   "pcs": {
     "pcsDaisyChain": [],
@@ -108,7 +108,7 @@
     "forceGridChargeKw": 10,
     "powerHeadroomKw": 0,
     "commandRampKwPerSec": 1000,
-    "bcuCount": 1
+    "bcuCount": 2
   },
   "pv": {
     "acInverters": [],
@@ -403,7 +403,7 @@
       "port": 502,
       "unitId": 1,
       "route": "PCS",
-      "enabled": false
+      "enabled": true
     }
   ],
   "signalMapping": {
