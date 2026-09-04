@@ -108,7 +108,7 @@
     "forceGridChargeKw": 10,
     "powerHeadroomKw": 0,
     "commandRampKwPerSec": 1000,
-    "bcuCount": 2
+    "bcuCount": 1
   },
   "pv": {
     "acInverters": [],
