@@ -36,6 +36,12 @@ describe("unified platform runtime flow", () => {
     );
   });
 
+  test("prefers configured total PV over the raw DC-only fallback", () => {
+    expect(functionBody("platform_sched_api_rt_handler")).toContain(
+      "telemetry.pvPowerKw ?? telemetry.pvKw ?? directPvPowerKw"
+    );
+  });
+
   test("does not use hardcoded eGauge/default waveform signal sources", () => {
     const runtimeBodies = [
       "platform_run",
@@ -120,6 +126,12 @@ describe("standalone unified platform runtime flow", () => {
       url: "/api/control/command",
       method: "post",
     });
+  });
+
+  test("uses site signal mapping for total PV in realtime UI data", () => {
+    expect(node("platform_sched_api_rt_handler").func).toContain(
+      "telemetry.pvPowerKw ?? telemetry.pvKw ?? directPvPowerKw"
+    );
   });
 
   test("uses the same validated EdgeScheduler implementation as the legacy addition flow", () => {
