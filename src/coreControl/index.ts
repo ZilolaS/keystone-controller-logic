@@ -388,7 +388,9 @@ function pickSignalMeteringReadings(
   const canonicalToInternal = {
     utilityPowerKw: ["gridPowerKw", "utilityPowerKw"],
     siteLoadKw: ["loadPowerKw", "siteLoadKw"],
-    pvKw: ["pvPowerKw", "pvKw"],
+    // pvKw is the control-facing PV signal. A site may expose pvPowerKw as
+    // combined AC + DC PV for display while PCS dispatch must use DC PV only.
+    pvKw: ["pvKw", "pvPowerKw"],
   } as const;
 
   for (const key of ["utilityPowerKw", "siteLoadKw", "pvKw"] as const) {

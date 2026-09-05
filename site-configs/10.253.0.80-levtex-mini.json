@@ -482,7 +482,7 @@
         "expr": "PVDC1.PVSideTotalPower + PVDC2.PVSideTotalPower + Meter.AC_PV_Power"
       },
       "pvKw": {
-        "expr": "PVDC1.PVSideTotalPower + PVDC2.PVSideTotalPower + Meter.AC_PV_Power"
+        "expr": "PVDC1.PVSideTotalPower + PVDC2.PVSideTotalPower"
       },
       "pcsPowerKw": {
         "expr": "PCS.ACBusTotalActivePower",
