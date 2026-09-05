@@ -83,6 +83,8 @@ describe("unified platform runtime flow", () => {
     expect(body).toContain("start: p.start === null ? null");
     expect(body).toContain("start: isCron ? null : startIso");
     expect(body).toContain("time: isCron ? undefined");
+    expect(body).toContain("cronTimeCandidates");
+    expect(body).not.toContain("for (let minute = firstMinute");
     expect(body).toContain("jobListItem");
     expect(body).toContain("method === 'CreateJob'");
     expect(body).toContain("localWallMsToEpochSec");

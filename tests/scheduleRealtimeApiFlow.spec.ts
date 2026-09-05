@@ -67,6 +67,9 @@ describe("schedule realtime API flow", () => {
     expect(body).toContain("intervalSec is reserved");
     expect(body).toContain("localWallMsToEpochSec");
     expect(body).toContain("previousLocalSec");
+    expect(body).toContain("cronTimeCandidates");
+    expect(body).toContain("cronDateMatches");
+    expect(body).not.toContain("for (let minute = firstMinute");
   });
 
   test("keeps VPP scheduling payloads as canonical EdgeScheduler command plans", () => {
