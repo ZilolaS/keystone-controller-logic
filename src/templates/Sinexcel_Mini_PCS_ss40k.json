@@ -1499,7 +1499,7 @@
     },
     {
       "id": "pcsWarning",
-      "description": "Calculated SS40K 40103 pcsWarning from Sinexcel PCS fault/alarm words",
+      "description": "Calculated SS40K 40103 pcsWarning from Sinexcel PCS fault/alarm words. Fan abnormal uses register 108 bit 1; register 36 fan-stop status bits are not faults.",
       "category": "Faults",
       "pollClass": "normal",
       "calc": {
@@ -1520,7 +1520,7 @@
           "w120": "SinexcelFaultWord120",
           "w121": "SinexcelFaultWord121"
         },
-        "expr": "((((w36 >>> 5) & 1) | ((w36 >>> 6) & 1) | ((w108 >>> 1) & 1)) << 0) | ((((w119 >>> 3) & 1)) << 3) | ((((w106 >>> 13) & 1)) << 4)"
+        "expr": "(((w108 >>> 1) & 1) << 0) | ((((w119 >>> 3) & 1)) << 3) | ((((w106 >>> 13) & 1)) << 4)"
       },
       "alarm": true,
       "bitfieldStatus": true,

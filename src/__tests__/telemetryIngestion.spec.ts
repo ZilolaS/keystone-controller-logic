@@ -1459,8 +1459,9 @@ describe("Telemetry baseline lock", () => {
         w37: "SinexcelStatusWord37",
       })
     );
-    expect(pcsWarning?.calc?.expr).toContain("w36 >>> 5");
-    expect(pcsWarning?.calc?.expr).toContain("w36 >>> 6");
+    expect(pcsWarning?.calc?.expr).not.toContain("w36 >>> 5");
+    expect(pcsWarning?.calc?.expr).not.toContain("w36 >>> 6");
+    expect(pcsWarning?.calc?.expr).toContain("w108 >>> 1");
 
     expect(
       template.telemetry.find((tag) => tag.id === "SinexcelFaultWord106")?.ss40k
@@ -1474,6 +1475,25 @@ describe("Telemetry baseline lock", () => {
       name: "pcsFaultWord121",
       model: "50103",
     });
+  });
+
+  test.each([
+    ["normal", 12, 0, 0, 0, 0],
+    ["electrical room fan stopped", 44, 0, 0, 0, 0],
+    ["transformer fan stopped", 76, 0, 0, 0, 0],
+    ["both fans stopped", 108, 0, 0, 0, 0],
+    ["module fan fault", 12, 2, 0, 0, 1],
+    ["module fan fault with fans stopped", 108, 2, 0, 0, 1],
+    ["other warnings with fans stopped", 108, 0, 8, 8192, 24],
+    ["fan fault and other warnings", 108, 2, 8, 8192, 25],
+  ])("Mini PCS warning mapping: %s", (_name, w36, w108, w119, w106, expected) => {
+    const template = resolveTelemetryTemplate("Sinexcel_Mini_PCS_ss40k");
+    const calc = template.telemetry.find((tag) => tag.id === "pcsWarning")!.calc!;
+    const inputs = calc.inputs!;
+    const words: Record<string, number> = { w36, w108, w119, w106 };
+    const evaluate = new Function(...Object.keys(inputs), `return (${calc.expr});`);
+
+    expect(evaluate(...Object.keys(inputs).map((key) => words[key] ?? 0))).toBe(expected);
   });
 
   test("Sinexcel Mini Gateway template exports cabinet alarms into product-neutral 50103", () => {
