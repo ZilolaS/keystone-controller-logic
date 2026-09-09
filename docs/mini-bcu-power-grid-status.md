@@ -51,3 +51,12 @@ context rather than relying solely on a potentially older named file-store
 cache. Confirm fresh gridStat and corrected W in emitted telemetry.
 
 Other sites and historical cloud data are not changed by this rollout.
+
+End-to-end verification also found two shared flow issues. Both flow exports
+overrode the generated BCU template multiplier back to 10; those overrides are
+removed so the template remains authoritative. The telemetry storage function
+also accessed `lib` outside its scope before reaching BCU startup; it now obtains
+the shared library in the outer function scope. Execution tests feed parent BMS
+telemetry through each flow and verify BCU compile/start messages and multiplier 1.
+The .80 flow patch is restricted to the telemetry setup and storage functions;
+control functions, schedules, wiring, and the container image remain unchanged.

@@ -9,6 +9,44 @@ type FlowNode = {
   func?: string;
 };
 
+describe.each(["unified_platform_runtime_flow.json", "keystone_legacy_addition_flow.json"])(
+  "%s BCU startup", (filename) => {
+    const nodes = JSON.parse(readFileSync(path.resolve(__dirname, "../flows", filename), "utf8")) as FlowNode[];
+
+    test("keeps template power scaling and starts readers from parent telemetry", () => {
+      function context(values: Record<string, any> = {}) {
+        return { get: (key: string) => values[key], set: (key: string, value: any) => { values[key] = value; } };
+      }
+      const generated = {
+        AMPACE_BCU_1: {
+          profileName: "AMPACE_Mini_BCU_42k", route: "slot2",
+          template: { telemetry: [{ id: "BcuPower", ss40k: { exportMultiplier: 1 }, calc: {} }] },
+        },
+      };
+      const lib = { telemetry: {
+        buildAmpaceBcu42kEquipmentConfig: jest.fn(() => generated),
+        buildSs40kLookup: jest.fn(() => ({ lookup: {}, equipmentToProfile: {}, modelIndexMap: {} })),
+      } };
+      const globalContext = context({ lib, unifiedTelemetry: {} });
+      const flowContext = context({
+        controlConfig: { system: { systemProfile: "MINI-60-90-122-480" } },
+        telemetryReaderConfig: [{ equipmentId: "AMPACE", profileName: "AMPACE_Mini_ss40k", route: "slot2" }],
+        telemetryEquipmentConfig: { AMPACE: { route: "slot2" } },
+      });
+      const node = { send: jest.fn(), status: jest.fn() };
+      const body = nodes.find(n => n.id === "platform_store_telemetry")!.func!;
+      const execute = new Function("msg", "global", "flow", "context", "node", "setTimeout", body);
+      expect(() => execute({ equipmentId: "AMPACE", payload: [{ tagID: "BcuCount", value: 1 }] },
+        globalContext, flowContext, context(), node, (callback: () => void) => callback())).not.toThrow();
+      expect(lib.telemetry.buildAmpaceBcu42kEquipmentConfig).toHaveBeenCalled();
+      expect(generated.AMPACE_BCU_1.template.telemetry[0].ss40k.exportMultiplier).toBe(1);
+      expect(node.send.mock.calls.some(([outputs]) => outputs[1]?.payload?.cmd === "compile")).toBe(true);
+      expect(node.send.mock.calls.some(([outputs]) => outputs[1]?.payload?.cmd === "start")).toBe(true);
+      expect(nodes.find(n => n.id === "platform_setup_telemetry")!.func).not.toContain("tag.ss40k.exportMultiplier = 10");
+    });
+  }
+);
+
 describe("unified platform runtime flow", () => {
   const flow = JSON.parse(
     readFileSync(
