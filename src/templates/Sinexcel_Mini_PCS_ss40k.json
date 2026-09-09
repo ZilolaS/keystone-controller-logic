@@ -2257,9 +2257,9 @@
     },
     {
       "id": "BatteryScheduling",
-      "description": "Temporary hard-coded daily schedule telemetry for cloud UI validation",
+      "description": "Legacy FMP daily schedule disabled; operational plans are managed by EdgeScheduler.",
       "pollClass": "startup",
-      "constant": 1,
+      "constant": 0,
       "ss40k": {
         "name": "BatteryScheduling",
         "model": "40104"
@@ -2267,7 +2267,7 @@
     },
     {
       "id": "ACChargeStatus",
-      "description": "Temporary hard-coded daily schedule telemetry for cloud UI validation",
+      "description": "Legacy FMP daily schedule disabled; operational plans are managed by EdgeScheduler.",
       "pollClass": "startup",
       "constant": 0,
       "ss40k": {
@@ -2277,7 +2277,7 @@
     },
     {
       "id": "chgST1",
-      "description": "Temporary hard-coded daily schedule telemetry for cloud UI validation",
+      "description": "Legacy FMP daily schedule disabled; operational plans are managed by EdgeScheduler.",
       "pollClass": "startup",
       "constant": 0,
       "ss40k": {
@@ -2287,9 +2287,9 @@
     },
     {
       "id": "chgET1",
-      "description": "Temporary hard-coded daily schedule telemetry for cloud UI validation",
+      "description": "Legacy FMP daily schedule disabled; operational plans are managed by EdgeScheduler.",
       "pollClass": "startup",
-      "constant": 15127,
+      "constant": 0,
       "ss40k": {
         "name": "chgET1",
         "model": "40104"
@@ -2297,7 +2297,7 @@
     },
     {
       "id": "chgST2",
-      "description": "Temporary hard-coded daily schedule telemetry for cloud UI validation",
+      "description": "Legacy FMP daily schedule disabled; operational plans are managed by EdgeScheduler.",
       "pollClass": "startup",
       "constant": 0,
       "ss40k": {
@@ -2307,7 +2307,7 @@
     },
     {
       "id": "chgET2",
-      "description": "Temporary hard-coded daily schedule telemetry for cloud UI validation",
+      "description": "Legacy FMP daily schedule disabled; operational plans are managed by EdgeScheduler.",
       "pollClass": "startup",
       "constant": 0,
       "ss40k": {
@@ -2317,7 +2317,7 @@
     },
     {
       "id": "chgST3",
-      "description": "Temporary hard-coded daily schedule telemetry for cloud UI validation",
+      "description": "Legacy FMP daily schedule disabled; operational plans are managed by EdgeScheduler.",
       "pollClass": "startup",
       "constant": 0,
       "ss40k": {
@@ -2327,7 +2327,7 @@
     },
     {
       "id": "chgET3",
-      "description": "Temporary hard-coded daily schedule telemetry for cloud UI validation",
+      "description": "Legacy FMP daily schedule disabled; operational plans are managed by EdgeScheduler.",
       "pollClass": "startup",
       "constant": 0,
       "ss40k": {
@@ -2337,7 +2337,7 @@
     },
     {
       "id": "dischgST1",
-      "description": "Temporary hard-coded daily schedule telemetry for cloud UI validation",
+      "description": "Legacy FMP daily schedule disabled; operational plans are managed by EdgeScheduler.",
       "pollClass": "startup",
       "constant": 0,
       "ss40k": {
@@ -2347,9 +2347,9 @@
     },
     {
       "id": "dischgET1",
-      "description": "Temporary hard-coded daily schedule telemetry for cloud UI validation",
+      "description": "Legacy FMP daily schedule disabled; operational plans are managed by EdgeScheduler.",
       "pollClass": "startup",
-      "constant": 15127,
+      "constant": 0,
       "ss40k": {
         "name": "dischgET1",
         "model": "40104"
@@ -2357,7 +2357,7 @@
     },
     {
       "id": "dischgST2",
-      "description": "Temporary hard-coded daily schedule telemetry for cloud UI validation",
+      "description": "Legacy FMP daily schedule disabled; operational plans are managed by EdgeScheduler.",
       "pollClass": "startup",
       "constant": 0,
       "ss40k": {
@@ -2367,7 +2367,7 @@
     },
     {
       "id": "dischgET2",
-      "description": "Temporary hard-coded daily schedule telemetry for cloud UI validation",
+      "description": "Legacy FMP daily schedule disabled; operational plans are managed by EdgeScheduler.",
       "pollClass": "startup",
       "constant": 0,
       "ss40k": {
@@ -2377,7 +2377,7 @@
     },
     {
       "id": "dischgST3",
-      "description": "Temporary hard-coded daily schedule telemetry for cloud UI validation",
+      "description": "Legacy FMP daily schedule disabled; operational plans are managed by EdgeScheduler.",
       "pollClass": "startup",
       "constant": 0,
       "ss40k": {
@@ -2387,7 +2387,7 @@
     },
     {
       "id": "dischgET3",
-      "description": "Temporary hard-coded daily schedule telemetry for cloud UI validation",
+      "description": "Legacy FMP daily schedule disabled; operational plans are managed by EdgeScheduler.",
       "pollClass": "startup",
       "constant": 0,
       "ss40k": {
@@ -2397,7 +2397,7 @@
     },
     {
       "id": "acChgST1",
-      "description": "Temporary hard-coded daily schedule telemetry for cloud UI validation",
+      "description": "Legacy FMP daily schedule disabled; operational plans are managed by EdgeScheduler.",
       "pollClass": "startup",
       "constant": 0,
       "ss40k": {
@@ -2407,7 +2407,7 @@
     },
     {
       "id": "acChgET1",
-      "description": "Temporary hard-coded daily schedule telemetry for cloud UI validation",
+      "description": "Legacy FMP daily schedule disabled; operational plans are managed by EdgeScheduler.",
       "pollClass": "startup",
       "constant": 0,
       "ss40k": {
@@ -2417,7 +2417,7 @@
     },
     {
       "id": "acChgST2",
-      "description": "Temporary hard-coded daily schedule telemetry for cloud UI validation",
+      "description": "Legacy FMP daily schedule disabled; operational plans are managed by EdgeScheduler.",
       "pollClass": "startup",
       "constant": 0,
       "ss40k": {
@@ -2427,7 +2427,7 @@
     },
     {
       "id": "acChgET2",
-      "description": "Temporary hard-coded daily schedule telemetry for cloud UI validation",
+      "description": "Legacy FMP daily schedule disabled; operational plans are managed by EdgeScheduler.",
       "pollClass": "startup",
       "constant": 0,
       "ss40k": {
@@ -2437,7 +2437,7 @@
     },
     {
       "id": "acChgST3",
-      "description": "Temporary hard-coded daily schedule telemetry for cloud UI validation",
+      "description": "Legacy FMP daily schedule disabled; operational plans are managed by EdgeScheduler.",
       "pollClass": "startup",
       "constant": 0,
       "ss40k": {
@@ -2447,7 +2447,7 @@
     },
     {
       "id": "acChgET3",
-      "description": "Temporary hard-coded daily schedule telemetry for cloud UI validation",
+      "description": "Legacy FMP daily schedule disabled; operational plans are managed by EdgeScheduler.",
       "pollClass": "startup",
       "constant": 0,
       "ss40k": {

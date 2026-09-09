@@ -1133,37 +1133,28 @@ describe("SS40K export helpers", () => {
     });
   });
 
-  test("inverter 40104 exposes visible daily schedule fields on component 10 by default", () => {
-    const template = resolveTelemetryTemplate("Sinexcel_Mini_PCS_ss40k");
+  test.each(["Sinexcel_Mini_PCS_ss40k", "Delta_280_ss40k"])("%s clears legacy FMP daily schedule without changing operational plans", (profile) => {
+    const template = resolveTelemetryTemplate(profile);
     const constants = Object.fromEntries(
       (template.telemetry || [])
-        .filter((tag) =>
-          [
-            "BatteryScheduling",
-            "ACChargeStatus",
-            "chgST1",
-            "chgET1",
-            "dischgST1",
-            "dischgET1",
-            "acChgST1",
-            "acChgET1",
-          ].includes(tag.id || "")
-        )
+        .filter((tag) => /^(BatteryScheduling|ACChargeStatus|(?:chg|dischg|acChg)(?:ST|ET)[1-3])$/.test(tag.id || ""))
         .map((tag) => [tag.id, tag.constant])
     );
     expect(constants).toMatchObject({
-      BatteryScheduling: 1,
+      BatteryScheduling: 0,
       ACChargeStatus: 0,
       chgST1: 0,
-      chgET1: 15127,
+      chgET1: 0,
       dischgST1: 0,
-      dischgET1: 15127,
+      dischgET1: 0,
       acChgST1: 0,
       acChgET1: 0,
     });
+    expect(Object.keys(constants)).toHaveLength(20);
+    expect(Object.values(constants).every(value => value === 0)).toBe(true);
 
     const { lookup } = buildSs40kLookup({
-      PCS: "Sinexcel_Mini_PCS_ss40k",
+      PCS: profile,
     });
 
     expect(lookup["PCS.BatteryScheduling"]).toMatchObject({
@@ -1180,16 +1171,7 @@ describe("SS40K export helpers", () => {
     const messages = buildSs40kFixedPayloads({
       lookup,
       telemetry: {
-        PCS: [
-          { tagID: "PCS.BatteryScheduling", value: 1 },
-          { tagID: "PCS.ACChargeStatus", value: 0 },
-          { tagID: "PCS.chgST1", value: 8 },
-          { tagID: "PCS.chgET1", value: 8 },
-          { tagID: "PCS.dischgST1", value: 8 },
-          { tagID: "PCS.dischgET1", value: 8 },
-          { tagID: "PCS.acChgST1", value: 0 },
-          { tagID: "PCS.acChgET1", value: 0 },
-        ],
+        PCS: Object.entries(constants).map(([tag, value]) => ({ tagID: `PCS.${tag}`, value })),
       },
       topic: "fort/v1/things/test/telem",
     });
@@ -1201,12 +1183,12 @@ describe("SS40K export helpers", () => {
           id: 40104,
           fixed: expect.objectContaining({
             ID: 40104,
-            BatteryScheduling: 1,
+            BatteryScheduling: 0,
             ACChargeStatus: 0,
-            chgST1: 8,
-            chgET1: 8,
-            dischgST1: 8,
-            dischgET1: 8,
+            chgST1: 0,
+            chgET1: 0,
+            dischgST1: 0,
+            dischgET1: 0,
             acChgST1: 0,
             acChgET1: 0,
           }),
