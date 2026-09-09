@@ -13,6 +13,29 @@ import { buildCatlSbmu42kEquipmentConfig } from "../telemetry/catlSbmu42k";
 import { resolveTelemetryTemplate } from "../telemetry/templateAdapter";
 
 describe("SS40K export helpers", () => {
+  test.each([0, 1, 2])("Mini grid status %s exports as 40101.gridStat", (status) => {
+    const { lookup } = buildSs40kLookup({ PCS: { profileName: "Sinexcel_Mini_PCS_ss40k" } });
+    const nowMs = Date.parse("2026-09-09T17:00:00Z");
+    const messages = buildSs40kFixedPayloads({
+      lookup,
+      telemetry: { PCS: [{ tagID: "PCS.GridStatus", value: status, timestamp: nowMs }] },
+      fixedSerialNumber: "PCS-TEST",
+      topic: "test",
+      nowMs,
+      maxSampleAgeMs: 60000,
+    });
+    expect(messages.find((message) => message.ss40k.model === "40101")?.payload["0"].fixed.gridStat).toBe(status);
+    const stale = buildSs40kFixedPayloads({
+      lookup,
+      telemetry: { PCS: [{ tagID: "PCS.GridStatus", value: status, timestamp: nowMs - 60001 }] },
+      fixedSerialNumber: "PCS-TEST",
+      topic: "test",
+      nowMs,
+      maxSampleAgeMs: 60000,
+    });
+    expect(stale.find((message) => message.ss40k.model === "40101")?.payload["0"].fixed.gridStat).toBeUndefined();
+  });
+
   test("buildSs40kLookup carries exportMultiplier metadata from templates", () => {
     const result = buildSs40kLookup({
       MBMU: { profileName: "MBMU_280_ss40k", route: "MBMU" },
@@ -450,7 +473,7 @@ describe("SS40K export helpers", () => {
     expect(lookup["AMPACE_BCU_2.BcuPower"]).toMatchObject({
       name: "W",
       model: "42101",
-      exportMultiplier: 10,
+      exportMultiplier: 1,
     });
     expect(lookup["AMPACE_BCU_2.TotalInEng"]).toMatchObject({
       name: "eBatChgTot",
@@ -534,7 +557,7 @@ describe("SS40K export helpers", () => {
             SoH: 98,
             V: 720.5,
             A: -12.3,
-            W: -88621,
+            W: -8862.15,
           }),
         },
       },
@@ -587,7 +610,7 @@ describe("SS40K export helpers", () => {
       V: 624.5,
       A: 27.7,
       ChaSt: 1,
-      W: 172986,
+      W: 17299,
     });
   });
 

@@ -85,6 +85,7 @@
     },
     {
       "id": "BcuPower",
+      "description": "BCU voltage times current in watts. Export directly; voltage and current are already scaled engineering values.",
       "calc": {
         "inputs": {
           "voltage": "InternalSumVoltage",
@@ -96,7 +97,7 @@
       "ss40k": {
         "name": "W",
         "model": "42101",
-        "exportMultiplier": 10
+        "exportMultiplier": 1
       }
     },
     {

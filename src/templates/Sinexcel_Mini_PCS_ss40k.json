@@ -89,6 +89,21 @@
       }
     },
     {
+      "id": "GridStatus",
+      "description": "FMP grid status using site operating-state semantics: fault/failed/stopped/disconnected = 1, grid-tied = 0, off-grid = 2. Off-grid is labeled Outage by FMP, not independent proof of utility loss.",
+      "pollClass": "normal",
+      "calc": {
+        "inputs": {
+          "status": "SystemStatusMap"
+        },
+        "expr": "(bit(status, 0) || bit(status, 9)) ? 1 : ((bit(status, 4) && !bit(status, 5)) ? 0 : ((bit(status, 5) && !bit(status, 4)) ? 2 : 1))"
+      },
+      "ss40k": {
+        "name": "gridStat",
+        "model": "40101"
+      }
+    },
+    {
       "id": "ACBusTotalActivePower",
       "pollClass": "fast",
       "function": "HR",

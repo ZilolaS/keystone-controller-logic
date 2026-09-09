@@ -718,7 +718,7 @@ function applyDerivedFmpFlowFields(
       group.fixed.ChaSt = batteryChargeStateFromCurrent(amps);
     }
     if (hasFiniteFixedValue(group.fixed, "W") || volts === null || amps === null) continue;
-    group.fixed.W = Math.round(volts * amps * 10);
+    group.fixed.W = Math.round(volts * amps);
   }
 }
 

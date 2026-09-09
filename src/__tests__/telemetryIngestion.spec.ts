@@ -1496,6 +1496,29 @@ describe("Telemetry baseline lock", () => {
     expect(evaluate(...Object.keys(inputs).map((key) => words[key] ?? 0))).toBe(expected);
   });
 
+  test.each([
+    ["grid-tied", 16, 0],
+    ["off-grid", 32, 2],
+    ["faulted", 1, 1],
+    ["failed", 512, 1],
+    ["fault overrides grid-tied", 17, 1],
+    ["fault overrides off-grid", 33, 1],
+    ["failed overrides grid-tied", 528, 1],
+    ["stopped", 0, 1],
+    ["standby", 2, 1],
+    ["conflicting running modes", 48, 1],
+  ])("Mini grid status: %s", (_name, status, expected) => {
+    const template = resolveTelemetryTemplate("Sinexcel_Mini_PCS_ss40k");
+    const profile = adaptTelemetryTemplateToReadProfile("Sinexcel_Mini_PCS_ss40k", template);
+    profile.tags = profile.tags.filter((tag) => ["SystemStatusMap", "GridStatus"].includes(tag.name));
+    const plan = buildReadPlan(profile, instance, compilerEnv);
+    const result = simulateReply(plan, 0, [status]);
+    expect(result.out2).toContainEqual(expect.objectContaining({ tagID: "GridStatus", value: expected }));
+    expect(template.telemetry.find((tag) => tag.id === "GridStatus")?.ss40k).toEqual({
+      name: "gridStat", model: "40101",
+    });
+  });
+
   test("Sinexcel Mini Gateway template exports cabinet alarms into product-neutral 50103", () => {
     const template = resolveTelemetryTemplate("mini_gateway");
 

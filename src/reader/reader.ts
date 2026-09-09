@@ -9,6 +9,7 @@ interface Runtime {
   updatedAt: Record<string, number>;
   pending: Set<string>;
   nextReqId: number;
+  drain?: () => void;
 }
 
 const RUNTIMES = new Map<EquipId, Runtime>();
@@ -80,8 +81,7 @@ export function start(
 
   RUNTIMES.set(plan.equipmentId, rt);
 
-  const poll = (i: number, blk: ReadPlan["blocks"][number]) => {
-    if (rt.inflight >= (env.MAX_IN_FLIGHT ?? 1)) return;
+  const sendPoll = (i: number, blk: ReadPlan["blocks"][number]) => {
     const reqKey = `${i}:${rt.nextReqId++}`;
     rt.inflight++;
     rt.pending.add(reqKey);
@@ -116,8 +116,31 @@ export function start(
     setTimeout(() => {
       if (rt.pending.delete(reqKey)) {
         rt.inflight = Math.max(0, rt.inflight - 1);
+        rt.drain?.();
       }
     }, (env.REQUEST_TIMEOUT_MS ?? 1500) + 10);
+  };
+
+  // Coalesce overdue polls per block and serve them in arrival order. A busy
+  // transport must not permanently starve a status block or drop startup reads.
+  const queued = new Set<number>();
+  let draining = false;
+  rt.drain = () => {
+    if (draining || RUNTIMES.get(plan.equipmentId) !== rt) return;
+    draining = true;
+    try {
+      while (queued.size && rt.inflight < (env.MAX_IN_FLIGHT ?? 1)) {
+        const index = queued.values().next().value!;
+        queued.delete(index);
+        sendPoll(index, plan.blocks[index]);
+      }
+    } finally {
+      draining = false;
+    }
+  };
+  const poll = (index: number) => {
+    queued.add(index);
+    rt.drain?.();
   };
 
   const recurringCounts = new Map<number, number>();
@@ -143,11 +166,11 @@ export function start(
     const jitterDelay = jitter ? Math.floor(Math.random() * jitter) : 0;
     const delay = baseDelay + jitterDelay;
     const t0 = setTimeout(() => {
-      poll(i, blk);
+      poll(i);
       if ((blk as any).startupOnly) {
         return;
       }
-      const t = setInterval(() => poll(i, blk), period);
+      const t = setInterval(() => poll(i), period);
       rt.timers.push(t);
     }, delay);
     rt.timers.push(t0);
@@ -515,6 +538,8 @@ export function onReply(
   if (derived.length) {
     samples.push(...derived);
   }
+
+  rt?.drain?.();
 
   if (!samples.length) {
     return {
