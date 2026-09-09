@@ -19,3 +19,10 @@ device-backed schedule registers are outside this placeholder cleanup.
 Initial deployment: Levtex (.80), template-only update with before/after backups
 and unchanged Node-RED image/flows. Verify all 20 fields are zero in AWS telemetry
 and that stored controller configuration and EdgeScheduler plans are unchanged.
+
+When `KEYSTONE_FORCE_UNIFIED_FLOW=true`, container startup recopies
+`/data-internal/flows/unified_platform_runtime_flow.json` into the active user
+directory. Local patches to unified function nodes must also update the matching
+functions in that bundled flow. Otherwise a later template-only restart silently
+restores old function logic. Keep unrelated bundled nodes and deployment settings
+unchanged, and compare the active flow against its pre-restart backup afterward.
