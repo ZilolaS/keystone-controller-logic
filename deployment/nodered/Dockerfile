@@ -3,7 +3,7 @@ FROM csedgeplatform.azurecr.io/noderedmodule@sha256:3c060e5784990b45880f159040f3
 USER root
 ARG SOURCE_REVISION
 LABEL org.opencontainers.image.revision=$SOURCE_REVISION
-LABEL org.opencontainers.image.version="3.0.22"
+LABEL org.opencontainers.image.version="3.0.23"
 COPY dist/ /data-internal/dist/
 COPY flows/unified_platform_runtime_flow.json /data-internal/flows/unified_platform_runtime_flow.json
 COPY scripts/apply-node-red-fixed-slots.py /data-internal/scripts/apply-node-red-fixed-slots.py

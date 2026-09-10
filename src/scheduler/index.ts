@@ -24,6 +24,8 @@ export interface SchedulePlan {
   timezone?: string;
   cron?: string;
   default?: boolean | string;
+  runState?: string;
+  expireTs?: number;
   duration?: ScheduleDuration | number | string;
   start?: string;
   until?: string;
@@ -197,9 +199,14 @@ export function matchActiveSchedulePlan(
     const planTimezone = normalizeTimezone(plan.timezone ?? timezone);
     const planNowParts = planTimezone === timezone ? nowParts : getLocalParts(now, planTimezone);
     const planNowLocalMs = planTimezone === timezone ? nowLocalMs : localMs(planNowParts);
-    const active = getAbsoluteTimeWindow(plan, now) ?? getActiveWindow(plan, planNowLocalMs);
+    const isAbsoluteJob = plan.execType === 'Once' || plan.execType === 'Immediate';
+    const active = isAbsoluteJob
+      ? getAbsoluteTimeWindow(plan, now)
+      : getAbsoluteTimeWindow(plan, now) ?? getActiveWindow(plan, planNowLocalMs);
     if (!active) continue;
-    if (!withinPlanBounds(plan, planNowLocalMs)) continue;
+    if (isAbsoluteJob) {
+      if (Number(plan.expireTs || 0) > 0 && now.getTime() >= Number(plan.expireTs) * 1000) continue;
+    } else if (!withinPlanBounds(plan, planNowLocalMs)) continue;
 
     candidates.push({
       plan,
@@ -216,7 +223,7 @@ export function matchActiveSchedulePlan(
     return candidates.sort(compareActivePlansByPrecedence)[0];
   }
 
-  const fallback = findDefaultPlan(plans);
+  const fallback = findDefaultPlan(plans, now);
   if (!fallback) return null;
 
   return {
@@ -571,8 +578,13 @@ function withinPlanBounds(plan: SchedulePlan, nowLocalMs: number): boolean {
   return true;
 }
 
-function findDefaultPlan(plans: SchedulePlan[]): SchedulePlan | null {
-  return plans.filter(isDefaultPlan).sort(comparePlansByPrecedence)[0] ?? null;
+function findDefaultPlan(plans: SchedulePlan[], now: Date): SchedulePlan | null {
+  return plans.filter((plan) => {
+    if (!isDefaultPlan(plan)) return false;
+    if (["Stopped", "Expired", "Completed", "Failed"].includes(String(plan.runState || ""))) return false;
+    const expires = Number(plan.expireTs || 0);
+    return !expires || now.getTime() < expires * 1000;
+  }).sort(comparePlansByPrecedence)[0] ?? null;
 }
 
 function findNextTimedStart(
