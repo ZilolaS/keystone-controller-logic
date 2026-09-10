@@ -97,7 +97,8 @@
       "ss40k": {
         "name": "W",
         "model": "42101",
-        "exportMultiplier": 1
+        "exportMultiplier": 1,
+        "exportExpr": "round(value)"
       }
     },
     {

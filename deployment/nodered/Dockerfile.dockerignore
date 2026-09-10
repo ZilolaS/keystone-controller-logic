@@ -1,0 +1,12 @@
+**
+!dist
+!dist/**
+dist/__tests__
+!flows
+!flows/unified_platform_runtime_flow.json
+!scripts
+!scripts/apply-node-red-fixed-slots.py
+!deployment
+!deployment/nodered
+!deployment/nodered/user-authentication.js
+!deployment/nodered/Dockerfile

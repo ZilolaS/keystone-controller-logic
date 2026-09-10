@@ -474,6 +474,7 @@ describe("SS40K export helpers", () => {
       name: "W",
       model: "42101",
       exportMultiplier: 1,
+      exportExpr: "round(value)",
     });
     expect(lookup["AMPACE_BCU_2.TotalInEng"]).toMatchObject({
       name: "eBatChgTot",
@@ -490,6 +491,34 @@ describe("SS40K export helpers", () => {
       model: "42103",
       modelIndex: "0",
     });
+  });
+
+  test.each([
+    [8862.15, 8862], [8862.75, 8863],
+    [-8862.15, -8862], [-8862.75, -8863], [0, 0],
+    [0.1, 0], [-0.1, 0],
+  ])("BCU power %s exports as whole watts without changing source precision", (value, expected) => {
+    const { lookup } = buildSs40kLookup(
+      buildAmpaceBcu42kEquipmentConfig({ count: 2, route: "AMPACE" })
+    );
+    const telemetry = Object.fromEntries([1, 2].map((index) => {
+      const equipment = `AMPACE_BCU_${index}`;
+      return [equipment, [
+        { tagID: `${equipment}.SerialNumber`, value: `BCU-${index}` },
+        { tagID: `${equipment}.BcuPower`, value },
+      ]];
+    }));
+    const messages = buildSs40kFixedPayloads({ lookup, telemetry, topic: "test" });
+    const power = messages.filter((message) => message.ss40k.model === "42101");
+    expect(power).toHaveLength(2);
+    for (const message of power) {
+      const watts = message.payload["0"].fixed.W as number;
+      expect(Number.isInteger(watts)).toBe(true);
+      expect(watts === expected).toBe(true);
+      expect(JSON.parse(JSON.stringify(watts))).toBe(expected);
+    }
+    expect(telemetry.AMPACE_BCU_1[1].value).toBe(value);
+    expect(telemetry.AMPACE_BCU_2[1].value).toBe(value);
   });
 
   test("generated Mini AMPACE BCU readers are capped at two BCUs", () => {
@@ -557,7 +586,7 @@ describe("SS40K export helpers", () => {
             SoH: 98,
             V: 720.5,
             A: -12.3,
-            W: -8862.15,
+            W: -8862,
           }),
         },
       },
