@@ -11,6 +11,44 @@
   },
   "telemetry": [
     {
+      "id": "MaxChargingCurrent",
+      "description": "PCS maximum charging current readback in amps, not the BMS permitted current.",
+      "category": "Battery",
+      "pollClass": "normal",
+      "function": "HR",
+      "address": 1626,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 10,
+        "scaledLow": 0,
+        "scaledHigh": 1
+      },
+      "ss40k": {
+        "name": "MaxChargingCurrent",
+        "model": "40104"
+      }
+    },
+    {
+      "id": "MaxDischargingCurrent",
+      "description": "PCS maximum discharging current readback in amps, not the BMS permitted current.",
+      "category": "Battery",
+      "pollClass": "normal",
+      "function": "HR",
+      "address": 1627,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 10,
+        "scaledLow": 0,
+        "scaledHigh": 1
+      },
+      "ss40k": {
+        "name": "MaxDischargingCurrent",
+        "model": "40104"
+      }
+    },
+    {
       "id": "SerialNumber",
       "description": "PCS serial number decoded from register 0 as two-byte big-endian ASCII words",
       "category": "Identity",
