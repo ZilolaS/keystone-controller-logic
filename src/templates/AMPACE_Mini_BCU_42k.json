@@ -42,7 +42,7 @@
       "id": "InternalSumVoltage",
       "function": "HRUS",
       "address": 0,
-      "pollClass": "slow",
+      "pollClass": "normal",
       "scale": {
         "mode": "Linear",
         "rawLow": 0,
@@ -59,7 +59,7 @@
       "id": "AmpaceCurrentRaw",
       "function": "HR",
       "address": 1,
-      "pollClass": "slow",
+      "pollClass": "normal",
       "description": "AMPACE current. Positive is discharge, opposite of 42K convention.",
       "scale": {
         "mode": "Linear",
@@ -77,7 +77,7 @@
         },
         "expr": "-current"
       },
-      "pollClass": "slow",
+      "pollClass": "normal",
       "ss40k": {
         "name": "A",
         "model": "42101"
@@ -93,7 +93,7 @@
         },
         "expr": "voltage * current"
       },
-      "pollClass": "slow",
+      "pollClass": "normal",
       "ss40k": {
         "name": "W",
         "model": "42101",
@@ -263,7 +263,7 @@
       "id": "USOC",
       "function": "HRUS",
       "address": 16,
-      "pollClass": "slow",
+      "pollClass": "normal",
       "scale": {
         "mode": "Linear",
         "rawLow": 0,
@@ -659,7 +659,7 @@
       "id": "HvPowOnState",
       "function": "HRUS",
       "address": 85,
-      "pollClass": "slow"
+      "pollClass": "normal"
     },
     {
       "id": "BcuLimitCurrState",
@@ -836,7 +836,7 @@
         },
         "expr": "hv ? 1 : 0"
       },
-      "pollClass": "slow",
+      "pollClass": "normal",
       "ss40k": {
         "name": "St",
         "model": "42101"
@@ -851,7 +851,7 @@
         },
         "expr": "st === 0 ? 0 : (a > 1 ? 1 : (a < -1 ? 2 : 3))"
       },
-      "pollClass": "slow",
+      "pollClass": "normal",
       "ss40k": {
         "name": "ChaSt",
         "model": "42101"
@@ -865,7 +865,7 @@
         },
         "expr": "hv ? 3 : 0"
       },
-      "pollClass": "slow",
+      "pollClass": "normal",
       "ss40k": {
         "name": "ConSt",
         "model": "42101"

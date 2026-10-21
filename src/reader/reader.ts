@@ -534,7 +534,9 @@ export function onReply(
   const calcValues =
     rt?.values ||
     Object.fromEntries(samples.map((sample) => [sample.tagID, sample.value]));
-  const derived = evaluateCalculatedTags(plan, calcValues, env, rt?.updatedAt);
+  const calcUpdatedAt = rt?.updatedAt ||
+    Object.fromEntries(samples.map((sample) => [sample.tagID, Number(sample.timestamp)]));
+  const derived = evaluateCalculatedTags(plan, calcValues, env, calcUpdatedAt);
   if (derived.length) {
     samples.push(...derived);
   }
@@ -581,6 +583,7 @@ function evaluateCalculatedTags(
   for (const calc of calcs) {
     const scope: Record<string, any> = {};
     let missing = false;
+    let timestamp = now;
 
     for (const [name, tagID] of Object.entries(calc.inputs || {})) {
       const value = values[tagID as string];
@@ -592,12 +595,13 @@ function evaluateCalculatedTags(
           typeof value === "bigint"
         ) ||
         (enforceFreshness &&
-          (!Number.isFinite(inputUpdatedAt) || now - Number(inputUpdatedAt) > maxAgeMs))
+          (!Number.isFinite(inputUpdatedAt) || Number(inputUpdatedAt) > now || now - Number(inputUpdatedAt) > maxAgeMs))
       ) {
         missing = true;
         break;
       }
       scope[name] = value;
+      if (Number.isFinite(inputUpdatedAt)) timestamp = Math.min(timestamp, Number(inputUpdatedAt));
     }
 
     if (missing) continue;
@@ -608,7 +612,7 @@ function evaluateCalculatedTags(
     out.push({
       tagID: calc.tagID,
       value,
-      timestamp: Date.now(),
+      timestamp,
       alarm: calc.alarm || "No",
       supportingTag: calc.supportingTag || "No",
     });
