@@ -255,7 +255,8 @@ export function buildSs40kFixedPayloads(
   const telemetry = filterTelemetryBySampleAge(
     rawTelemetry,
     options.maxSampleAgeMs,
-    options.nowMs
+    options.nowMs,
+    lookup
   );
   const groups: Record<string, Ss40kPayloadGroup> = {};
 
@@ -314,7 +315,8 @@ export function buildSs40kFixedPayloads(
   );
   applySiteSignalOverrides(groups, telemetry, signalMapping, version);
   applyDerivedFmpFlowFields(groups, telemetry, version);
-  applyEnergyAccumulatorOverrides(groups, telemetry, version, options.energyAccumulator);
+  applyEnergyAccumulatorOverrides(groups, telemetry, version, options.energyAccumulator,
+    declaredHardwareEnergyPoints(lookup, signalMapping));
   applyDailyEnergyOverrides(groups, version, options.energyAccumulator);
   const identityTelemetry = rawTelemetry || telemetry;
   applyPerEquipmentIdentity(groups, lookup, identityTelemetry, equipmentIdentity);
@@ -404,18 +406,30 @@ function applySystemIdentityModels(
 function filterTelemetryBySampleAge(
   telemetry: Ss40kTelemetryStore,
   maxSampleAgeMs: number | undefined,
-  nowMs: number | undefined
+  nowMs: number | undefined,
+  lookup: Record<string, Ss40kLookupEntry>
 ): Ss40kTelemetryStore {
   const maxAge = finitePositiveNumber(maxSampleAgeMs);
   if (maxAge === null) return telemetry;
 
   const now = finitePositiveNumber(nowMs) ?? Date.now();
+  const energyTags = new Set(Object.values(lookup)
+    .filter(meta => /^(40102|42102)$/.test(meta.model) && meta.name in SS40K_DAILY_ENERGY_POINTS)
+    .map(meta => meta.sourceTagID));
   const filtered: Ss40kTelemetryStore = {};
   for (const [equipment, samples] of Object.entries(telemetry || {})) {
     if (!Array.isArray(samples)) continue;
     const freshSamples = samples.filter((sample) => {
       const timestampMs = timestampToMs(sample?.timestamp);
-      return timestampMs !== null && now - timestampMs <= maxAge;
+      const energy = energyTags.has(sample?.tagID);
+      if (energy && (sample.stale === true ||
+          (sample.quality !== undefined && String(sample.quality).toLowerCase() !== "good") ||
+          !["number", "string"].includes(typeof sample.value) || String(sample.value).trim() === "" ||
+          !Number.isFinite(Number(sample.value)))) return false;
+      // Lifetime counters have their own poll cadence; never extend fast power freshness.
+      const pollMs = energy ? finitePositiveNumber(sample.pollIntervalMs) : null;
+      const ageLimit = pollMs === null ? maxAge : Math.max(maxAge, pollMs * 2);
+      return timestampMs !== null && timestampMs <= now && now - timestampMs <= ageLimit;
     });
     if (freshSamples.length) filtered[equipment] = freshSamples;
   }
@@ -883,11 +897,27 @@ function toDirectFixedTargets(
   return [groups[key].fixed];
 }
 
+function declaredHardwareEnergyPoints(
+  lookup: Record<string, Ss40kLookupEntry>,
+  mapping: SignalMappingConfig | undefined
+): Set<string> {
+  const points = new Set<string>();
+  for (const meta of Object.values(lookup)) {
+    if (meta.model === "40102" && meta.name in SS40K_DAILY_ENERGY_POINTS) points.add(meta.name);
+  }
+  for (const [point, spec] of Object.entries(mapping?.ss40k || {})) {
+    if (spec?.expr && point in SS40K_DAILY_ENERGY_POINTS &&
+        ss40kDirectModelForPoint(point, spec.model) === "40102") points.add(point);
+  }
+  return points;
+}
+
 function applyEnergyAccumulatorOverrides(
   groups: Record<string, Ss40kPayloadGroup>,
   telemetry: Ss40kTelemetryStore,
   version: string,
-  options: Ss40kEnergyAccumulatorOptions | undefined
+  options: Ss40kEnergyAccumulatorOptions | undefined,
+  hardwarePoints: Set<string>
 ) {
   if (!options || options.enabled === false) return;
 
@@ -912,8 +942,10 @@ function applyEnergyAccumulatorOverrides(
 
   const utilityTag = sourceTags.utilityNetKwh || "Meter.Utility_Energy";
   const utilityEnergy = valueFromTelemetry(telemetry, utilityTag);
-  const hasDirectGridImport = hasFiniteFixedValue(fixed40102, "eGridImpTot");
-  const hasDirectGridExport = hasFiniteFixedValue(fixed40102, "eGridExpTot");
+  // A configured device counter must not change to a software baseline on expiry/startup.
+  const hasDeviceSource = (point: string) => hardwarePoints.has(point) || hasFiniteFixedValue(fixed40102, point);
+  const hasDirectGridImport = hasDeviceSource("eGridImpTot");
+  const hasDirectGridExport = hasDeviceSource("eGridExpTot");
   if (utilityEnergy !== null && (!hasDirectGridImport || !hasDirectGridExport)) {
     seedCounter(counters, fixed40102, "eGridImpTot", outputMultiplier);
     seedCounter(counters, fixed40102, "eGridExpTot", outputMultiplier);
@@ -947,7 +979,7 @@ function applyEnergyAccumulatorOverrides(
   }
 
   const acCoupledPvKwhTag = sourceTags.acCoupledPvKwh || "Meter2.PV_Energy";
-  accumulatePositiveRawKwh(
+  if (!hardwarePoints.has("eAcCplTot")) accumulatePositiveRawKwh(
     telemetry,
     acCoupledPvKwhTag,
     counters,
@@ -956,7 +988,7 @@ function applyEnergyAccumulatorOverrides(
     "eAcCplTot",
     outputMultiplier
   );
-  if (!hasFiniteFixedValue(fixed40102, "eAcCplTot")) {
+  if (!hasDeviceSource("eAcCplTot")) {
     seedCounter(counters, fixed40102, "eAcCplTot", outputMultiplier);
     if (dtHours > 0) {
       const acCoupledPvWatts = positiveNumber(fixed40101.pAcCplTot);
@@ -966,7 +998,7 @@ function applyEnergyAccumulatorOverrides(
     }
     fixed40102.eAcCplTot = formatEnergyCounter(counters.eAcCplTot, outputMultiplier);
   }
-  accumulatePositiveRawKwh(
+  if (!hardwarePoints.has("eGenTot")) accumulatePositiveRawKwh(
     telemetry,
     sourceTags.generatorKwh || "Meter.Generator_Energy",
     counters,
@@ -976,7 +1008,7 @@ function applyEnergyAccumulatorOverrides(
     outputMultiplier
   );
 
-  const hasDirectLoadEnergy = hasFiniteFixedValue(fixed40102, "eLoadTot");
+  const hasDirectLoadEnergy = hasDeviceSource("eLoadTot");
   const loadWatts = positiveNumber(fixed40101.pLoad);
   if (!hasDirectLoadEnergy) {
     seedCounter(counters, fixed40102, "eLoadTot", outputMultiplier);
@@ -986,16 +1018,16 @@ function applyEnergyAccumulatorOverrides(
     fixed40102.eLoadTot = formatEnergyCounter(counters.eLoadTot, outputMultiplier);
   }
 
-  const hasDirectBatteryChargeEnergy = hasFiniteFixedValue(fixed40102, "eBatChgTot");
-  const hasDirectBatteryDischargeEnergy = hasFiniteFixedValue(fixed40102, "eBatDischgTot");
+  const hasDirectBatteryChargeEnergy = hasDeviceSource("eBatChgTot");
+  const hasDirectBatteryDischargeEnergy = hasDeviceSource("eBatDischgTot");
   const batteryKw = resolveBatteryPowerKw(telemetry, fixed40101, sourceTags.batteryPowerKw);
   if (!hasDirectBatteryChargeEnergy || !hasDirectBatteryDischargeEnergy) {
-    seedCounter(counters, fixed40102, "eBatChgTot", outputMultiplier);
-    seedCounter(counters, fixed40102, "eBatDischgTot", outputMultiplier);
+    if (!hasDirectBatteryChargeEnergy) seedCounter(counters, fixed40102, "eBatChgTot", outputMultiplier);
+    if (!hasDirectBatteryDischargeEnergy) seedCounter(counters, fixed40102, "eBatDischgTot", outputMultiplier);
     if (batteryKw !== null && dtHours > 0) {
-      if (batteryKw > 0) {
+      if (batteryKw > 0 && !hasDirectBatteryDischargeEnergy) {
         counters.eBatDischgTot = roundEnergyKwh(positiveCounter(counters.eBatDischgTot) + batteryKw * dtHours);
-      } else if (batteryKw < 0) {
+      } else if (batteryKw < 0 && !hasDirectBatteryChargeEnergy) {
         counters.eBatChgTot = roundEnergyKwh(positiveCounter(counters.eBatChgTot) + Math.abs(batteryKw) * dtHours);
       }
     }
