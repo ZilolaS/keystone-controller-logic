@@ -44,6 +44,22 @@
 
 `buildEspire290EquipmentConfig({ clusterCount })` in `src/telemetry/espire290OlpCms.ts` returns the CMS entry plus one BMS entry and one TMU entry per cluster.
 
+### Legacy UDTs
+
+`scripts/build-espire290-udt.py [clusterCount]` re-shapes the ss templates into the legacy `Original_*_udt.json` format, with the same fields as `Original_280_MBMU_udt.json`. The legacy format has no base offset, so each cluster and TMU gets its own UDT with absolute addresses.
+
+| File | UDT name | Content |
+|---|---|---|
+| `Original_290_OLP_CMS_udt.json` | `udt_OLP_290_CMS_V1` | 83 system points + 75 commands (158 tags) |
+| `Original_290_OLP_BMS{n}_udt.json` | `udt_OLP_290_BMS{n}_V1` | Cluster n, 50 tags |
+| `Original_290_OLP_TMU{n}_udt.json` | `udt_OLP_290_TMU{n}_V1` | TMU n, 27 tags |
+
+The committed files cover only cluster 1. For a multi-cluster site, run `python scripts/build-espire290-udt.py <N>`.
+
+**Unverified:** all telemetry is input registers (`IR`/`IRUS`, FC04). Every older UDT uses only `HR`/`HRUS`. Confirm the legacy importer/runtime reads FC04 before deploying; the CMS doesn't expose these points as holding registers.
+
+`src/__tests__/espire290Udt.spec.ts` fails if the UDTs and the templates drift apart.
+
 The 24-char system and EMS SN strings (30001–30024 and 30026–30049, one ASCII character per register) are not templated, because the reader has no ASCII parser yet. Only the length registers are.
 
 Every `ss40k.model` is `"TODO"`. See `src/telemetry/espire290ReportingModels.ts`.
