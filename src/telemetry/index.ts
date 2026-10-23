@@ -25,6 +25,20 @@ export {
   buildAmpaceBcu42kTemplate,
 } from "./ampaceBcu42k";
 export {
+  ESPIRE290_MAX_CLUSTERS,
+  ESPIRE290_SYSTEM_PROFILE,
+  buildEspire290ClusterTemplate,
+  buildEspire290EquipmentConfig,
+  buildEspire290TmuTemplate,
+  espire290ClusterControlBase,
+} from "./espire290OlpCms";
+export {
+  ESPIRE290_CONFIG_MODELS,
+  ESPIRE290_FAULT_MODELS,
+  ESPIRE290_INFO_MODELS,
+  ESPIRE290_MONITORING_MODELS,
+} from "./espire290ReportingModels";
+export {
   createTelemetryRuntimeState,
   handleTelemetryMessage,
 } from "./runtime";

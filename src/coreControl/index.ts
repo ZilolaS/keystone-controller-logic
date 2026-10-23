@@ -90,6 +90,38 @@ export {
   type MiniStandaloneTelemetry,
   type MiniStandaloneWriterOptions,
 } from "./miniStandaloneSequencer";
+export {
+  classifyEspire290Faults,
+  espire290ClusterMask,
+  espire290CmsPowerToPcsConvention,
+  resolveEspire290PowerCaps,
+  E290_CLUSTER_FAULT_CODE2,
+  E290_CLUSTER_FAULT_CODE3,
+  E290_CMS_FAULT_WORD1,
+  E290_CMS_FAULT_WORD2,
+  type Espire290ClusterFault,
+  type Espire290ClusterTelemetry,
+  type Espire290CmsTelemetry,
+  type Espire290FaultCategory,
+  type Espire290FaultClassification,
+  type Espire290PowerCaps,
+  type Espire290PowerCapsInput,
+} from "./espire290Faults";
+export {
+  ESPIRE290_EMS_COMM_TIMEOUT_MS,
+  ESPIRE290_OPERATION_MODE_REMOTE,
+  ESPIRE290_WORKING_MODE_MANUAL,
+  espire290CommandsToWriterEnvelopes,
+  evaluateEspire290CmsSequencer,
+  initialEspire290SequencerState,
+  type Espire290Command,
+  type Espire290SequencerInput,
+  type Espire290SequencerMode,
+  type Espire290SequencerOptions,
+  type Espire290SequencerResult,
+  type Espire290SequencerState,
+  type Espire290WriterOptions,
+} from "./espire290CmsSequencer";
 export type {
   ControlCommandDesign,
   ControlDesignRole,

@@ -1,0 +1,811 @@
+{
+  "version": "2",
+  "device": {
+    "vendor": "OLiPower",
+    "model": "Omni BL 290 BMU cluster template",
+    "protocol": "modbus-tcp",
+    "name": "eSpire290_OLP_BMS_Cluster",
+    "sourceFormat": "json-offset-template",
+    "defaultByteOrder": "BE",
+    "defaultWordOrder32": "ABCD",
+    "notes": "Addresses are offsets from the cluster base. Runtime base = 31981 + clusterIndex * 50 (cluster 1 = index 0). Instantiate with buildEspire290ClusterTemplate()."
+  },
+  "telemetry": [
+    {
+      "id": "ClusterId",
+      "constant": "${clusterId}",
+      "pollClass": "startup",
+      "ss40k": {
+        "name": "ClusterId",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "HvOnStatus",
+      "description": "Cluster HV-on status",
+      "category": "Status",
+      "pollClass": "fast",
+      "function": "IRUS",
+      "address": 0,
+      "confidence": "high",
+      "ss40k": {
+        "name": "HvOnStatus",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "ChargeStatus",
+      "description": "Cluster charge status (semantics undocumented)",
+      "category": "Status",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 1,
+      "confidence": "low",
+      "ss40k": {
+        "name": "ChargeStatus",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "RunningStatus",
+      "description": "Cluster running status (semantics undocumented)",
+      "category": "Status",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 2,
+      "confidence": "low",
+      "ss40k": {
+        "name": "RunningStatus",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "Soc",
+      "description": "Cluster SOC (%)",
+      "category": "Telemetry",
+      "pollClass": "fast",
+      "function": "IRUS",
+      "address": 3,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 10,
+        "engLow": 0,
+        "engHigh": 1
+      },
+      "confidence": "high",
+      "ss40k": {
+        "name": "Soc",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "Soh",
+      "description": "Cluster SOH (%)",
+      "category": "Telemetry",
+      "pollClass": "slow",
+      "function": "IRUS",
+      "address": 4,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 10,
+        "engLow": 0,
+        "engHigh": 1
+      },
+      "confidence": "high",
+      "ss40k": {
+        "name": "Soh",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "Voltage",
+      "description": "Cluster cell-sum voltage (V)",
+      "category": "Telemetry",
+      "pollClass": "fast",
+      "function": "IRUS",
+      "address": 5,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 10,
+        "engLow": 0,
+        "engHigh": 1
+      },
+      "confidence": "high",
+      "ss40k": {
+        "name": "Voltage",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "Current",
+      "description": "Cluster current (A). Sign: charge +, discharge -",
+      "category": "Telemetry",
+      "pollClass": "fast",
+      "function": "IR",
+      "address": 6,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 10,
+        "engLow": 0,
+        "engHigh": 1
+      },
+      "confidence": "high",
+      "ss40k": {
+        "name": "Current",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "AllowedChargeCurrent",
+      "description": "Cluster allowed charge current (A)",
+      "category": "Telemetry",
+      "pollClass": "fast",
+      "function": "IR",
+      "address": 7,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 10,
+        "engLow": 0,
+        "engHigh": 1
+      },
+      "confidence": "high",
+      "ss40k": {
+        "name": "AllowedChargeCurrent",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "AllowedDischargeCurrent",
+      "description": "Cluster allowed discharge current (A)",
+      "category": "Telemetry",
+      "pollClass": "fast",
+      "function": "IR",
+      "address": 8,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 10,
+        "engLow": 0,
+        "engHigh": 1
+      },
+      "confidence": "high",
+      "ss40k": {
+        "name": "AllowedDischargeCurrent",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "MaxCellVoltageBsuIndex",
+      "description": "BSU index of max cell voltage",
+      "category": "Telemetry",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 9,
+      "confidence": "high",
+      "supportingTag": true,
+      "ss40k": {
+        "name": "MaxCellVoltageBsuIndex",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "MaxCellVoltageCellIndex",
+      "description": "Cell index of max cell voltage",
+      "category": "Telemetry",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 10,
+      "confidence": "high",
+      "supportingTag": true,
+      "ss40k": {
+        "name": "MaxCellVoltageCellIndex",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "MaxCellVoltage",
+      "description": "Max cell voltage (mV)",
+      "category": "Telemetry",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 11,
+      "confidence": "high",
+      "ss40k": {
+        "name": "MaxCellVoltage",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "MinCellVoltageBsuIndex",
+      "description": "BSU index of min cell voltage",
+      "category": "Telemetry",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 12,
+      "confidence": "high",
+      "supportingTag": true,
+      "ss40k": {
+        "name": "MinCellVoltageBsuIndex",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "MinCellVoltageCellIndex",
+      "description": "Cell index of min cell voltage",
+      "category": "Telemetry",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 13,
+      "confidence": "high",
+      "supportingTag": true,
+      "ss40k": {
+        "name": "MinCellVoltageCellIndex",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "MinCellVoltage",
+      "description": "Min cell voltage (mV)",
+      "category": "Telemetry",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 14,
+      "confidence": "high",
+      "ss40k": {
+        "name": "MinCellVoltage",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "AverageCellVoltage",
+      "description": "Average cell voltage (mV)",
+      "category": "Telemetry",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 15,
+      "confidence": "high",
+      "ss40k": {
+        "name": "AverageCellVoltage",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "MaxCellTempBsuIndex",
+      "description": "BSU index of max cell temp",
+      "category": "Telemetry",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 16,
+      "confidence": "high",
+      "supportingTag": true,
+      "ss40k": {
+        "name": "MaxCellTempBsuIndex",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "MaxCellTempCellIndex",
+      "description": "Cell index of max cell temp",
+      "category": "Telemetry",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 17,
+      "confidence": "high",
+      "supportingTag": true,
+      "ss40k": {
+        "name": "MaxCellTempCellIndex",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "MaxCellTemperature",
+      "description": "Max cell temperature (C)",
+      "category": "Telemetry",
+      "pollClass": "normal",
+      "function": "IR",
+      "address": 18,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 10,
+        "engLow": 0,
+        "engHigh": 1
+      },
+      "confidence": "high",
+      "ss40k": {
+        "name": "MaxCellTemperature",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "MinCellTempBsuIndex",
+      "description": "BSU index of min cell temp",
+      "category": "Telemetry",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 19,
+      "confidence": "high",
+      "supportingTag": true,
+      "ss40k": {
+        "name": "MinCellTempBsuIndex",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "MinCellTempCellIndex",
+      "description": "Cell index of min cell temp",
+      "category": "Telemetry",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 20,
+      "confidence": "high",
+      "supportingTag": true,
+      "ss40k": {
+        "name": "MinCellTempCellIndex",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "MinCellTemperature",
+      "description": "Min cell temperature (C)",
+      "category": "Telemetry",
+      "pollClass": "normal",
+      "function": "IR",
+      "address": 21,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 10,
+        "engLow": 0,
+        "engHigh": 1
+      },
+      "confidence": "high",
+      "ss40k": {
+        "name": "MinCellTemperature",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "AverageCellTemperature",
+      "description": "Average cell temperature (C)",
+      "category": "Telemetry",
+      "pollClass": "normal",
+      "function": "IR",
+      "address": 22,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 10,
+        "engLow": 0,
+        "engHigh": 1
+      },
+      "confidence": "high",
+      "ss40k": {
+        "name": "AverageCellTemperature",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "AvailableChargeEnergy",
+      "description": "Energy to SOC high limit (kWh)",
+      "category": "Telemetry",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 23,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 10,
+        "engLow": 0,
+        "engHigh": 1
+      },
+      "confidence": "high",
+      "ss40k": {
+        "name": "AvailableChargeEnergy",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "AvailableDischargeEnergy",
+      "description": "Energy to SOC low limit (kWh)",
+      "category": "Telemetry",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 24,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 10,
+        "engLow": 0,
+        "engHigh": 1
+      },
+      "confidence": "high",
+      "ss40k": {
+        "name": "AvailableDischargeEnergy",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "InsulationPositive",
+      "description": "Insulation HV+ (kOhm)",
+      "category": "Telemetry",
+      "pollClass": "slow",
+      "function": "IRUS",
+      "address": 25,
+      "confidence": "high",
+      "ss40k": {
+        "name": "InsulationPositive",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "InsulationNegative",
+      "description": "Insulation HV- (kOhm)",
+      "category": "Telemetry",
+      "pollClass": "slow",
+      "function": "IRUS",
+      "address": 26,
+      "confidence": "high",
+      "ss40k": {
+        "name": "InsulationNegative",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "FaultCode1",
+      "description": "Severe protection trips (HV off, remotely resettable): b0 cell OV, b1 cell UV, b2 total OV, b3 total UV, b4 chg high T, b5 chg low T, b6 dis high T, b7 dis low T, b8 dis OC, b9 chg OC, b10 cell dV, b11 dT, b14 BSU dV. Point sheet labels these 'Level-1'; strategy doc V0.4 calls them 'Level-3' (severe) - strategy doc wins",
+      "category": "Faults",
+      "pollClass": "fast",
+      "function": "IRUS",
+      "address": 27,
+      "confidence": "high",
+      "alarm": true,
+      "bitfieldStatus": true,
+      "ss40k": {
+        "name": "FaultCode1",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "FaultCode2",
+      "description": "b0 L-CAN comm (HV box<->modules), b1 temp sensor, b2 voltage sensor, b3 insulation (<15 kOhm), b4 relay/contactor check, b5 REQUEST FORCED CHARGE flag (sheet only), b6 thermal unit comm",
+      "category": "Faults",
+      "pollClass": "fast",
+      "function": "IRUS",
+      "address": 28,
+      "confidence": "high",
+      "alarm": true,
+      "bitfieldStatus": true,
+      "ss40k": {
+        "name": "FaultCode2",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "FaultCode3",
+      "description": "Site DI faults: b0 E-stop, b1 heat/fire detector, b2 door open (sheet) / smoke detector (strategy doc), b3 water immersion, b4 dehumidifier, b5 combustible gas, b6 HV+ fuse, b7 HV- fuse",
+      "category": "Faults",
+      "pollClass": "fast",
+      "function": "IRUS",
+      "address": 29,
+      "confidence": "medium",
+      "alarm": true,
+      "bitfieldStatus": true,
+      "ss40k": {
+        "name": "FaultCode3",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "FaultCode4",
+      "description": "Fault code 4 (undocumented)",
+      "category": "Faults",
+      "pollClass": "slow",
+      "function": "IRUS",
+      "address": 30,
+      "confidence": "low",
+      "alarm": true,
+      "bitfieldStatus": true,
+      "ss40k": {
+        "name": "FaultCode4",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "FaultCode5",
+      "description": "Fault code 5 (undocumented)",
+      "category": "Faults",
+      "pollClass": "slow",
+      "function": "IRUS",
+      "address": 31,
+      "confidence": "low",
+      "alarm": true,
+      "bitfieldStatus": true,
+      "ss40k": {
+        "name": "FaultCode5",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "FaultCode6",
+      "description": "Fault code 6 (undocumented)",
+      "category": "Faults",
+      "pollClass": "slow",
+      "function": "IRUS",
+      "address": 32,
+      "confidence": "low",
+      "alarm": true,
+      "bitfieldStatus": true,
+      "ss40k": {
+        "name": "FaultCode6",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "FaultCode7",
+      "description": "Fault code 7 (undocumented)",
+      "category": "Faults",
+      "pollClass": "slow",
+      "function": "IRUS",
+      "address": 33,
+      "confidence": "low",
+      "alarm": true,
+      "bitfieldStatus": true,
+      "ss40k": {
+        "name": "FaultCode7",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "FaultCode8",
+      "description": "Fault code 8 (undocumented)",
+      "category": "Faults",
+      "pollClass": "slow",
+      "function": "IRUS",
+      "address": 34,
+      "confidence": "low",
+      "alarm": true,
+      "bitfieldStatus": true,
+      "ss40k": {
+        "name": "FaultCode8",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "FaultCode9",
+      "description": "Fault code 9 (undocumented)",
+      "category": "Faults",
+      "pollClass": "slow",
+      "function": "IRUS",
+      "address": 35,
+      "confidence": "low",
+      "alarm": true,
+      "bitfieldStatus": true,
+      "ss40k": {
+        "name": "FaultCode9",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "FaultCode10",
+      "description": "Fault code 10 (undocumented)",
+      "category": "Faults",
+      "pollClass": "slow",
+      "function": "IRUS",
+      "address": 36,
+      "confidence": "low",
+      "alarm": true,
+      "bitfieldStatus": true,
+      "ss40k": {
+        "name": "FaultCode10",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "WarningCode1",
+      "description": "Level-2 (charge/discharge forbid, current request -> 0): same bit layout as FaultCode1",
+      "category": "Warnings",
+      "pollClass": "fast",
+      "function": "IRUS",
+      "address": 37,
+      "confidence": "high",
+      "alarm": true,
+      "bitfieldStatus": true,
+      "ss40k": {
+        "name": "WarningCode1",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "WarningCode2",
+      "description": "Warning code 2 (undocumented)",
+      "category": "Warnings",
+      "pollClass": "slow",
+      "function": "IRUS",
+      "address": 38,
+      "confidence": "low",
+      "alarm": true,
+      "bitfieldStatus": true,
+      "ss40k": {
+        "name": "WarningCode2",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "WarningCode3",
+      "description": "Warning code 3 (undocumented)",
+      "category": "Warnings",
+      "pollClass": "slow",
+      "function": "IRUS",
+      "address": 39,
+      "confidence": "low",
+      "alarm": true,
+      "bitfieldStatus": true,
+      "ss40k": {
+        "name": "WarningCode3",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "WarningCode4",
+      "description": "Warning code 4 (undocumented)",
+      "category": "Warnings",
+      "pollClass": "slow",
+      "function": "IRUS",
+      "address": 40,
+      "confidence": "low",
+      "alarm": true,
+      "bitfieldStatus": true,
+      "ss40k": {
+        "name": "WarningCode4",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "WarningCode5",
+      "description": "Warning code 5 (undocumented)",
+      "category": "Warnings",
+      "pollClass": "slow",
+      "function": "IRUS",
+      "address": 41,
+      "confidence": "low",
+      "alarm": true,
+      "bitfieldStatus": true,
+      "ss40k": {
+        "name": "WarningCode5",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "WarningCode6",
+      "description": "Warning code 6 (undocumented)",
+      "category": "Warnings",
+      "pollClass": "slow",
+      "function": "IRUS",
+      "address": 42,
+      "confidence": "low",
+      "alarm": true,
+      "bitfieldStatus": true,
+      "ss40k": {
+        "name": "WarningCode6",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "WarningCode7",
+      "description": "Warning code 7 (undocumented)",
+      "category": "Warnings",
+      "pollClass": "slow",
+      "function": "IRUS",
+      "address": 43,
+      "confidence": "low",
+      "alarm": true,
+      "bitfieldStatus": true,
+      "ss40k": {
+        "name": "WarningCode7",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "WarningCode8",
+      "description": "Warning code 8 (undocumented)",
+      "category": "Warnings",
+      "pollClass": "slow",
+      "function": "IRUS",
+      "address": 44,
+      "confidence": "low",
+      "alarm": true,
+      "bitfieldStatus": true,
+      "ss40k": {
+        "name": "WarningCode8",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "WarningCode9",
+      "description": "Warning code 9 (undocumented)",
+      "category": "Warnings",
+      "pollClass": "slow",
+      "function": "IRUS",
+      "address": 45,
+      "confidence": "low",
+      "alarm": true,
+      "bitfieldStatus": true,
+      "ss40k": {
+        "name": "WarningCode9",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "WarningCode10",
+      "description": "Warning code 10 (undocumented)",
+      "category": "Warnings",
+      "pollClass": "slow",
+      "function": "IRUS",
+      "address": 46,
+      "confidence": "low",
+      "alarm": true,
+      "bitfieldStatus": true,
+      "ss40k": {
+        "name": "WarningCode10",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "ContactorOutputs",
+      "description": "b0 precharge, b1 negative, b2 positive contactor (1 = closed)",
+      "category": "Status",
+      "pollClass": "fast",
+      "function": "IRUS",
+      "address": 47,
+      "confidence": "high",
+      "bitfieldStatus": true,
+      "ss40k": {
+        "name": "ContactorOutputs",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "SampleVoltage",
+      "description": "HV sample voltage (V)",
+      "category": "Telemetry",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 48,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 10,
+        "engLow": 0,
+        "engHigh": 1
+      },
+      "confidence": "high",
+      "ss40k": {
+        "name": "SampleVoltage",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "BmsSelfCheck",
+      "description": "1 = HV-on allowed, 0 = BMS not ready",
+      "category": "Status",
+      "pollClass": "fast",
+      "function": "IRUS",
+      "address": 49,
+      "confidence": "high",
+      "enumStatus": {
+        "0": "Not ready",
+        "1": "HV on allowed"
+      },
+      "ss40k": {
+        "name": "BmsSelfCheck",
+        "model": "TODO"
+      }
+    }
+  ]
+}

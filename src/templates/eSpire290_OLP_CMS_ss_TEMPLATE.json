@@ -1,0 +1,2067 @@
+{
+  "version": "2",
+  "device": {
+    "vendor": "OLiPower (Olipower Energy & Automation Technology Co.)",
+    "model": "Omni BL 290 CMS (3-level BMS, ECU-1170-551)",
+    "protocol": "modbus-tcp",
+    "name": "eSpire290_OLP_CMS",
+    "sourceFormat": "vendor-xlsx-extraction",
+    "defaultByteOrder": "BE",
+    "defaultWordOrder32": "ABCD",
+    "notes": "eSpire 290 battery-side system template, from OLP290_CMS_ETH2_V3.3-LY 20260930.xlsx + strategy doc V0.4 (R&D for C&I SharePoint: 020 Product/espire 290/EMS General/General). Connect on ETH2 192.168.2.101:503 (upper-level EMS interface). Addresses are the sheet's labels used as literal PDU addresses (e.g. IR 31962) - verify on first site connect, see docs/eSpire290_OLP_CMS_Modbus_Register_Map.md section 2. Per-cluster BMS (base 31981, stride 50) and per-TMU (base 33162, stride 28) telemetry live in the offset templates eSpire290_OLP_BMS_Cluster_ss_TEMPLATE / eSpire290_OLP_TMU_ss_TEMPLATE, instantiated by src/telemetry/espire290OlpCms.ts. Sign: CMS current/power are charge +, discharge -. PCS is the Delta PCS125HV - reuse Delta_280_ss40k."
+  },
+  "telemetry": [
+    {
+      "id": "SysSnLength",
+      "description": "System SN length (chars, 0-24); SN chars follow at 30001-30024 as one ASCII char per register",
+      "category": "Info",
+      "pollClass": "startup",
+      "function": "IRUS",
+      "address": 30000,
+      "confidence": "high",
+      "supportingTag": true,
+      "ss40k": {
+        "name": "SysSnLength",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "EmsSnLength",
+      "description": "EMS controller SN length",
+      "category": "Info",
+      "pollClass": "startup",
+      "function": "IRUS",
+      "address": 30025,
+      "confidence": "high",
+      "supportingTag": true,
+      "ss40k": {
+        "name": "EmsSnLength",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "AppVersion",
+      "description": "APP version, v.nn.mm packed decimal (10000 = 1.00.00)",
+      "category": "Info",
+      "pollClass": "startup",
+      "function": "IRUS",
+      "address": 30050,
+      "confidence": "high",
+      "ss40k": {
+        "name": "AppVersion",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "SoftVersion",
+      "description": "Controller software version, v.nn.mm packed decimal",
+      "category": "Info",
+      "pollClass": "startup",
+      "function": "IRUS",
+      "address": 30051,
+      "confidence": "high",
+      "ss40k": {
+        "name": "SoftVersion",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "SysOperationMode",
+      "description": "Operation mode readback",
+      "category": "Status",
+      "pollClass": "slow",
+      "function": "IRUS",
+      "address": 30052,
+      "confidence": "high",
+      "enumStatus": {
+        "1": "Local (touch panel)",
+        "2": "Remote (Modbus TCP ETH2)",
+        "3": "Cloud (MQTT)"
+      },
+      "ss40k": {
+        "name": "SysOperationMode",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "SysDefaultWorkingMode",
+      "description": "Default working mode (definition changed in V3.0)",
+      "category": "Status",
+      "pollClass": "slow",
+      "function": "IRUS",
+      "address": 30053,
+      "confidence": "medium",
+      "enumStatus": {
+        "0": "Manual",
+        "1": "Plan",
+        "2": "Command"
+      },
+      "ss40k": {
+        "name": "SysDefaultWorkingMode",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "BmsConfigNumber",
+      "description": "Number of BMS clusters configured",
+      "category": "Config",
+      "pollClass": "slow",
+      "function": "IRUS",
+      "address": 30061,
+      "confidence": "high",
+      "ss40k": {
+        "name": "BmsConfigNumber",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "BmsEnableStatus",
+      "description": "Cluster enable mask, bit0-15 = BMS1-16",
+      "category": "Config",
+      "pollClass": "slow",
+      "function": "IRUS",
+      "address": 30062,
+      "confidence": "high",
+      "bitfieldStatus": true,
+      "ss40k": {
+        "name": "BmsEnableStatus",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "CmsSocDiffFault",
+      "description": "Inter-cluster SOC difference fault threshold",
+      "category": "Config",
+      "pollClass": "slow",
+      "function": "IRUS",
+      "address": 30063,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 10,
+        "engLow": 0,
+        "engHigh": 1
+      },
+      "confidence": "high",
+      "ss40k": {
+        "name": "CmsSocDiffFault",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "CmsSocDiffWarning",
+      "description": "Inter-cluster SOC difference warning threshold",
+      "category": "Config",
+      "pollClass": "slow",
+      "function": "IRUS",
+      "address": 30064,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 10,
+        "engLow": 0,
+        "engHigh": 1
+      },
+      "confidence": "high",
+      "ss40k": {
+        "name": "CmsSocDiffWarning",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "SocUpLimit",
+      "description": "CMS SOC upper limit (%)",
+      "category": "Config",
+      "pollClass": "slow",
+      "function": "IRUS",
+      "address": 30065,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 10,
+        "engLow": 0,
+        "engHigh": 1
+      },
+      "confidence": "high",
+      "ss40k": {
+        "name": "SocUpLimit",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "SocLowLimit",
+      "description": "CMS SOC lower limit (%)",
+      "category": "Config",
+      "pollClass": "slow",
+      "function": "IRUS",
+      "address": 30066,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 10,
+        "engLow": 0,
+        "engHigh": 1
+      },
+      "confidence": "high",
+      "ss40k": {
+        "name": "SocLowLimit",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "TmsConfigNumber",
+      "description": "Number of TMUs configured",
+      "category": "Config",
+      "pollClass": "slow",
+      "function": "IRUS",
+      "address": 30067,
+      "confidence": "high",
+      "ss40k": {
+        "name": "TmsConfigNumber",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "TmuEnableStatus",
+      "description": "TMU enable mask, bit0-15 = TMU1-16",
+      "category": "Config",
+      "pollClass": "slow",
+      "function": "IRUS",
+      "address": 30068,
+      "confidence": "high",
+      "bitfieldStatus": true,
+      "ss40k": {
+        "name": "TmuEnableStatus",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "SysYear",
+      "description": "CMS clock year",
+      "category": "Info",
+      "pollClass": "slow",
+      "function": "IRUS",
+      "address": 30250,
+      "confidence": "medium",
+      "ss40k": {
+        "name": "SysYear",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "SysMonth",
+      "description": "CMS clock month",
+      "category": "Info",
+      "pollClass": "slow",
+      "function": "IRUS",
+      "address": 30251,
+      "confidence": "medium",
+      "ss40k": {
+        "name": "SysMonth",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "SysDay",
+      "description": "CMS clock day",
+      "category": "Info",
+      "pollClass": "slow",
+      "function": "IRUS",
+      "address": 30252,
+      "confidence": "medium",
+      "ss40k": {
+        "name": "SysDay",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "SysHour",
+      "description": "CMS clock hour",
+      "category": "Info",
+      "pollClass": "slow",
+      "function": "IRUS",
+      "address": 30253,
+      "confidence": "medium",
+      "ss40k": {
+        "name": "SysHour",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "SysMinute",
+      "description": "CMS clock minute",
+      "category": "Info",
+      "pollClass": "slow",
+      "function": "IRUS",
+      "address": 30254,
+      "confidence": "medium",
+      "ss40k": {
+        "name": "SysMinute",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "SysSecond",
+      "description": "CMS clock second",
+      "category": "Info",
+      "pollClass": "slow",
+      "function": "IRUS",
+      "address": 30255,
+      "confidence": "medium",
+      "ss40k": {
+        "name": "SysSecond",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "SysTimezone",
+      "description": "CMS clock timezone",
+      "category": "Info",
+      "pollClass": "slow",
+      "function": "IRUS",
+      "address": 30256,
+      "confidence": "medium",
+      "ss40k": {
+        "name": "SysTimezone",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "HeartBeat",
+      "description": "CMS heartbeat counter (read-only; semantics undocumented)",
+      "category": "Status",
+      "pollClass": "fast",
+      "function": "IRUS",
+      "address": 30257,
+      "confidence": "medium",
+      "ss40k": {
+        "name": "HeartBeat",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "DigitalInput1",
+      "description": "Wet inputs DI0-DI3 (bit0-3)",
+      "category": "Status",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 30531,
+      "confidence": "high",
+      "bitfieldStatus": true,
+      "ss40k": {
+        "name": "DigitalInput1",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "DigitalInput2",
+      "description": "Dry/wet inputs DI4-DI19 (bit0-15). DI4 = E-stop (NC, open = trip)",
+      "category": "Status",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 30532,
+      "confidence": "high",
+      "bitfieldStatus": true,
+      "ss40k": {
+        "name": "DigitalInput2",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "DigitalOutputLsd",
+      "description": "LSD outputs bit0-1",
+      "category": "Status",
+      "pollClass": "slow",
+      "function": "IRUS",
+      "address": 30535,
+      "confidence": "high",
+      "bitfieldStatus": true,
+      "ss40k": {
+        "name": "DigitalOutputLsd",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "DigitalOutputHsd",
+      "description": "HSD outputs: bit0 green lamp, bit1 yellow (any HV on), bit2 red (severe alarm)",
+      "category": "Status",
+      "pollClass": "slow",
+      "function": "IRUS",
+      "address": 30536,
+      "confidence": "high",
+      "bitfieldStatus": true,
+      "ss40k": {
+        "name": "DigitalOutputHsd",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "DigitalOutputRelay",
+      "description": "Relay outputs DO0-DO7",
+      "category": "Status",
+      "pollClass": "slow",
+      "function": "IRUS",
+      "address": 30537,
+      "confidence": "high",
+      "bitfieldStatus": true,
+      "ss40k": {
+        "name": "DigitalOutputRelay",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "Eth2Ip1",
+      "description": "ETH2 IPv4 octet 1",
+      "category": "Info",
+      "pollClass": "startup",
+      "function": "IRUS",
+      "address": 30574,
+      "confidence": "high",
+      "ss40k": {
+        "name": "Eth2Ip1",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "Eth2Ip2",
+      "description": "ETH2 IPv4 octet 2",
+      "category": "Info",
+      "pollClass": "startup",
+      "function": "IRUS",
+      "address": 30575,
+      "confidence": "high",
+      "ss40k": {
+        "name": "Eth2Ip2",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "Eth2Ip3",
+      "description": "ETH2 IPv4 octet 3",
+      "category": "Info",
+      "pollClass": "startup",
+      "function": "IRUS",
+      "address": 30576,
+      "confidence": "high",
+      "ss40k": {
+        "name": "Eth2Ip3",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "Eth2Ip4",
+      "description": "ETH2 IPv4 octet 4",
+      "category": "Info",
+      "pollClass": "startup",
+      "function": "IRUS",
+      "address": 30577,
+      "confidence": "high",
+      "ss40k": {
+        "name": "Eth2Ip4",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "CmsOnlineStatus",
+      "description": "CMS online status (semantics undocumented)",
+      "category": "Status",
+      "pollClass": "fast",
+      "function": "IRUS",
+      "address": 31950,
+      "confidence": "medium",
+      "ss40k": {
+        "name": "CmsOnlineStatus",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "CmsFaultStatus",
+      "description": "Per-cluster fault mask, bit0-15 = cluster 1-16",
+      "category": "Faults",
+      "pollClass": "fast",
+      "function": "IRUS",
+      "address": 31951,
+      "confidence": "high",
+      "alarm": true,
+      "bitfieldStatus": true,
+      "ss40k": {
+        "name": "CmsFaultStatus",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "CmsWarningStatus",
+      "description": "Per-cluster warning mask, bit0-15 = cluster 1-16",
+      "category": "Warnings",
+      "pollClass": "fast",
+      "function": "IRUS",
+      "address": 31952,
+      "confidence": "high",
+      "alarm": true,
+      "bitfieldStatus": true,
+      "ss40k": {
+        "name": "CmsWarningStatus",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "CmsHvOnStatus",
+      "description": "Per-cluster HV-on mask, bit0-15 = cluster 1-16",
+      "category": "Status",
+      "pollClass": "fast",
+      "function": "IRUS",
+      "address": 31953,
+      "confidence": "high",
+      "bitfieldStatus": true,
+      "ss40k": {
+        "name": "CmsHvOnStatus",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "CmsChargeStatus",
+      "description": "CMS charge status (semantics undocumented)",
+      "category": "Status",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 31954,
+      "confidence": "low",
+      "ss40k": {
+        "name": "CmsChargeStatus",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "BmsChargeForbidStatus",
+      "description": "Per-cluster charge-forbid mask (assumed bit0-15 = cluster 1-16)",
+      "category": "Status",
+      "pollClass": "fast",
+      "function": "IRUS",
+      "address": 31955,
+      "confidence": "medium",
+      "bitfieldStatus": true,
+      "ss40k": {
+        "name": "BmsChargeForbidStatus",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "BmsDischargeForbidStatus",
+      "description": "Per-cluster discharge-forbid mask (assumed bit0-15 = cluster 1-16)",
+      "category": "Status",
+      "pollClass": "fast",
+      "function": "IRUS",
+      "address": 31956,
+      "confidence": "medium",
+      "bitfieldStatus": true,
+      "ss40k": {
+        "name": "BmsDischargeForbidStatus",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "BmsChargeRequestStatus",
+      "description": "Per-cluster charge-request mask (assumed)",
+      "category": "Status",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 31957,
+      "confidence": "low",
+      "bitfieldStatus": true,
+      "ss40k": {
+        "name": "BmsChargeRequestStatus",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "BmsDischargeRequestStatus",
+      "description": "Per-cluster discharge-request mask (assumed)",
+      "category": "Status",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 31958,
+      "confidence": "low",
+      "bitfieldStatus": true,
+      "ss40k": {
+        "name": "BmsDischargeRequestStatus",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "CmsRateCapacity",
+      "description": "Rated capacity (kWh). Int16 x0.1 would overflow above 3276.7 kWh (~11 clusters) - read unsigned",
+      "category": "Telemetry",
+      "pollClass": "slow",
+      "function": "IRUS",
+      "address": 31959,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 10,
+        "engLow": 0,
+        "engHigh": 1
+      },
+      "confidence": "high",
+      "ss40k": {
+        "name": "CmsRateCapacity",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "CmsAvailableChargeEnergy",
+      "description": "Energy from current SOC to SOC upper limit (kWh)",
+      "category": "Telemetry",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 31960,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 10,
+        "engLow": 0,
+        "engHigh": 1
+      },
+      "confidence": "high",
+      "ss40k": {
+        "name": "CmsAvailableChargeEnergy",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "CmsAvailableDischargeEnergy",
+      "description": "Energy from current SOC to SOC lower limit (kWh)",
+      "category": "Telemetry",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 31961,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 10,
+        "engLow": 0,
+        "engHigh": 1
+      },
+      "confidence": "high",
+      "ss40k": {
+        "name": "CmsAvailableDischargeEnergy",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "CmsSoc",
+      "description": "System SOC (%)",
+      "category": "Telemetry",
+      "pollClass": "fast",
+      "function": "IRUS",
+      "address": 31962,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 10,
+        "engLow": 0,
+        "engHigh": 1
+      },
+      "confidence": "high",
+      "ss40k": {
+        "name": "CmsSoc",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "CmsSoh",
+      "description": "System SOH (%)",
+      "category": "Telemetry",
+      "pollClass": "slow",
+      "function": "IRUS",
+      "address": 31963,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 10,
+        "engLow": 0,
+        "engHigh": 1
+      },
+      "confidence": "high",
+      "ss40k": {
+        "name": "CmsSoh",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "CmsVoltage",
+      "description": "Average voltage of HV-on clusters (V)",
+      "category": "Telemetry",
+      "pollClass": "fast",
+      "function": "IRUS",
+      "address": 31964,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 10,
+        "engLow": 0,
+        "engHigh": 1
+      },
+      "confidence": "high",
+      "ss40k": {
+        "name": "CmsVoltage",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "CmsCurrent",
+      "description": "Total current of HV-on clusters (A). Sign: charge +, discharge -",
+      "category": "Telemetry",
+      "pollClass": "fast",
+      "function": "IR",
+      "address": 31965,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 10,
+        "engLow": 0,
+        "engHigh": 1
+      },
+      "confidence": "high",
+      "ss40k": {
+        "name": "CmsCurrent",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "CmsSocDiff",
+      "description": "Inter-cluster SOC difference (%)",
+      "category": "Telemetry",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 31966,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 10,
+        "engLow": 0,
+        "engHigh": 1
+      },
+      "confidence": "high",
+      "ss40k": {
+        "name": "CmsSocDiff",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "CmsMaxCellVoltage",
+      "description": "Max cell voltage (mV)",
+      "category": "Telemetry",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 31967,
+      "confidence": "high",
+      "ss40k": {
+        "name": "CmsMaxCellVoltage",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "CmsMinCellVoltage",
+      "description": "Min cell voltage (mV)",
+      "category": "Telemetry",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 31968,
+      "confidence": "high",
+      "ss40k": {
+        "name": "CmsMinCellVoltage",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "CmsAverageCellVoltage",
+      "description": "Average cell voltage (mV)",
+      "category": "Telemetry",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 31969,
+      "confidence": "high",
+      "ss40k": {
+        "name": "CmsAverageCellVoltage",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "CmsMaxCellTemperature",
+      "description": "Max cell temperature (C)",
+      "category": "Telemetry",
+      "pollClass": "normal",
+      "function": "IR",
+      "address": 31970,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 10,
+        "engLow": 0,
+        "engHigh": 1
+      },
+      "confidence": "high",
+      "ss40k": {
+        "name": "CmsMaxCellTemperature",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "CmsMinCellTemperature",
+      "description": "Min cell temperature (C)",
+      "category": "Telemetry",
+      "pollClass": "normal",
+      "function": "IR",
+      "address": 31971,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 10,
+        "engLow": 0,
+        "engHigh": 1
+      },
+      "confidence": "high",
+      "ss40k": {
+        "name": "CmsMinCellTemperature",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "CmsAverageCellTemp",
+      "description": "Average cell temperature (C)",
+      "category": "Telemetry",
+      "pollClass": "normal",
+      "function": "IR",
+      "address": 31972,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 10,
+        "engLow": 0,
+        "engHigh": 1
+      },
+      "confidence": "high",
+      "ss40k": {
+        "name": "CmsAverageCellTemp",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "CmsFaultWord1",
+      "description": "CMS fault word 1: b0 CMS fault, b1 BMS count cfg err, b2 cell capacity cfg err, b3 BSU count cfg err, b4 cell count cfg err, b5 TC count cfg err, b6 SOC diff too high, b7 SOC too low (<10%, blocks HV-on), b8 cell dV too high (>500 mV, blocks HV-on), b9 inter-cluster current too high (>10 A, blocks HV-on)",
+      "category": "Faults",
+      "pollClass": "fast",
+      "function": "IRUS",
+      "address": 31973,
+      "confidence": "high",
+      "alarm": true,
+      "bitfieldStatus": true,
+      "ss40k": {
+        "name": "CmsFaultWord1",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "CmsFaultWord2",
+      "description": "CMS fault word 2: b0 CMS emergency stop (HV off) - per strategy doc V0.4 only, not in point sheet",
+      "category": "Faults",
+      "pollClass": "fast",
+      "function": "IRUS",
+      "address": 31974,
+      "confidence": "medium",
+      "alarm": true,
+      "bitfieldStatus": true,
+      "ss40k": {
+        "name": "CmsFaultWord2",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "CmsFaultWord3",
+      "description": "CMS fault word 3 (undocumented)",
+      "category": "Faults",
+      "pollClass": "slow",
+      "function": "IRUS",
+      "address": 31975,
+      "confidence": "low",
+      "alarm": true,
+      "bitfieldStatus": true,
+      "ss40k": {
+        "name": "CmsFaultWord3",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "CmsFaultWord4",
+      "description": "CMS fault word 4 (undocumented)",
+      "category": "Faults",
+      "pollClass": "slow",
+      "function": "IRUS",
+      "address": 31976,
+      "confidence": "low",
+      "alarm": true,
+      "bitfieldStatus": true,
+      "ss40k": {
+        "name": "CmsFaultWord4",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "CmsWarningWord1",
+      "description": "CMS warning word 1: b0 online BMS < configured, b4 SOC diff warning, b6 cell dV warning, b7 current diff warning",
+      "category": "Warnings",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 31977,
+      "confidence": "high",
+      "alarm": true,
+      "bitfieldStatus": true,
+      "ss40k": {
+        "name": "CmsWarningWord1",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "CmsWarningWord2",
+      "description": "CMS warning word 2 (undocumented)",
+      "category": "Warnings",
+      "pollClass": "slow",
+      "function": "IRUS",
+      "address": 31978,
+      "confidence": "low",
+      "alarm": true,
+      "bitfieldStatus": true,
+      "ss40k": {
+        "name": "CmsWarningWord2",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "CmsWarningWord3",
+      "description": "CMS warning word 3 (undocumented)",
+      "category": "Warnings",
+      "pollClass": "slow",
+      "function": "IRUS",
+      "address": 31979,
+      "confidence": "low",
+      "alarm": true,
+      "bitfieldStatus": true,
+      "ss40k": {
+        "name": "CmsWarningWord3",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "CmsWarningWord4",
+      "description": "CMS warning word 4: bitN = BMS N+1 SOC too low",
+      "category": "Warnings",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 31980,
+      "confidence": "high",
+      "alarm": true,
+      "bitfieldStatus": true,
+      "ss40k": {
+        "name": "CmsWarningWord4",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "CmsAllowedChargeCurrent",
+      "description": "MIN(cluster allowed charge current) x HV-on cluster count (A)",
+      "category": "Telemetry",
+      "pollClass": "fast",
+      "function": "IR",
+      "address": 32781,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 10,
+        "engLow": 0,
+        "engHigh": 1
+      },
+      "confidence": "high",
+      "ss40k": {
+        "name": "CmsAllowedChargeCurrent",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "CmsAllowedDischargeCurrent",
+      "description": "MIN(cluster allowed discharge current) x HV-on cluster count (A)",
+      "category": "Telemetry",
+      "pollClass": "fast",
+      "function": "IR",
+      "address": 32782,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 10,
+        "engLow": 0,
+        "engHigh": 1
+      },
+      "confidence": "high",
+      "ss40k": {
+        "name": "CmsAllowedDischargeCurrent",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "CmsDcPower",
+      "description": "DC power = cmsVoltage x cmsCurrent (kW). Sign: charge +, discharge - (opposite of PCS convention)",
+      "category": "Telemetry",
+      "pollClass": "fast",
+      "function": "IR",
+      "address": 32783,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 10,
+        "engLow": 0,
+        "engHigh": 1
+      },
+      "confidence": "high",
+      "ss40k": {
+        "name": "CmsDcPower",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "CmsAllowedChargePower",
+      "description": "Allowed charge power (kW)",
+      "category": "Telemetry",
+      "pollClass": "fast",
+      "function": "IR",
+      "address": 32784,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 10,
+        "engLow": 0,
+        "engHigh": 1
+      },
+      "confidence": "high",
+      "ss40k": {
+        "name": "CmsAllowedChargePower",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "CmsAllowedDischargePower",
+      "description": "Allowed discharge power (kW)",
+      "category": "Telemetry",
+      "pollClass": "fast",
+      "function": "IR",
+      "address": 32785,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 10,
+        "engLow": 0,
+        "engHigh": 1
+      },
+      "confidence": "high",
+      "ss40k": {
+        "name": "CmsAllowedDischargePower",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "TmsOnlineStatus",
+      "description": "TMS online status",
+      "category": "Status",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 33150,
+      "confidence": "medium",
+      "ss40k": {
+        "name": "TmsOnlineStatus",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "TmsFaultStatus",
+      "description": "TMS fault status (assumed per-TMU mask)",
+      "category": "Faults",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 33151,
+      "confidence": "medium",
+      "alarm": true,
+      "bitfieldStatus": true,
+      "ss40k": {
+        "name": "TmsFaultStatus",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "TmsAlarmStatus",
+      "description": "TMS alarm status (assumed per-TMU mask)",
+      "category": "Warnings",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 33152,
+      "confidence": "medium",
+      "alarm": true,
+      "bitfieldStatus": true,
+      "ss40k": {
+        "name": "TmsAlarmStatus",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "TmsPowerOnStatus",
+      "description": "TMS power-on status (assumed per-TMU mask)",
+      "category": "Status",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 33153,
+      "confidence": "medium",
+      "bitfieldStatus": true,
+      "ss40k": {
+        "name": "TmsPowerOnStatus",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "TmsFaultWord1",
+      "description": "TMS fault word 1 (bits undocumented)",
+      "category": "Faults",
+      "pollClass": "slow",
+      "function": "IRUS",
+      "address": 33154,
+      "confidence": "low",
+      "alarm": true,
+      "bitfieldStatus": true,
+      "ss40k": {
+        "name": "TmsFaultWord1",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "TmsFaultWord2",
+      "description": "TMS fault word 2 (bits undocumented)",
+      "category": "Faults",
+      "pollClass": "slow",
+      "function": "IRUS",
+      "address": 33155,
+      "confidence": "low",
+      "alarm": true,
+      "bitfieldStatus": true,
+      "ss40k": {
+        "name": "TmsFaultWord2",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "TmsFaultWord3",
+      "description": "TMS fault word 3 (bits undocumented)",
+      "category": "Faults",
+      "pollClass": "slow",
+      "function": "IRUS",
+      "address": 33156,
+      "confidence": "low",
+      "alarm": true,
+      "bitfieldStatus": true,
+      "ss40k": {
+        "name": "TmsFaultWord3",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "TmsFaultWord4",
+      "description": "TMS fault word 4 (bits undocumented)",
+      "category": "Faults",
+      "pollClass": "slow",
+      "function": "IRUS",
+      "address": 33157,
+      "confidence": "low",
+      "alarm": true,
+      "bitfieldStatus": true,
+      "ss40k": {
+        "name": "TmsFaultWord4",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "TmsWarningWord1",
+      "description": "TMS warning word 1 (bits undocumented)",
+      "category": "Warnings",
+      "pollClass": "slow",
+      "function": "IRUS",
+      "address": 33158,
+      "confidence": "low",
+      "alarm": true,
+      "bitfieldStatus": true,
+      "ss40k": {
+        "name": "TmsWarningWord1",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "TmsWarningWord2",
+      "description": "TMS warning word 2 (bits undocumented)",
+      "category": "Warnings",
+      "pollClass": "slow",
+      "function": "IRUS",
+      "address": 33159,
+      "confidence": "low",
+      "alarm": true,
+      "bitfieldStatus": true,
+      "ss40k": {
+        "name": "TmsWarningWord2",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "TmsWarningWord3",
+      "description": "TMS warning word 3 (bits undocumented)",
+      "category": "Warnings",
+      "pollClass": "slow",
+      "function": "IRUS",
+      "address": 33160,
+      "confidence": "low",
+      "alarm": true,
+      "bitfieldStatus": true,
+      "ss40k": {
+        "name": "TmsWarningWord3",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "TmsWarningWord4",
+      "description": "TMS warning word 4 (bits undocumented)",
+      "category": "Warnings",
+      "pollClass": "slow",
+      "function": "IRUS",
+      "address": 33161,
+      "confidence": "low",
+      "alarm": true,
+      "bitfieldStatus": true,
+      "ss40k": {
+        "name": "TmsWarningWord4",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "ImuStatus",
+      "description": "Insulation monitor: b0-3 state (1 self-check, 2 normal, 5 HV+ to ground fault, 6 HV- to ground fault), b4-5 fault level (00 normal, 01 level-2, 10 level-1)",
+      "category": "Faults",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 34000,
+      "confidence": "high",
+      "alarm": true,
+      "bitfieldStatus": true,
+      "ss40k": {
+        "name": "ImuStatus",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "ImuInsulationResistance",
+      "description": "Insulation resistance (kOhm)",
+      "category": "Telemetry",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 34001,
+      "confidence": "high",
+      "ss40k": {
+        "name": "ImuInsulationResistance",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "ImuBatteryVoltage",
+      "description": "IMU-measured cluster voltage (V)",
+      "category": "Telemetry",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 34002,
+      "confidence": "high",
+      "ss40k": {
+        "name": "ImuBatteryVoltage",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "ImuSoftwareVersion",
+      "description": "IMU software version",
+      "category": "Info",
+      "pollClass": "startup",
+      "function": "IRUS",
+      "address": 34003,
+      "confidence": "high",
+      "ss40k": {
+        "name": "ImuSoftwareVersion",
+        "model": "TODO"
+      }
+    }
+  ],
+  "commands": [
+    {
+      "id": "SetSysWorkingMode",
+      "description": "Working mode: 1 = plan, 3 = manual (vendor default 3: execute realtime power immediately). Moved from 40017 in V3.0",
+      "category": "BMSControl",
+      "function": "HRUS",
+      "address": 40007,
+      "pollClass": "normal",
+      "readback": true,
+      "confidence": "high"
+    },
+    {
+      "id": "SetSysOperationMode",
+      "description": "Operation mode: 1 = local (touch panel), 2 = remote (Modbus TCP on ETH2, vendor default). Moved from 40016 in V3.0",
+      "category": "BMSControl",
+      "function": "HRUS",
+      "address": 40019,
+      "pollClass": "normal",
+      "readback": true,
+      "confidence": "high"
+    },
+    {
+      "id": "SetBmsConfigNumber",
+      "description": "Total cluster count (TMU count is bound to cluster count)",
+      "category": "BMSControl",
+      "function": "HRUS",
+      "address": 40032,
+      "pollClass": "normal",
+      "readback": true,
+      "confidence": "high"
+    },
+    {
+      "id": "SetBmsEnableStatus",
+      "description": "Cluster enable mask, bit0-15 = cluster 1-16. Clear a bit to isolate a faulted cluster",
+      "category": "BMSControl",
+      "function": "HRUS",
+      "address": 40033,
+      "pollClass": "normal",
+      "readback": true,
+      "confidence": "high"
+    },
+    {
+      "id": "SetSocUpLimit",
+      "description": "CMS SOC high limit, 0.1 %/bit",
+      "category": "BMSControl",
+      "function": "HRUS",
+      "address": 40034,
+      "pollClass": "normal",
+      "readback": true,
+      "confidence": "high",
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 10,
+        "engLow": 0,
+        "engHigh": 1
+      }
+    },
+    {
+      "id": "SetSocLowLimit",
+      "description": "CMS SOC low limit, 0.1 %/bit",
+      "category": "BMSControl",
+      "function": "HRUS",
+      "address": 40035,
+      "pollClass": "normal",
+      "readback": true,
+      "confidence": "high",
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 10,
+        "engLow": 0,
+        "engHigh": 1
+      }
+    },
+    {
+      "id": "SetTmuConfigNumber",
+      "description": "TMU count",
+      "category": "BMSControl",
+      "function": "HRUS",
+      "address": 40037,
+      "pollClass": "normal",
+      "readback": true,
+      "confidence": "high"
+    },
+    {
+      "id": "SetTmuEnableStatus",
+      "description": "TMU enable mask",
+      "category": "BMSControl",
+      "function": "HRUS",
+      "address": 40038,
+      "pollClass": "normal",
+      "readback": true,
+      "confidence": "high"
+    },
+    {
+      "id": "ResetCms",
+      "description": "Reset all clusters: write 1 ONCE (vendor: single send, never repeat)",
+      "category": "BMSControl",
+      "function": "HRUS",
+      "address": 40214,
+      "pollClass": "normal",
+      "readback": false,
+      "confidence": "high"
+    },
+    {
+      "id": "SetCmsHvOn",
+      "description": "All clusters HV: write 40215=1,40216=0 for ON; 40215=0,40216=1 for OFF; other combos invalid. Always write as a pair",
+      "category": "BMSControl",
+      "function": "HRUS",
+      "address": 40215,
+      "pollClass": "normal",
+      "readback": true,
+      "confidence": "high"
+    },
+    {
+      "id": "SetCmsHvOff",
+      "description": "See SetCmsHvOn",
+      "category": "BMSControl",
+      "function": "HRUS",
+      "address": 40216,
+      "pollClass": "normal",
+      "readback": true,
+      "confidence": "high"
+    },
+    {
+      "id": "Bms1Reset",
+      "description": "Cluster 1 fault reset: write 1 ONCE",
+      "category": "BMSControl",
+      "function": "HRUS",
+      "address": 40300,
+      "pollClass": "normal",
+      "readback": false,
+      "confidence": "high"
+    },
+    {
+      "id": "Bms1HvOn",
+      "description": "Cluster 1 HV: 40301=1,40302=0 ON / 40301=0,40302=1 OFF. Always write as a pair",
+      "category": "BMSControl",
+      "function": "HRUS",
+      "address": 40301,
+      "pollClass": "normal",
+      "readback": true,
+      "confidence": "high"
+    },
+    {
+      "id": "Bms1HvOff",
+      "description": "See Bms1HvOn",
+      "category": "BMSControl",
+      "function": "HRUS",
+      "address": 40302,
+      "pollClass": "normal",
+      "readback": true,
+      "confidence": "high"
+    },
+    {
+      "id": "Bms1SoftStart",
+      "description": "Cluster 1 soft start: write 1 ONCE",
+      "category": "BMSControl",
+      "function": "HRUS",
+      "address": 40307,
+      "pollClass": "normal",
+      "readback": false,
+      "confidence": "high"
+    },
+    {
+      "id": "Bms2Reset",
+      "description": "Cluster 2 fault reset: write 1 ONCE",
+      "category": "BMSControl",
+      "function": "HRUS",
+      "address": 40308,
+      "pollClass": "normal",
+      "readback": false,
+      "confidence": "high"
+    },
+    {
+      "id": "Bms2HvOn",
+      "description": "Cluster 2 HV: 40309=1,40310=0 ON / 40309=0,40310=1 OFF. Always write as a pair",
+      "category": "BMSControl",
+      "function": "HRUS",
+      "address": 40309,
+      "pollClass": "normal",
+      "readback": true,
+      "confidence": "medium"
+    },
+    {
+      "id": "Bms2HvOff",
+      "description": "See Bms2HvOn",
+      "category": "BMSControl",
+      "function": "HRUS",
+      "address": 40310,
+      "pollClass": "normal",
+      "readback": true,
+      "confidence": "medium"
+    },
+    {
+      "id": "Bms2SoftStart",
+      "description": "Cluster 2 soft start: write 1 ONCE",
+      "category": "BMSControl",
+      "function": "HRUS",
+      "address": 40315,
+      "pollClass": "normal",
+      "readback": false,
+      "confidence": "medium"
+    },
+    {
+      "id": "Bms3Reset",
+      "description": "Cluster 3 fault reset: write 1 ONCE",
+      "category": "BMSControl",
+      "function": "HRUS",
+      "address": 40316,
+      "pollClass": "normal",
+      "readback": false,
+      "confidence": "high"
+    },
+    {
+      "id": "Bms3HvOn",
+      "description": "Cluster 3 HV: 40317=1,40318=0 ON / 40317=0,40318=1 OFF. Always write as a pair",
+      "category": "BMSControl",
+      "function": "HRUS",
+      "address": 40317,
+      "pollClass": "normal",
+      "readback": true,
+      "confidence": "medium"
+    },
+    {
+      "id": "Bms3HvOff",
+      "description": "See Bms3HvOn",
+      "category": "BMSControl",
+      "function": "HRUS",
+      "address": 40318,
+      "pollClass": "normal",
+      "readback": true,
+      "confidence": "medium"
+    },
+    {
+      "id": "Bms3SoftStart",
+      "description": "Cluster 3 soft start: write 1 ONCE",
+      "category": "BMSControl",
+      "function": "HRUS",
+      "address": 40323,
+      "pollClass": "normal",
+      "readback": false,
+      "confidence": "medium"
+    },
+    {
+      "id": "Bms4Reset",
+      "description": "Cluster 4 fault reset: write 1 ONCE",
+      "category": "BMSControl",
+      "function": "HRUS",
+      "address": 40324,
+      "pollClass": "normal",
+      "readback": false,
+      "confidence": "high"
+    },
+    {
+      "id": "Bms4HvOn",
+      "description": "Cluster 4 HV: 40325=1,40326=0 ON / 40325=0,40326=1 OFF. Always write as a pair",
+      "category": "BMSControl",
+      "function": "HRUS",
+      "address": 40325,
+      "pollClass": "normal",
+      "readback": true,
+      "confidence": "medium"
+    },
+    {
+      "id": "Bms4HvOff",
+      "description": "See Bms4HvOn",
+      "category": "BMSControl",
+      "function": "HRUS",
+      "address": 40326,
+      "pollClass": "normal",
+      "readback": true,
+      "confidence": "medium"
+    },
+    {
+      "id": "Bms4SoftStart",
+      "description": "Cluster 4 soft start: write 1 ONCE",
+      "category": "BMSControl",
+      "function": "HRUS",
+      "address": 40331,
+      "pollClass": "normal",
+      "readback": false,
+      "confidence": "medium"
+    },
+    {
+      "id": "Bms5Reset",
+      "description": "Cluster 5 fault reset: write 1 ONCE",
+      "category": "BMSControl",
+      "function": "HRUS",
+      "address": 40332,
+      "pollClass": "normal",
+      "readback": false,
+      "confidence": "high"
+    },
+    {
+      "id": "Bms5HvOn",
+      "description": "Cluster 5 HV: 40333=1,40334=0 ON / 40333=0,40334=1 OFF. Always write as a pair",
+      "category": "BMSControl",
+      "function": "HRUS",
+      "address": 40333,
+      "pollClass": "normal",
+      "readback": true,
+      "confidence": "medium"
+    },
+    {
+      "id": "Bms5HvOff",
+      "description": "See Bms5HvOn",
+      "category": "BMSControl",
+      "function": "HRUS",
+      "address": 40334,
+      "pollClass": "normal",
+      "readback": true,
+      "confidence": "medium"
+    },
+    {
+      "id": "Bms5SoftStart",
+      "description": "Cluster 5 soft start: write 1 ONCE",
+      "category": "BMSControl",
+      "function": "HRUS",
+      "address": 40339,
+      "pollClass": "normal",
+      "readback": false,
+      "confidence": "medium"
+    },
+    {
+      "id": "Bms6Reset",
+      "description": "Cluster 6 fault reset: write 1 ONCE",
+      "category": "BMSControl",
+      "function": "HRUS",
+      "address": 40340,
+      "pollClass": "normal",
+      "readback": false,
+      "confidence": "high"
+    },
+    {
+      "id": "Bms6HvOn",
+      "description": "Cluster 6 HV: 40341=1,40342=0 ON / 40341=0,40342=1 OFF. Always write as a pair",
+      "category": "BMSControl",
+      "function": "HRUS",
+      "address": 40341,
+      "pollClass": "normal",
+      "readback": true,
+      "confidence": "medium"
+    },
+    {
+      "id": "Bms6HvOff",
+      "description": "See Bms6HvOn",
+      "category": "BMSControl",
+      "function": "HRUS",
+      "address": 40342,
+      "pollClass": "normal",
+      "readback": true,
+      "confidence": "medium"
+    },
+    {
+      "id": "Bms6SoftStart",
+      "description": "Cluster 6 soft start: write 1 ONCE",
+      "category": "BMSControl",
+      "function": "HRUS",
+      "address": 40347,
+      "pollClass": "normal",
+      "readback": false,
+      "confidence": "medium"
+    },
+    {
+      "id": "Bms7Reset",
+      "description": "Cluster 7 fault reset: write 1 ONCE",
+      "category": "BMSControl",
+      "function": "HRUS",
+      "address": 40348,
+      "pollClass": "normal",
+      "readback": false,
+      "confidence": "high"
+    },
+    {
+      "id": "Bms7HvOn",
+      "description": "Cluster 7 HV: 40349=1,40350=0 ON / 40349=0,40350=1 OFF. Always write as a pair",
+      "category": "BMSControl",
+      "function": "HRUS",
+      "address": 40349,
+      "pollClass": "normal",
+      "readback": true,
+      "confidence": "medium"
+    },
+    {
+      "id": "Bms7HvOff",
+      "description": "See Bms7HvOn",
+      "category": "BMSControl",
+      "function": "HRUS",
+      "address": 40350,
+      "pollClass": "normal",
+      "readback": true,
+      "confidence": "medium"
+    },
+    {
+      "id": "Bms7SoftStart",
+      "description": "Cluster 7 soft start: write 1 ONCE",
+      "category": "BMSControl",
+      "function": "HRUS",
+      "address": 40355,
+      "pollClass": "normal",
+      "readback": false,
+      "confidence": "medium"
+    },
+    {
+      "id": "Bms8Reset",
+      "description": "Cluster 8 fault reset: write 1 ONCE",
+      "category": "BMSControl",
+      "function": "HRUS",
+      "address": 40356,
+      "pollClass": "normal",
+      "readback": false,
+      "confidence": "high"
+    },
+    {
+      "id": "Bms8HvOn",
+      "description": "Cluster 8 HV: 40357=1,40358=0 ON / 40357=0,40358=1 OFF. Always write as a pair",
+      "category": "BMSControl",
+      "function": "HRUS",
+      "address": 40357,
+      "pollClass": "normal",
+      "readback": true,
+      "confidence": "medium"
+    },
+    {
+      "id": "Bms8HvOff",
+      "description": "See Bms8HvOn",
+      "category": "BMSControl",
+      "function": "HRUS",
+      "address": 40358,
+      "pollClass": "normal",
+      "readback": true,
+      "confidence": "medium"
+    },
+    {
+      "id": "Bms8SoftStart",
+      "description": "Cluster 8 soft start: write 1 ONCE",
+      "category": "BMSControl",
+      "function": "HRUS",
+      "address": 40363,
+      "pollClass": "normal",
+      "readback": false,
+      "confidence": "medium"
+    },
+    {
+      "id": "Bms9Reset",
+      "description": "Cluster 9 fault reset: write 1 ONCE",
+      "category": "BMSControl",
+      "function": "HRUS",
+      "address": 40364,
+      "pollClass": "normal",
+      "readback": false,
+      "confidence": "high"
+    },
+    {
+      "id": "Bms9HvOn",
+      "description": "Cluster 9 HV: 40365=1,40366=0 ON / 40365=0,40366=1 OFF. Always write as a pair",
+      "category": "BMSControl",
+      "function": "HRUS",
+      "address": 40365,
+      "pollClass": "normal",
+      "readback": true,
+      "confidence": "medium"
+    },
+    {
+      "id": "Bms9HvOff",
+      "description": "See Bms9HvOn",
+      "category": "BMSControl",
+      "function": "HRUS",
+      "address": 40366,
+      "pollClass": "normal",
+      "readback": true,
+      "confidence": "medium"
+    },
+    {
+      "id": "Bms9SoftStart",
+      "description": "Cluster 9 soft start: write 1 ONCE",
+      "category": "BMSControl",
+      "function": "HRUS",
+      "address": 40371,
+      "pollClass": "normal",
+      "readback": false,
+      "confidence": "medium"
+    },
+    {
+      "id": "Bms10Reset",
+      "description": "Cluster 10 fault reset: write 1 ONCE",
+      "category": "BMSControl",
+      "function": "HRUS",
+      "address": 40372,
+      "pollClass": "normal",
+      "readback": false,
+      "confidence": "high"
+    },
+    {
+      "id": "Bms10HvOn",
+      "description": "Cluster 10 HV: 40373=1,40374=0 ON / 40373=0,40374=1 OFF. Always write as a pair",
+      "category": "BMSControl",
+      "function": "HRUS",
+      "address": 40373,
+      "pollClass": "normal",
+      "readback": true,
+      "confidence": "medium"
+    },
+    {
+      "id": "Bms10HvOff",
+      "description": "See Bms10HvOn",
+      "category": "BMSControl",
+      "function": "HRUS",
+      "address": 40374,
+      "pollClass": "normal",
+      "readback": true,
+      "confidence": "medium"
+    },
+    {
+      "id": "Bms10SoftStart",
+      "description": "Cluster 10 soft start: write 1 ONCE",
+      "category": "BMSControl",
+      "function": "HRUS",
+      "address": 40379,
+      "pollClass": "normal",
+      "readback": false,
+      "confidence": "medium"
+    },
+    {
+      "id": "Bms11Reset",
+      "description": "Cluster 11 fault reset: write 1 ONCE",
+      "category": "BMSControl",
+      "function": "HRUS",
+      "address": 40380,
+      "pollClass": "normal",
+      "readback": false,
+      "confidence": "high"
+    },
+    {
+      "id": "Bms11HvOn",
+      "description": "Cluster 11 HV: 40381=1,40382=0 ON / 40381=0,40382=1 OFF. Always write as a pair",
+      "category": "BMSControl",
+      "function": "HRUS",
+      "address": 40381,
+      "pollClass": "normal",
+      "readback": true,
+      "confidence": "medium"
+    },
+    {
+      "id": "Bms11HvOff",
+      "description": "See Bms11HvOn",
+      "category": "BMSControl",
+      "function": "HRUS",
+      "address": 40382,
+      "pollClass": "normal",
+      "readback": true,
+      "confidence": "medium"
+    },
+    {
+      "id": "Bms11SoftStart",
+      "description": "Cluster 11 soft start: write 1 ONCE",
+      "category": "BMSControl",
+      "function": "HRUS",
+      "address": 40387,
+      "pollClass": "normal",
+      "readback": false,
+      "confidence": "medium"
+    },
+    {
+      "id": "Bms12Reset",
+      "description": "Cluster 12 fault reset: write 1 ONCE",
+      "category": "BMSControl",
+      "function": "HRUS",
+      "address": 40388,
+      "pollClass": "normal",
+      "readback": false,
+      "confidence": "high"
+    },
+    {
+      "id": "Bms12HvOn",
+      "description": "Cluster 12 HV: 40389=1,40390=0 ON / 40389=0,40390=1 OFF. Always write as a pair",
+      "category": "BMSControl",
+      "function": "HRUS",
+      "address": 40389,
+      "pollClass": "normal",
+      "readback": true,
+      "confidence": "medium"
+    },
+    {
+      "id": "Bms12HvOff",
+      "description": "See Bms12HvOn",
+      "category": "BMSControl",
+      "function": "HRUS",
+      "address": 40390,
+      "pollClass": "normal",
+      "readback": true,
+      "confidence": "medium"
+    },
+    {
+      "id": "Bms12SoftStart",
+      "description": "Cluster 12 soft start: write 1 ONCE",
+      "category": "BMSControl",
+      "function": "HRUS",
+      "address": 40395,
+      "pollClass": "normal",
+      "readback": false,
+      "confidence": "medium"
+    },
+    {
+      "id": "Bms13Reset",
+      "description": "Cluster 13 fault reset: write 1 ONCE",
+      "category": "BMSControl",
+      "function": "HRUS",
+      "address": 40396,
+      "pollClass": "normal",
+      "readback": false,
+      "confidence": "high"
+    },
+    {
+      "id": "Bms13HvOn",
+      "description": "Cluster 13 HV: 40397=1,40398=0 ON / 40397=0,40398=1 OFF. Always write as a pair",
+      "category": "BMSControl",
+      "function": "HRUS",
+      "address": 40397,
+      "pollClass": "normal",
+      "readback": true,
+      "confidence": "medium"
+    },
+    {
+      "id": "Bms13HvOff",
+      "description": "See Bms13HvOn",
+      "category": "BMSControl",
+      "function": "HRUS",
+      "address": 40398,
+      "pollClass": "normal",
+      "readback": true,
+      "confidence": "medium"
+    },
+    {
+      "id": "Bms13SoftStart",
+      "description": "Cluster 13 soft start: write 1 ONCE",
+      "category": "BMSControl",
+      "function": "HRUS",
+      "address": 40403,
+      "pollClass": "normal",
+      "readback": false,
+      "confidence": "medium"
+    },
+    {
+      "id": "Bms14Reset",
+      "description": "Cluster 14 fault reset: write 1 ONCE",
+      "category": "BMSControl",
+      "function": "HRUS",
+      "address": 40404,
+      "pollClass": "normal",
+      "readback": false,
+      "confidence": "high"
+    },
+    {
+      "id": "Bms14HvOn",
+      "description": "Cluster 14 HV: 40405=1,40406=0 ON / 40405=0,40406=1 OFF. Always write as a pair",
+      "category": "BMSControl",
+      "function": "HRUS",
+      "address": 40405,
+      "pollClass": "normal",
+      "readback": true,
+      "confidence": "medium"
+    },
+    {
+      "id": "Bms14HvOff",
+      "description": "See Bms14HvOn",
+      "category": "BMSControl",
+      "function": "HRUS",
+      "address": 40406,
+      "pollClass": "normal",
+      "readback": true,
+      "confidence": "medium"
+    },
+    {
+      "id": "Bms14SoftStart",
+      "description": "Cluster 14 soft start: write 1 ONCE",
+      "category": "BMSControl",
+      "function": "HRUS",
+      "address": 40411,
+      "pollClass": "normal",
+      "readback": false,
+      "confidence": "medium"
+    },
+    {
+      "id": "Bms15Reset",
+      "description": "Cluster 15 fault reset: write 1 ONCE",
+      "category": "BMSControl",
+      "function": "HRUS",
+      "address": 40412,
+      "pollClass": "normal",
+      "readback": false,
+      "confidence": "high"
+    },
+    {
+      "id": "Bms15HvOn",
+      "description": "Cluster 15 HV: 40413=1,40414=0 ON / 40413=0,40414=1 OFF. Always write as a pair",
+      "category": "BMSControl",
+      "function": "HRUS",
+      "address": 40413,
+      "pollClass": "normal",
+      "readback": true,
+      "confidence": "medium"
+    },
+    {
+      "id": "Bms15HvOff",
+      "description": "See Bms15HvOn",
+      "category": "BMSControl",
+      "function": "HRUS",
+      "address": 40414,
+      "pollClass": "normal",
+      "readback": true,
+      "confidence": "medium"
+    },
+    {
+      "id": "Bms15SoftStart",
+      "description": "Cluster 15 soft start: write 1 ONCE",
+      "category": "BMSControl",
+      "function": "HRUS",
+      "address": 40419,
+      "pollClass": "normal",
+      "readback": false,
+      "confidence": "medium"
+    },
+    {
+      "id": "Bms16Reset",
+      "description": "Cluster 16 fault reset: write 1 ONCE",
+      "category": "BMSControl",
+      "function": "HRUS",
+      "address": 40420,
+      "pollClass": "normal",
+      "readback": false,
+      "confidence": "high"
+    },
+    {
+      "id": "Bms16HvOn",
+      "description": "Cluster 16 HV: 40421=1,40422=0 ON / 40421=0,40422=1 OFF. Always write as a pair",
+      "category": "BMSControl",
+      "function": "HRUS",
+      "address": 40421,
+      "pollClass": "normal",
+      "readback": true,
+      "confidence": "medium"
+    },
+    {
+      "id": "Bms16HvOff",
+      "description": "See Bms16HvOn",
+      "category": "BMSControl",
+      "function": "HRUS",
+      "address": 40422,
+      "pollClass": "normal",
+      "readback": true,
+      "confidence": "medium"
+    },
+    {
+      "id": "Bms16SoftStart",
+      "description": "Cluster 16 soft start: write 1 ONCE",
+      "category": "BMSControl",
+      "function": "HRUS",
+      "address": 40427,
+      "pollClass": "normal",
+      "readback": false,
+      "confidence": "medium"
+    }
+  ]
+}
