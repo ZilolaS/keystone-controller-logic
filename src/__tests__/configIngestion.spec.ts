@@ -246,6 +246,28 @@ describe("Cloud SiteConfig ingestion", () => {
     );
   });
 
+  test("accepts NANO system profile and removes eSpire280-only topology", () => {
+    const result = applyCloudConfigUpdates(makeBaseConfig(), [
+      {
+        commandId: "SITE.SystemProfile",
+        values: { SystemProfile: "NANO" },
+      },
+    ]);
+
+    expect(result.success).toBe(true);
+    expect(result.restartRequired).toBe(true);
+    expect(result.nextConfig.system.systemProfile).toBe("NANO");
+    expect(result.nextConfig.pcs).toBeUndefined();
+    expect(result.nextConfig.mbmu).toBeUndefined();
+    expect(result.nextCapabilities).toMatchObject({
+      isNano: true,
+      isMini: false,
+      is280: false,
+      hasPcs: true,
+      hasMbmu: false,
+    });
+  });
+
   test("validates Mini model profile size options", () => {
     const invalidPcs = makeBaseConfig();
     invalidPcs.system.systemProfile = "MINI-40-90-163-480";
@@ -253,7 +275,7 @@ describe("Cloud SiteConfig ingestion", () => {
       expect.arrayContaining([
         expect.objectContaining({
           path: "system.systemProfile",
-          message: "systemProfile must be eSpire280 or a valid MINI-* profile",
+          message: "systemProfile must be eSpire280, NANO, or a valid MINI-* profile",
         }),
       ])
     );
@@ -951,6 +973,62 @@ describe("Cloud SiteConfig ingestion", () => {
         expect.objectContaining({ path: "network.assets.0.port" }),
         expect.objectContaining({ path: "network.assets.0.unitId" }),
         expect.objectContaining({ path: "network.assets.0.serverSlot" }),
+      ])
+    );
+  });
+
+  test("validates site-configured meter register maps", () => {
+    const valid = makeBaseConfig();
+    valid.metering.meters = [
+      {
+        id: "Meter2",
+        meterType: "eGauge",
+        baseProfile: "eGauge_Mission_Energy_Meter2_ss40k",
+        ip: "192.168.1.65",
+        route: "Meter2",
+        registerMap: [
+          {
+            signal: "acCoupledPvKw",
+            tagID: "Meter2.Solar",
+            register: 9004,
+            function: "IRF",
+            scale: 0.001,
+          },
+        ],
+      },
+    ];
+
+    expect(validateSiteConfig(valid)).toEqual([]);
+
+    const invalid = makeBaseConfig();
+    invalid.metering.meters = [
+      {
+        id: "",
+        meterType: "eGauge",
+        ip: "",
+        port: 70000,
+        unitId: 300,
+        registerMap: [
+          {
+            signal: "custom",
+            tagID: "Meter.Bad",
+            register: -1,
+            function: "" as any,
+            scale: Number.NaN,
+          },
+        ],
+      },
+    ];
+
+    expect(validateSiteConfig(invalid)).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ path: "metering.meters.0.id" }),
+        expect.objectContaining({ path: "metering.meters.0.ip" }),
+        expect.objectContaining({ path: "metering.meters.0.port" }),
+        expect.objectContaining({ path: "metering.meters.0.unitId" }),
+        expect.objectContaining({ path: "metering.meters.0.registerMap.0.register" }),
+        expect.objectContaining({ path: "metering.meters.0.registerMap.0.function" }),
+        expect.objectContaining({ path: "metering.meters.0.registerMap.0.scale" }),
       ])
     );
   });

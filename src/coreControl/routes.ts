@@ -3,6 +3,7 @@ import type { UnifiedControlDesign } from "./design";
 export type ControlRouteId =
   | "product-280"
   | "product-mini"
+  | "product-nano"
   | "metering"
   | "scheduled-dispatch"
   | "realtime-dispatch"
@@ -14,7 +15,7 @@ export type ControlRouteId =
   | "generator"
   | "writer-pcs";
 
-export type ControlProductPath = "eSpire280" | "Mini" | "unsupported";
+export type ControlProductPath = "eSpire280" | "Mini" | "NANO" | "unsupported";
 
 export interface ControlRoute {
   id: ControlRouteId;
@@ -60,6 +61,13 @@ export function buildUnifiedControlRoutePlan(
       design.productLine === "Mini"
         ? "Mini system profile selected"
         : "site is not configured as Mini"
+    ),
+    route(
+      "product-nano",
+      design.productLine === "NANO",
+      design.productLine === "NANO"
+        ? "NANO system profile selected"
+        : "site is not configured as NANO"
     ),
     route(
       "metering",
@@ -153,6 +161,7 @@ function route(
 function resolveProductPath(design: UnifiedControlDesign): ControlProductPath {
   if (design.productLine === "280") return "eSpire280";
   if (design.productLine === "Mini") return "Mini";
+  if (design.productLine === "NANO") return "NANO";
   return "unsupported";
 }
 

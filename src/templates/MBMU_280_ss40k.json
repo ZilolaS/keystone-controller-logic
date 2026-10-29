@@ -405,7 +405,31 @@
         "scaledLow": -20000,
         "scaledHigh": 20000
       },
-      "pollClass": "normal"
+      "pollClass": "normal",
+      "ss40k": {
+        "name": "pBatDischg",
+        "model": "40101",
+        "exportMultiplier": 1000,
+        "exportExpr": "max(value, 0)"
+      }
+    },
+    {
+      "id": "System_Power_kW_Charge",
+      "description": "System charging power derived from System_Power_kW",
+      "category": "Summary",
+      "calc": {
+        "inputs": {
+          "power": "System_Power_kW"
+        },
+        "expr": "power"
+      },
+      "pollClass": "normal",
+      "ss40k": {
+        "name": "pBatChg",
+        "model": "40101",
+        "exportMultiplier": 1000,
+        "exportExpr": "max(-value, 0)"
+      }
     },
     {
       "id": "BMS_PowerOn_State",

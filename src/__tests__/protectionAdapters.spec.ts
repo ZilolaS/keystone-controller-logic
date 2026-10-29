@@ -26,22 +26,48 @@ describe("protection adapters from Node-RED flow behavior", () => {
     });
   });
 
-  test("normalizes SEL751 outage bit from ROW_21 bit 7", () => {
-    expect(normalizeSel751Protection({ row21: 0b10000000 })).toEqual({
-      protectionState: "islanded",
+  test("normalizes SEL751 relay words from IN401/IN402/SV01T/SV07T", () => {
+    expect(
+      normalizeSel751Protection({
+        row19: 0b11000000,
+        row44: 0b10000000,
+        rb1: true,
+      })
+    ).toEqual({
+      protectionState: "normal",
       pcsRunAllowed: true,
-      outageDetected: true,
+      remoteInterlockClosed: true,
+      outageDetected: false,
+      gridPresent: true,
+      breakerClosed52A: true,
+      breakerOpen52B: true,
+      breakerFeedbackMismatch: false,
       raw: {
-        sel_outage: 1,
+        sel_grid_present: 1,
+        sel_outage: 0,
+        sel_52a_closed: 1,
+        sel_52b_open: 1,
+        sel_feedback_mismatch: 0,
+        sel_rb1: 1,
       },
     });
 
-    expect(normalizeSel751Protection({ row21: 0 })).toEqual({
-      protectionState: "normal",
-      pcsRunAllowed: true,
-      outageDetected: false,
+    expect(normalizeSel751Protection({ row19: 0, row44: 0b00000010 })).toEqual({
+      protectionState: "islanded",
+      pcsRunAllowed: false,
+      remoteInterlockClosed: false,
+      outageDetected: true,
+      gridPresent: false,
+      breakerClosed52A: false,
+      breakerOpen52B: false,
+      breakerFeedbackMismatch: true,
       raw: {
-        sel_outage: 0,
+        sel_grid_present: 0,
+        sel_outage: 1,
+        sel_52a_closed: 0,
+        sel_52b_open: 0,
+        sel_feedback_mismatch: 1,
+        sel_rb1: 0,
       },
     });
   });

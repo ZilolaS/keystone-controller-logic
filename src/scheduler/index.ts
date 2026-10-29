@@ -4,6 +4,7 @@ import { SiteConfig } from "../config";
 
 export type ScheduleStrategy = Record<string, unknown>;
 export type ScheduleConstraints = Record<string, unknown>;
+export type ScheduleCommandPayload = Record<string, unknown>;
 
 export interface ScheduleDuration {
   unit?: "minute" | "minutes" | "hour" | "hours" | "day" | "days" | string;
@@ -12,11 +13,19 @@ export interface ScheduleDuration {
 
 export interface SchedulePlan {
   planID?: string;
+  jobId?: string | number;
   name?: string;
   description?: string;
   version?: string;
+  owner?: string;
+  priority?: number | string;
+  flags?: number | string;
+  execType?: string;
+  timezone?: string;
   cron?: string;
   default?: boolean | string;
+  runState?: string;
+  expireTs?: number;
   duration?: ScheduleDuration | number | string;
   start?: string;
   until?: string;
@@ -26,6 +35,8 @@ export interface SchedulePlan {
   };
   strategy?: ScheduleStrategy;
   constraints?: ScheduleConstraints;
+  payload?: ScheduleCommandPayload | string;
+  payloadJson?: string;
   activePowerKwSetpoint?: number;
   reactivePowerKvarSetpoint?: number;
   setpoint?: {
@@ -73,6 +84,8 @@ export interface ActiveSchedulePlan {
 export interface ScheduleSelection {
   planID?: string;
   name?: string;
+  owner?: string;
+  priority?: number | string;
   reason?: string;
   via?: ActiveSchedulePlan["via"];
   isFallback?: boolean;
@@ -86,6 +99,8 @@ export interface ScheduleOutput {
   selectedPlan?: ScheduleSelection;
   strategy?: ScheduleStrategy;
   constraints?: ScheduleConstraints;
+  payload?: ScheduleCommandPayload;
+  payloadJson?: string;
 }
 
 export interface ScheduleMatchOptions {
@@ -109,11 +124,13 @@ interface LocalParts {
 }
 
 interface CronFields {
+  second: string;
   minute: string;
   hour: string;
   dayOfMonth: string;
   month: string;
   dayOfWeek: string;
+  year?: string;
 }
 
 const MONTH_NAMES: Record<string, number> = {
@@ -142,7 +159,7 @@ const WEEKDAY_NAMES: Record<string, number> = {
 };
 
 export function initScheduler(config: SiteConfig, options: SchedulerOptions = {}) {
-  const timezone = options.timezone ?? config.system.controllerTimezone;
+  const timezone = normalizeTimezone(options.timezone ?? config.system.controllerTimezone);
 
   return {
     getSetpointForNow(input: SchedulerOptions = {}): ScheduleOutput {
@@ -161,7 +178,7 @@ export function matchActiveSchedulePlan(
   plansRaw: SchedulePlanInput,
   options: ScheduleMatchOptions = {}
 ): ActiveSchedulePlan | null {
-  const timezone = options.timezone ?? "America/Los_Angeles";
+  const timezone = normalizeTimezone(options.timezone);
   const now = toDate(options.now);
 
   if (options.upstreamActivePlan) {
@@ -175,25 +192,38 @@ export function matchActiveSchedulePlan(
   const nowLocalMs = localMs(nowParts);
   const nowLocal = new Date(nowLocalMs);
 
-  for (let index = plans.length - 1; index >= 0; index -= 1) {
+  const candidates: ActiveSchedulePlan[] = [];
+  for (let index = 0; index < plans.length; index += 1) {
     const plan = plans[index];
     if (isDefaultPlan(plan)) continue;
-    const active = getAbsoluteTimeWindow(plan, now) ?? getActiveWindow(plan, nowParts, nowLocalMs);
+    const planTimezone = normalizeTimezone(plan.timezone ?? timezone);
+    const planNowParts = planTimezone === timezone ? nowParts : getLocalParts(now, planTimezone);
+    const planNowLocalMs = planTimezone === timezone ? nowLocalMs : localMs(planNowParts);
+    const isAbsoluteJob = plan.execType === 'Once' || plan.execType === 'Immediate';
+    const active = isAbsoluteJob
+      ? getAbsoluteTimeWindow(plan, now)
+      : getAbsoluteTimeWindow(plan, now) ?? getActiveWindow(plan, planNowLocalMs);
     if (!active) continue;
-    if (!withinPlanBounds(plan, nowLocalMs)) continue;
+    if (isAbsoluteJob) {
+      if (Number(plan.expireTs || 0) > 0 && now.getTime() >= Number(plan.expireTs) * 1000) continue;
+    } else if (!withinPlanBounds(plan, planNowLocalMs)) continue;
 
-    return {
+    candidates.push({
       plan,
       start: new Date(active.startMs),
       end: new Date(active.endMs),
-      nowLocal,
+      nowLocal: new Date(planNowLocalMs),
       source: "local",
       via: "timed",
       selectedReason: "timed",
-    };
+    });
   }
 
-  const fallback = findDefaultPlan(plans);
+  if (candidates.length) {
+    return candidates.sort(compareActivePlansByPrecedence)[0];
+  }
+
+  const fallback = findDefaultPlan(plans, now);
   if (!fallback) return null;
 
   return {
@@ -205,12 +235,13 @@ export function matchActiveSchedulePlan(
     via: "default",
     isFallback: true,
     selectedReason: "default",
-    nextTimedStart: findNextTimedStart(plans, now, nowParts, nowLocalMs),
+    nextTimedStart: findNextTimedStart(plans, now, timezone),
   };
 }
 
 export function scheduleOutputFromActivePlan(activePlan: ActiveSchedulePlan): ScheduleOutput {
   const plan = activePlan.plan;
+  const payload = normalizeCommandPayload(plan.payload ?? plan.payloadJson);
   const activePowerKwSetpoint = firstFiniteNumber(
     plan.activePowerKwSetpoint,
     plan.setpoint?.activePowerKw,
@@ -227,8 +258,10 @@ export function scheduleOutputFromActivePlan(activePlan: ActiveSchedulePlan): Sc
     ...(reactivePowerKvarSetpoint !== undefined ? { reactivePowerKvarSetpoint } : {}),
     activePlan,
     selectedPlan: {
-      planID: plan.planID,
+      planID: plan.planID ?? String(plan.jobId ?? ""),
       name: plan.name,
+      owner: plan.owner,
+      priority: plan.priority,
       reason: activePlan.selectedReason,
       via: activePlan.via,
       isFallback: activePlan.isFallback,
@@ -236,7 +269,25 @@ export function scheduleOutputFromActivePlan(activePlan: ActiveSchedulePlan): Sc
     },
     strategy: plan.strategy,
     constraints: plan.constraints,
+    ...(payload ? { payload } : {}),
+    ...(typeof plan.payloadJson === "string" ? { payloadJson: plan.payloadJson } : {}),
   };
+}
+
+function normalizeCommandPayload(value: unknown): ScheduleCommandPayload | undefined {
+  if (!value) return undefined;
+  if (typeof value === "string") {
+    try {
+      const parsed = JSON.parse(value);
+      return normalizeCommandPayload(parsed);
+    } catch {
+      return undefined;
+    }
+  }
+  if (typeof value === "object" && !Array.isArray(value)) {
+    return value as ScheduleCommandPayload;
+  }
+  return undefined;
 }
 
 function normalizePlans(plansRaw: SchedulePlanInput): SchedulePlan[] {
@@ -299,37 +350,17 @@ function normalizeUpstreamActivePlan(
 
 function getActiveWindow(
   plan: SchedulePlan,
-  nowParts: LocalParts,
   nowLocalMs: number
 ): { startMs: number; endMs: number } | null {
   const cron = parseCron(plan.cron);
   if (!cron) return null;
 
-  const today = localMs({
-    ...nowParts,
-    hour: cron.hour === "*" ? nowParts.hour : parseNumberToken(cron.hour, "hour") ?? 0,
-    minute: cron.minute === "*" ? nowParts.minute : parseNumberToken(cron.minute, "minute") ?? 0,
-    second: 0,
-  });
-  const yesterdayParts = addLocalDays(nowParts, -1);
-  const yesterday = localMs({
-    ...yesterdayParts,
-    hour: cron.hour === "*" ? nowParts.hour : parseNumberToken(cron.hour, "hour") ?? 0,
-    minute: cron.minute === "*" ? nowParts.minute : parseNumberToken(cron.minute, "minute") ?? 0,
-    second: 0,
-  });
-
   const durationMinutes = getDurationMinutes(plan.duration);
-  const candidates = [today, yesterday];
-
-  for (const startMs of candidates) {
-    const parts = partsFromLocalMs(startMs);
-    if (!cronMatchesDate(cron, parts)) continue;
-    const endMs = startMs + durationMinutes * 60_000;
-    if (nowLocalMs >= startMs && nowLocalMs < endMs) {
-      return { startMs, endMs };
-    }
-  }
+  const durationMs = durationMinutes * 60_000;
+  const startMs = findPreviousCronStart(cron, nowLocalMs, durationMs);
+  if (startMs == null) return null;
+  const endMs = startMs + durationMs;
+  if (nowLocalMs >= startMs && nowLocalMs < endMs) return { startMs, endMs };
 
   return null;
 }
@@ -351,42 +382,176 @@ function getAbsoluteTimeWindow(
 
 function parseCron(cron: string | undefined): CronFields | null {
   if (!cron) return null;
-  const fields = cron.trim().split(/\s+/);
-  if (fields.length < 5) return null;
-  return {
-    minute: fields[0],
-    hour: fields[1],
-    dayOfMonth: fields[2],
-    month: fields[3],
-    dayOfWeek: fields[4],
+  const inputFields = cron.trim().split(/\s+/);
+  const fields = inputFields.length === 5 ? ["0", ...inputFields] : inputFields;
+  if (fields.length !== 6 && fields.length !== 7) return null;
+  const parsed = {
+    second: fields[0],
+    minute: fields[1],
+    hour: fields[2],
+    dayOfMonth: fields[3],
+    month: fields[4],
+    dayOfWeek: fields[5],
+    year: fields[6],
   };
+  return isValidCron(parsed) ? parsed : null;
+}
+
+function isValidCron(cron: CronFields): boolean {
+  return (
+    tokenMatchesAny(cron.second, "second") &&
+    tokenMatchesAny(cron.minute, "minute") &&
+    tokenMatchesAny(cron.hour, "hour") &&
+    tokenMatchesAny(cron.dayOfMonth, "dayOfMonth") &&
+    tokenMatchesAny(cron.month, "month") &&
+    tokenMatchesAny(cron.dayOfWeek, "dayOfWeek") &&
+    (cron.year == null || tokenMatchesAny(cron.year, "year"))
+  );
 }
 
 function cronMatchesDate(cron: CronFields, parts: LocalParts): boolean {
   return (
+    tokenMatches(cron.second, parts.second, "second") &&
+    tokenMatches(cron.minute, parts.minute, "minute") &&
+    tokenMatches(cron.hour, parts.hour, "hour") &&
     tokenMatches(cron.dayOfMonth, parts.day, "dayOfMonth") &&
     tokenMatches(cron.month, parts.month, "month") &&
-    tokenMatches(cron.dayOfWeek, parts.weekday, "dayOfWeek")
+    tokenMatches(cron.dayOfWeek, parts.weekday, "dayOfWeek") &&
+    (cron.year == null || tokenMatches(cron.year, parts.year, "year"))
   );
 }
 
-function tokenMatches(field: string, value: number, kind: "minute" | "hour" | "dayOfMonth" | "month" | "dayOfWeek"): boolean {
-  if (field === "*") return true;
-  return field.split(",").some((token) => parseNumberToken(token, kind) === value);
+function tokenMatchesAny(
+  field: string,
+  kind: "second" | "minute" | "hour" | "dayOfMonth" | "month" | "dayOfWeek" | "year"
+): boolean {
+  const values = expandCronField(field, kind);
+  return values === null || values.size > 0;
+}
+
+function tokenMatches(
+  field: string,
+  value: number,
+  kind: "second" | "minute" | "hour" | "dayOfMonth" | "month" | "dayOfWeek" | "year"
+): boolean {
+  const values = expandCronField(field, kind);
+  if (values === null) return true;
+  if (values.size === 0) return false;
+  return values.has(kind === "dayOfWeek" && value === 7 ? 0 : value);
+}
+
+function expandCronField(
+  field: string,
+  kind: "second" | "minute" | "hour" | "dayOfMonth" | "month" | "dayOfWeek" | "year"
+): Set<number> | null {
+  const trimmed = String(field ?? "").trim();
+  if (!trimmed || trimmed === "*") return null;
+  if (trimmed === "?" && (kind === "dayOfMonth" || kind === "dayOfWeek")) return null;
+  if (trimmed === "?") return new Set();
+
+  const range = cronRange(kind);
+  const values = new Set<number>();
+  for (const rawToken of trimmed.split(",")) {
+    const token = rawToken.trim();
+    if (!token) return new Set();
+    const [base, stepText] = token.split("/");
+    const step = stepText === undefined ? 1 : Number(stepText);
+    if (!Number.isInteger(step) || step <= 0) return new Set();
+
+    let start: number;
+    let end: number;
+    if (base === "*" || base === "?") {
+      if (base === "?" && kind !== "dayOfMonth" && kind !== "dayOfWeek") return new Set();
+      start = range.min;
+      end = range.max;
+    } else if (base.includes("-")) {
+      const [left, right] = base.split("-");
+      const leftValue = parseNumberToken(left, kind);
+      const rightValue = parseNumberToken(right, kind);
+      if (leftValue == null || rightValue == null || leftValue > rightValue) return new Set();
+      start = leftValue;
+      end = rightValue;
+    } else {
+      const value = parseNumberToken(base, kind);
+      if (value == null) return new Set();
+      start = value;
+      end = value;
+    }
+
+    for (let value = start; value <= end; value += step) {
+      if (!valueInCronRange(value, kind)) return new Set();
+      values.add(kind === "dayOfWeek" && value === 7 ? 0 : value);
+    }
+  }
+
+  return values;
 }
 
 function parseNumberToken(
   token: string,
-  kind: "minute" | "hour" | "dayOfMonth" | "month" | "dayOfWeek"
+  kind: "second" | "minute" | "hour" | "dayOfMonth" | "month" | "dayOfWeek" | "year"
 ): number | undefined {
   const normalized = token.trim().toUpperCase();
-  if (normalized === "*") return undefined;
+  if (normalized === "*" || normalized === "?") return undefined;
   if (kind === "month" && MONTH_NAMES[normalized] != null) return MONTH_NAMES[normalized];
   if (kind === "dayOfWeek" && WEEKDAY_NAMES[normalized] != null) return WEEKDAY_NAMES[normalized];
   const value = Number(normalized);
   if (!Number.isFinite(value)) return undefined;
   if (kind === "dayOfWeek" && value === 7) return 0;
   return value;
+}
+
+function cronRange(kind: "second" | "minute" | "hour" | "dayOfMonth" | "month" | "dayOfWeek" | "year"): { min: number; max: number } {
+  if (kind === "second" || kind === "minute") return { min: 0, max: 59 };
+  if (kind === "hour") return { min: 0, max: 23 };
+  if (kind === "dayOfMonth") return { min: 1, max: 31 };
+  if (kind === "month") return { min: 1, max: 12 };
+  if (kind === "dayOfWeek") return { min: 0, max: 7 };
+  return { min: 1970, max: 2099 };
+}
+
+function valueInCronRange(
+  value: number,
+  kind: "second" | "minute" | "hour" | "dayOfMonth" | "month" | "dayOfWeek" | "year"
+): boolean {
+  const range = cronRange(kind);
+  return Number.isInteger(value) && value >= range.min && value <= range.max;
+}
+
+function cronSeconds(cron: CronFields): number[] {
+  const expanded = expandCronField(cron.second, "second");
+  return Array.from(expanded ?? new Set(Array.from({ length: 60 }, (_, index) => index))).sort((a, b) => a - b);
+}
+
+function findPreviousCronStart(cron: CronFields, nowLocalMs: number, lookbackMs: number): number | null {
+  const seconds = cronSeconds(cron);
+  const firstMinute = Math.floor((nowLocalMs - lookbackMs) / 60_000);
+  const lastMinute = Math.floor(nowLocalMs / 60_000);
+  let best: number | null = null;
+  for (let minute = firstMinute; minute <= lastMinute; minute += 1) {
+    const minuteMs = minute * 60_000;
+    for (const second of seconds) {
+      const candidateMs = minuteMs + second * 1000;
+      if (candidateMs > nowLocalMs || candidateMs < nowLocalMs - lookbackMs) continue;
+      if (cronMatchesDate(cron, partsFromLocalMs(candidateMs))) best = candidateMs;
+    }
+  }
+  return best;
+}
+
+function findNextCronStart(cron: CronFields, nowLocalMs: number, horizonDays = 366): number | null {
+  const seconds = cronSeconds(cron);
+  const firstMinute = Math.floor(nowLocalMs / 60_000);
+  const lastMinute = firstMinute + horizonDays * 24 * 60;
+  for (let minute = firstMinute; minute <= lastMinute; minute += 1) {
+    const minuteMs = minute * 60_000;
+    for (const second of seconds) {
+      const candidateMs = minuteMs + second * 1000;
+      if (candidateMs <= nowLocalMs) continue;
+      if (cronMatchesDate(cron, partsFromLocalMs(candidateMs))) return candidateMs;
+    }
+  }
+  return null;
 }
 
 function getDurationMinutes(duration: SchedulePlan["duration"]): number {
@@ -413,19 +578,19 @@ function withinPlanBounds(plan: SchedulePlan, nowLocalMs: number): boolean {
   return true;
 }
 
-function findDefaultPlan(plans: SchedulePlan[]): SchedulePlan | null {
-  for (let index = plans.length - 1; index >= 0; index -= 1) {
-    const plan = plans[index];
-    if (isDefaultPlan(plan)) return plan;
-  }
-  return null;
+function findDefaultPlan(plans: SchedulePlan[], now: Date): SchedulePlan | null {
+  return plans.filter((plan) => {
+    if (!isDefaultPlan(plan)) return false;
+    if (["Stopped", "Expired", "Completed", "Failed"].includes(String(plan.runState || ""))) return false;
+    const expires = Number(plan.expireTs || 0);
+    return !expires || now.getTime() < expires * 1000;
+  }).sort(comparePlansByPrecedence)[0] ?? null;
 }
 
 function findNextTimedStart(
   plans: SchedulePlan[],
   now: Date,
-  nowParts: LocalParts,
-  nowLocalMs: number
+  timezone: string
 ): Date | null {
   let best: number | null = null;
   const nowMs = now.getTime();
@@ -437,32 +602,67 @@ function findNextTimedStart(
     if (best == null || startMs < best) best = startMs;
   }
 
-  for (let dayOffset = 0; dayOffset <= 31; dayOffset += 1) {
-    const dayParts = addLocalDays(nowParts, dayOffset);
-    for (const plan of plans) {
-      if (isDefaultPlan(plan)) continue;
-      if (!plan.cron) continue;
-      const cron = parseCron(plan.cron);
-      if (!cron) continue;
-      const startMs = localMs({
-        ...dayParts,
-        hour: cron.hour === "*" ? 0 : parseNumberToken(cron.hour, "hour") ?? 0,
-        minute: cron.minute === "*" ? 0 : parseNumberToken(cron.minute, "minute") ?? 0,
-        second: 0,
-      });
-      if (startMs <= nowLocalMs) continue;
-      if (!cronMatchesDate(cron, partsFromLocalMs(startMs))) continue;
-      if (!withinPlanBounds(plan, startMs)) continue;
-      if (best == null || startMs < best) best = startMs;
-    }
-    if (best != null) break;
+  for (const plan of plans) {
+    if (isDefaultPlan(plan) || !plan.cron) continue;
+    const cron = parseCron(plan.cron);
+    if (!cron) continue;
+    const planTimezone = normalizeTimezone(plan.timezone ?? timezone);
+    const nowLocalMs = localMs(getLocalParts(now, planTimezone));
+    const startMs = findNextCronStart(cron, nowLocalMs);
+    if (startMs == null || !withinPlanBounds(plan, startMs)) continue;
+    if (best == null || startMs < best) best = startMs;
   }
 
   return best == null ? null : new Date(best);
 }
 
 function isDefaultPlan(plan: SchedulePlan): boolean {
-  return plan.default === true || String(plan.default).toLowerCase() === "true";
+  return (
+    plan.default === true ||
+    String(plan.default).toLowerCase() === "true" ||
+    Number(plan.flags) === 1
+  );
+}
+
+function compareActivePlansByPrecedence(
+  left: ActiveSchedulePlan,
+  right: ActiveSchedulePlan
+): number {
+  const priorityDelta = planPriority(right.plan) - planPriority(left.plan);
+  if (priorityDelta !== 0) return priorityDelta;
+
+  const leftStart = left.start?.getTime() ?? Number.MAX_SAFE_INTEGER;
+  const rightStart = right.start?.getTime() ?? Number.MAX_SAFE_INTEGER;
+  if (leftStart !== rightStart) return leftStart - rightStart;
+
+  return planOrder(right.plan) - planOrder(left.plan);
+}
+
+function comparePlansByPrecedence(left: SchedulePlan, right: SchedulePlan): number {
+  const priorityDelta = planPriority(right) - planPriority(left);
+  if (priorityDelta !== 0) return priorityDelta;
+
+  return planOrder(right) - planOrder(left);
+}
+
+function planPriority(plan: SchedulePlan): number {
+  const priority = Number(plan.priority);
+  return Number.isFinite(priority) ? priority : 0;
+}
+
+function planOrder(plan: SchedulePlan): number {
+  const id = Number(plan.jobId ?? plan.planID);
+  return Number.isFinite(id) ? id : 0;
+}
+
+function normalizeTimezone(timezone: string | undefined): string {
+  const candidate = timezone || "UTC";
+  try {
+    new Intl.DateTimeFormat("en-US", { timeZone: candidate }).format(new Date(0));
+    return candidate;
+  } catch {
+    return "UTC";
+  }
 }
 
 function getLocalParts(date: Date, timezone: string): LocalParts {

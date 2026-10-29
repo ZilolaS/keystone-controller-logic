@@ -1,0 +1,3081 @@
+{
+  "version": "2",
+  "device": {
+    "vendor": "Solis",
+    "model": "FP-Nano Hybrid Inverter",
+    "protocol": "modbus-tcp",
+    "defaultByteOrder": "BE",
+    "defaultWordOrder32": "ABCD",
+    "name": "udt_NANO_HybridInverter_V15",
+    "sourceFormat": "MatterCGI_Interface_Definition_V15_20251229"
+  },
+  "telemetry": [
+    {
+      "id": "PowerStatus",
+      "description": "Inverter power status",
+      "category": "Basic",
+      "pollClass": "normal",
+      "function": "IR",
+      "address": 33121,
+      "enumStatus": true,
+      "ss40k": {
+        "name": "PowerStatus",
+        "model": "40101"
+      }
+    },
+    {
+      "id": "PowerControl",
+      "description": "Inverter power control - 0xDE: Standby, 0xBE: PowerOn",
+      "category": "Basic",
+      "pollClass": "normal",
+      "function": "HR",
+      "address": 43007,
+      "enumStatus": true,
+      "ss40k": {
+        "name": "PowerControl",
+        "model": "40104"
+      }
+    },
+    {
+      "id": "OperatingMode",
+      "description": "Operating mode - Off-grid or Grid-tied via register 43110 bit02",
+      "category": "Basic",
+      "pollClass": "normal",
+      "function": "HR",
+      "address": 43110,
+      "bitfieldStatus": true,
+      "ss40k": {
+        "name": "OperatingMode",
+        "model": "40104"
+      }
+    },
+    {
+      "id": "WorkMode",
+      "description": "Work mode - Self used / Feed-in priority / Back-up / Off-grid via register 43110",
+      "category": "Basic",
+      "pollClass": "normal",
+      "function": "HR",
+      "address": 43110,
+      "bitfieldStatus": true,
+      "ss40k": {
+        "name": "WorkMode",
+        "model": "40104"
+      }
+    },
+    {
+      "id": "MeasurementSelect",
+      "description": "Measurement select - 0: Meter, 1: CT. Register 43073 BIT13",
+      "category": "Measurement",
+      "pollClass": "slow",
+      "function": "HR",
+      "address": 43073,
+      "bitfieldStatus": true
+    },
+    {
+      "id": "MeterType",
+      "description": "Meter type - low byte of register 43140",
+      "category": "Measurement",
+      "pollClass": "slow",
+      "function": "HR",
+      "address": 43140
+    },
+    {
+      "id": "CTDirection",
+      "description": "CT direction - 0: Normal, 1: Reversed. Register 43029",
+      "category": "Measurement",
+      "pollClass": "slow",
+      "function": "HR",
+      "address": 43029,
+      "enumStatus": true,
+      "ss40k": {
+        "name": "CTDirection",
+        "model": "40104"
+      }
+    },
+    {
+      "id": "BatteryType",
+      "description": "Battery type - 0: No battery, 0x6300: Lithium-ion HV. Register 43009",
+      "category": "Battery",
+      "pollClass": "slow",
+      "function": "HR",
+      "address": 43009,
+      "enumStatus": true,
+      "ss40k": {
+        "name": "BatteryType",
+        "model": "40104"
+      }
+    },
+    {
+      "id": "ChargeLimitSoc",
+      "description": "Charge limit SOC %. Register 43010. 1 = 1%",
+      "category": "Battery",
+      "pollClass": "normal",
+      "function": "HR",
+      "address": 43010,
+      "ss40k": {
+        "name": "ChargeLimitSoc",
+        "model": "40104"
+      }
+    },
+    {
+      "id": "MaxChargingCurrent",
+      "description": "Max charging current (A). Register 43117. Model-specific: 30k=160A, 40k=varies",
+      "category": "Battery",
+      "pollClass": "slow",
+      "function": "HR",
+      "address": 43117,
+      "ss40k": {
+        "name": "MaxChargingCurrent",
+        "model": "40104"
+      }
+    },
+    {
+      "id": "MaxDischargingCurrent",
+      "description": "Max discharging current (A). Register 43118",
+      "category": "Battery",
+      "pollClass": "slow",
+      "function": "HR",
+      "address": 43118
+    },
+    {
+      "id": "OnGridCutOffSoc",
+      "description": "On-grid cut-off SOC %. Register 48125",
+      "category": "Battery",
+      "pollClass": "slow",
+      "function": "HR",
+      "address": 48125,
+      "ss40k": {
+        "name": "OnGridCutOffSoc",
+        "model": "40104"
+      }
+    },
+    {
+      "id": "OffGridCutOffSoc",
+      "description": "Off-grid cut-off SOC %. Register 48127",
+      "category": "Battery",
+      "pollClass": "slow",
+      "function": "HR",
+      "address": 48127,
+      "ss40k": {
+        "name": "OffGridCutOffSoc",
+        "model": "40104"
+      }
+    },
+    {
+      "id": "BatteryReserveSOC",
+      "description": "Battery reserve SOC % for backup mode. Register 43024",
+      "category": "Battery",
+      "pollClass": "slow",
+      "function": "HR",
+      "address": 43024
+    },
+    {
+      "id": "BatteryScheduling",
+      "description": "Battery TOU scheduling enable flags. Register 43707 - BIT00: charge slot 1, BIT01: slot 2, BIT02: slot 3",
+      "category": "BatteryScheduling",
+      "pollClass": "normal",
+      "function": "HR",
+      "address": 43707,
+      "bitfieldStatus": true,
+      "ss40k": {
+        "name": "BatteryScheduling",
+        "model": "40104"
+      }
+    },
+    {
+      "id": "TOUMaximumChargingPower",
+      "description": "TOU max charging power (0.1kW). Register 48101",
+      "category": "BatteryTOUCharge",
+      "pollClass": "normal",
+      "function": "HR",
+      "address": 48101,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 10,
+        "scaledLow": 0,
+        "scaledHigh": 1
+      },
+      "ss40k": {
+        "name": "pChgT1",
+        "model": "40104"
+      }
+    },
+    {
+      "id": "socChgEndT1",
+      "description": "TOU charging stop SOC % for plan 1. Register 43708",
+      "category": "BatteryTOUCharge",
+      "pollClass": "normal",
+      "function": "HR",
+      "address": 43708,
+      "ss40k": {
+        "name": "socChgEndT1",
+        "model": "40104"
+      }
+    },
+    {
+      "id": "socChgEndT2",
+      "description": "TOU charging stop SOC % for plan 2. Register 43715",
+      "category": "BatteryTOUCharge",
+      "pollClass": "normal",
+      "function": "HR",
+      "address": 43715,
+      "ss40k": {
+        "name": "socChgEndT2",
+        "model": "40104"
+      }
+    },
+    {
+      "id": "socChgEndT3",
+      "description": "TOU charging stop SOC % for plan 3. Register 43722",
+      "category": "BatteryTOUCharge",
+      "pollClass": "normal",
+      "function": "HR",
+      "address": 43722,
+      "ss40k": {
+        "name": "socChgEndT3",
+        "model": "40104"
+      }
+    },
+    {
+      "id": "chgST1_Hour",
+      "description": "TOU charge plan 1 start time U16 (high byte=minute, low byte=hour). Register 43711 (raw hour register, supports chgST1 calc)",
+      "category": "BatteryTOUCharge",
+      "pollClass": "slow",
+      "function": "HR",
+      "address": 43711,
+      "supporting": true
+    },
+    {
+      "id": "chgST1_Minute",
+      "description": "TOU charge plan 1 start time U16 (high byte=minute, low byte=hour). Register 43711 (raw minute register, supports chgST1 calc)",
+      "category": "BatteryTOUCharge",
+      "pollClass": "slow",
+      "function": "HR",
+      "address": 43712,
+      "supporting": true
+    },
+    {
+      "id": "chgST1",
+      "description": "TOU charge plan 1 start time U16 (high byte=minute, low byte=hour). Register 43711 [combined from hour reg 43711 + minute reg 43712 via calc]",
+      "category": "BatteryTOUCharge",
+      "pollClass": "slow",
+      "calc": {
+        "inputs": {
+          "hour": "chgST1_Hour",
+          "minute": "chgST1_Minute"
+        },
+        "expr": "(minute << 8) | hour"
+      },
+      "ss40k": {
+        "name": "chgST1",
+        "model": "40104"
+      }
+    },
+    {
+      "id": "chgET1_Hour",
+      "description": "TOU charge plan 1 end time U16. Register 43713 (raw hour register, supports chgET1 calc)",
+      "category": "BatteryTOUCharge",
+      "pollClass": "slow",
+      "function": "HR",
+      "address": 43713,
+      "supporting": true
+    },
+    {
+      "id": "chgET1_Minute",
+      "description": "TOU charge plan 1 end time U16. Register 43713 (raw minute register, supports chgET1 calc)",
+      "category": "BatteryTOUCharge",
+      "pollClass": "slow",
+      "function": "HR",
+      "address": 43714,
+      "supporting": true
+    },
+    {
+      "id": "chgET1",
+      "description": "TOU charge plan 1 end time U16. Register 43713 [combined from hour reg 43713 + minute reg 43714 via calc]",
+      "category": "BatteryTOUCharge",
+      "pollClass": "slow",
+      "calc": {
+        "inputs": {
+          "hour": "chgET1_Hour",
+          "minute": "chgET1_Minute"
+        },
+        "expr": "(minute << 8) | hour"
+      },
+      "ss40k": {
+        "name": "chgET1",
+        "model": "40104"
+      }
+    },
+    {
+      "id": "chgST2_Hour",
+      "description": "TOU charge plan 2 start time U16. Register 43718 (raw hour register, supports chgST2 calc)",
+      "category": "BatteryTOUCharge",
+      "pollClass": "slow",
+      "function": "HR",
+      "address": 43718,
+      "supporting": true
+    },
+    {
+      "id": "chgST2_Minute",
+      "description": "TOU charge plan 2 start time U16. Register 43718 (raw minute register, supports chgST2 calc)",
+      "category": "BatteryTOUCharge",
+      "pollClass": "slow",
+      "function": "HR",
+      "address": 43719,
+      "supporting": true
+    },
+    {
+      "id": "chgST2",
+      "description": "TOU charge plan 2 start time U16. Register 43718 [combined from hour reg 43718 + minute reg 43719 via calc]",
+      "category": "BatteryTOUCharge",
+      "pollClass": "slow",
+      "calc": {
+        "inputs": {
+          "hour": "chgST2_Hour",
+          "minute": "chgST2_Minute"
+        },
+        "expr": "(minute << 8) | hour"
+      },
+      "ss40k": {
+        "name": "chgST2",
+        "model": "40104"
+      }
+    },
+    {
+      "id": "chgET2_Hour",
+      "description": "TOU charge plan 2 end time U16. Register 43720 (raw hour register, supports chgET2 calc)",
+      "category": "BatteryTOUCharge",
+      "pollClass": "slow",
+      "function": "HR",
+      "address": 43720,
+      "supporting": true
+    },
+    {
+      "id": "chgET2_Minute",
+      "description": "TOU charge plan 2 end time U16. Register 43720 (raw minute register, supports chgET2 calc)",
+      "category": "BatteryTOUCharge",
+      "pollClass": "slow",
+      "function": "HR",
+      "address": 43721,
+      "supporting": true
+    },
+    {
+      "id": "chgET2",
+      "description": "TOU charge plan 2 end time U16. Register 43720 [combined from hour reg 43720 + minute reg 43721 via calc]",
+      "category": "BatteryTOUCharge",
+      "pollClass": "slow",
+      "calc": {
+        "inputs": {
+          "hour": "chgET2_Hour",
+          "minute": "chgET2_Minute"
+        },
+        "expr": "(minute << 8) | hour"
+      },
+      "ss40k": {
+        "name": "chgET2",
+        "model": "40104"
+      }
+    },
+    {
+      "id": "chgST3_Hour",
+      "description": "TOU charge plan 3 start time U16. Register 43725 (raw hour register, supports chgST3 calc)",
+      "category": "BatteryTOUCharge",
+      "pollClass": "slow",
+      "function": "HR",
+      "address": 43725,
+      "supporting": true
+    },
+    {
+      "id": "chgST3_Minute",
+      "description": "TOU charge plan 3 start time U16. Register 43725 (raw minute register, supports chgST3 calc)",
+      "category": "BatteryTOUCharge",
+      "pollClass": "slow",
+      "function": "HR",
+      "address": 43726,
+      "supporting": true
+    },
+    {
+      "id": "chgST3",
+      "description": "TOU charge plan 3 start time U16. Register 43725 [combined from hour reg 43725 + minute reg 43726 via calc]",
+      "category": "BatteryTOUCharge",
+      "pollClass": "slow",
+      "calc": {
+        "inputs": {
+          "hour": "chgST3_Hour",
+          "minute": "chgST3_Minute"
+        },
+        "expr": "(minute << 8) | hour"
+      },
+      "ss40k": {
+        "name": "chgST3",
+        "model": "40104"
+      }
+    },
+    {
+      "id": "chgET3_Hour",
+      "description": "TOU charge plan 3 end time U16. Register 43727 (raw hour register, supports chgET3 calc)",
+      "category": "BatteryTOUCharge",
+      "pollClass": "slow",
+      "function": "HR",
+      "address": 43727,
+      "supporting": true
+    },
+    {
+      "id": "chgET3_Minute",
+      "description": "TOU charge plan 3 end time U16. Register 43727 (raw minute register, supports chgET3 calc)",
+      "category": "BatteryTOUCharge",
+      "pollClass": "slow",
+      "function": "HR",
+      "address": 43728,
+      "supporting": true
+    },
+    {
+      "id": "chgET3",
+      "description": "TOU charge plan 3 end time U16. Register 43727 [combined from hour reg 43727 + minute reg 43728 via calc]",
+      "category": "BatteryTOUCharge",
+      "pollClass": "slow",
+      "calc": {
+        "inputs": {
+          "hour": "chgET3_Hour",
+          "minute": "chgET3_Minute"
+        },
+        "expr": "(minute << 8) | hour"
+      },
+      "ss40k": {
+        "name": "chgET3",
+        "model": "40104"
+      }
+    },
+    {
+      "id": "TOUMaximumDischargingPower",
+      "description": "TOU max discharging power (0.1kW). Register 48113",
+      "category": "BatteryTOUDischarge",
+      "pollClass": "normal",
+      "function": "HR",
+      "address": 48113,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 10,
+        "scaledLow": 0,
+        "scaledHigh": 1
+      },
+      "ss40k": {
+        "name": "pDischgT1",
+        "model": "40104"
+      }
+    },
+    {
+      "id": "socDischgEndT1",
+      "description": "TOU discharging stop SOC % for plan 1. Register 43750",
+      "category": "BatteryTOUDischarge",
+      "pollClass": "normal",
+      "function": "HR",
+      "address": 43750,
+      "ss40k": {
+        "name": "socDischgEndT1",
+        "model": "40104"
+      }
+    },
+    {
+      "id": "socDischgEndT2",
+      "description": "TOU discharging stop SOC % for plan 2. Register 43757 (inferred +7 offset from plan 1; confirm against V15 register map)",
+      "category": "BatteryTOUDischarge",
+      "pollClass": "normal",
+      "function": "HR",
+      "address": 43757,
+      "ss40k": {
+        "name": "socDischgEndT2",
+        "model": "40104"
+      }
+    },
+    {
+      "id": "socDischgEndT3",
+      "description": "TOU discharging stop SOC % for plan 3. Register 43764 (inferred +7 offset from plan 1; confirm against V15 register map)",
+      "category": "BatteryTOUDischarge",
+      "pollClass": "normal",
+      "function": "HR",
+      "address": 43764,
+      "ss40k": {
+        "name": "socDischgEndT3",
+        "model": "40104"
+      }
+    },
+    {
+      "id": "dischgST1_Hour",
+      "description": "TOU discharge plan 1 start time U16. Register 43753 (raw hour register, supports dischgST1 calc)",
+      "category": "BatteryTOUDischarge",
+      "pollClass": "slow",
+      "function": "HR",
+      "address": 43753,
+      "supporting": true
+    },
+    {
+      "id": "dischgST1_Minute",
+      "description": "TOU discharge plan 1 start time U16. Register 43753 (raw minute register, supports dischgST1 calc)",
+      "category": "BatteryTOUDischarge",
+      "pollClass": "slow",
+      "function": "HR",
+      "address": 43754,
+      "supporting": true
+    },
+    {
+      "id": "dischgST1",
+      "description": "TOU discharge plan 1 start time U16. Register 43753 [combined from hour reg 43753 + minute reg 43754 via calc]",
+      "category": "BatteryTOUDischarge",
+      "pollClass": "slow",
+      "calc": {
+        "inputs": {
+          "hour": "dischgST1_Hour",
+          "minute": "dischgST1_Minute"
+        },
+        "expr": "(minute << 8) | hour"
+      },
+      "ss40k": {
+        "name": "dischgST1",
+        "model": "40104"
+      }
+    },
+    {
+      "id": "dischgET1_Hour",
+      "description": "TOU discharge plan 1 end time U16. Register 43755 (raw hour register, supports dischgET1 calc)",
+      "category": "BatteryTOUDischarge",
+      "pollClass": "slow",
+      "function": "HR",
+      "address": 43755,
+      "supporting": true
+    },
+    {
+      "id": "dischgET1_Minute",
+      "description": "TOU discharge plan 1 end time U16. Register 43755 (raw minute register, supports dischgET1 calc)",
+      "category": "BatteryTOUDischarge",
+      "pollClass": "slow",
+      "function": "HR",
+      "address": 43756,
+      "supporting": true
+    },
+    {
+      "id": "dischgET1",
+      "description": "TOU discharge plan 1 end time U16. Register 43755 [combined from hour reg 43755 + minute reg 43756 via calc]",
+      "category": "BatteryTOUDischarge",
+      "pollClass": "slow",
+      "calc": {
+        "inputs": {
+          "hour": "dischgET1_Hour",
+          "minute": "dischgET1_Minute"
+        },
+        "expr": "(minute << 8) | hour"
+      },
+      "ss40k": {
+        "name": "dischgET1",
+        "model": "40104"
+      }
+    },
+    {
+      "id": "dischgST2_Hour",
+      "description": "TOU discharge plan 2 start time U16. Register 43760 (raw hour register, supports dischgST2 calc)",
+      "category": "BatteryTOUDischarge",
+      "pollClass": "slow",
+      "function": "HR",
+      "address": 43760,
+      "supporting": true
+    },
+    {
+      "id": "dischgST2_Minute",
+      "description": "TOU discharge plan 2 start time U16. Register 43760 (raw minute register, supports dischgST2 calc)",
+      "category": "BatteryTOUDischarge",
+      "pollClass": "slow",
+      "function": "HR",
+      "address": 43761,
+      "supporting": true
+    },
+    {
+      "id": "dischgST2",
+      "description": "TOU discharge plan 2 start time U16. Register 43760 [combined from hour reg 43760 + minute reg 43761 via calc]",
+      "category": "BatteryTOUDischarge",
+      "pollClass": "slow",
+      "calc": {
+        "inputs": {
+          "hour": "dischgST2_Hour",
+          "minute": "dischgST2_Minute"
+        },
+        "expr": "(minute << 8) | hour"
+      },
+      "ss40k": {
+        "name": "dischgST2",
+        "model": "40104"
+      }
+    },
+    {
+      "id": "dischgET2_Hour",
+      "description": "TOU discharge plan 2 end time U16. Register 43762 (raw hour register, supports dischgET2 calc)",
+      "category": "BatteryTOUDischarge",
+      "pollClass": "slow",
+      "function": "HR",
+      "address": 43762,
+      "supporting": true
+    },
+    {
+      "id": "dischgET2_Minute",
+      "description": "TOU discharge plan 2 end time U16. Register 43762 (raw minute register, supports dischgET2 calc)",
+      "category": "BatteryTOUDischarge",
+      "pollClass": "slow",
+      "function": "HR",
+      "address": 43763,
+      "supporting": true
+    },
+    {
+      "id": "dischgET2",
+      "description": "TOU discharge plan 2 end time U16. Register 43762 [combined from hour reg 43762 + minute reg 43763 via calc]",
+      "category": "BatteryTOUDischarge",
+      "pollClass": "slow",
+      "calc": {
+        "inputs": {
+          "hour": "dischgET2_Hour",
+          "minute": "dischgET2_Minute"
+        },
+        "expr": "(minute << 8) | hour"
+      },
+      "ss40k": {
+        "name": "dischgET2",
+        "model": "40104"
+      }
+    },
+    {
+      "id": "dischgST3_Hour",
+      "description": "TOU discharge plan 3 start time U16. Register 43767 (raw hour register, supports dischgST3 calc)",
+      "category": "BatteryTOUDischarge",
+      "pollClass": "slow",
+      "function": "HR",
+      "address": 43767,
+      "supporting": true
+    },
+    {
+      "id": "dischgST3_Minute",
+      "description": "TOU discharge plan 3 start time U16. Register 43767 (raw minute register, supports dischgST3 calc)",
+      "category": "BatteryTOUDischarge",
+      "pollClass": "slow",
+      "function": "HR",
+      "address": 43768,
+      "supporting": true
+    },
+    {
+      "id": "dischgST3",
+      "description": "TOU discharge plan 3 start time U16. Register 43767 [combined from hour reg 43767 + minute reg 43768 via calc]",
+      "category": "BatteryTOUDischarge",
+      "pollClass": "slow",
+      "calc": {
+        "inputs": {
+          "hour": "dischgST3_Hour",
+          "minute": "dischgST3_Minute"
+        },
+        "expr": "(minute << 8) | hour"
+      },
+      "ss40k": {
+        "name": "dischgST3",
+        "model": "40104"
+      }
+    },
+    {
+      "id": "dischgET3_Hour",
+      "description": "TOU discharge plan 3 end time U16. Register 43769 (raw hour register, supports dischgET3 calc)",
+      "category": "BatteryTOUDischarge",
+      "pollClass": "slow",
+      "function": "HR",
+      "address": 43769,
+      "supporting": true
+    },
+    {
+      "id": "dischgET3_Minute",
+      "description": "TOU discharge plan 3 end time U16. Register 43769 (raw minute register, supports dischgET3 calc)",
+      "category": "BatteryTOUDischarge",
+      "pollClass": "slow",
+      "function": "HR",
+      "address": 43770,
+      "supporting": true
+    },
+    {
+      "id": "dischgET3",
+      "description": "TOU discharge plan 3 end time U16. Register 43769 [combined from hour reg 43769 + minute reg 43770 via calc]",
+      "category": "BatteryTOUDischarge",
+      "pollClass": "slow",
+      "calc": {
+        "inputs": {
+          "hour": "dischgET3_Hour",
+          "minute": "dischgET3_Minute"
+        },
+        "expr": "(minute << 8) | hour"
+      },
+      "ss40k": {
+        "name": "dischgET3",
+        "model": "40104"
+      }
+    },
+    {
+      "id": "GridRegulation",
+      "description": "Grid regulation standard. Register 43068",
+      "category": "GridBase",
+      "pollClass": "slow",
+      "function": "HR",
+      "address": 43068,
+      "enumStatus": true,
+      "ss40k": {
+        "name": "GridRegulation",
+        "model": "40104"
+      }
+    },
+    {
+      "id": "RampRate",
+      "description": "Ramp rate %. Register 43429",
+      "category": "GridConnection",
+      "pollClass": "slow",
+      "function": "HR",
+      "address": 43429,
+      "ss40k": {
+        "name": "RampRate",
+        "model": "40104"
+      }
+    },
+    {
+      "id": "PermitServiceStatus",
+      "description": "Permit service status. Register 43007",
+      "category": "GridConnection",
+      "pollClass": "normal",
+      "function": "HR",
+      "address": 43007,
+      "enumStatus": true,
+      "ss40k": {
+        "name": "PermitServiceStatus",
+        "model": "40104"
+      }
+    },
+    {
+      "id": "ApplicableVoltageHigh",
+      "description": "Reconnection upper voltage limit (0.1V). Register 43083",
+      "category": "GridConnection",
+      "pollClass": "slow",
+      "function": "HR",
+      "address": 43083,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 1000,
+        "scaledLow": 0,
+        "scaledHigh": 1
+      },
+      "ss40k": {
+        "name": "ApplicableVoltageHigh",
+        "model": "40104"
+      }
+    },
+    {
+      "id": "ApplicableVoltageLow",
+      "description": "Reconnection lower voltage limit (0.1V). Register 43082",
+      "category": "GridConnection",
+      "pollClass": "slow",
+      "function": "HR",
+      "address": 43082,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 1000,
+        "scaledLow": 0,
+        "scaledHigh": 1
+      },
+      "ss40k": {
+        "name": "ApplicableVoltageLow",
+        "model": "40104"
+      }
+    },
+    {
+      "id": "ApplicableFrequencyHigh",
+      "description": "Reconnection upper frequency limit (0.01Hz). Register 43085",
+      "category": "GridConnection",
+      "pollClass": "slow",
+      "function": "HR",
+      "address": 43085,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 1000,
+        "scaledLow": 0,
+        "scaledHigh": 1
+      },
+      "ss40k": {
+        "name": "ApplicableFrequencyHigh",
+        "model": "40104"
+      }
+    },
+    {
+      "id": "ApplicableFrequencyLow",
+      "description": "Reconnection lower frequency limit (0.01Hz). Register 43084",
+      "category": "GridConnection",
+      "pollClass": "slow",
+      "function": "HR",
+      "address": 43084,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 1000,
+        "scaledLow": 0,
+        "scaledHigh": 1
+      },
+      "ss40k": {
+        "name": "ApplicableFrequencyLow",
+        "model": "40104"
+      }
+    },
+    {
+      "id": "ConnectionDelayTime",
+      "description": "Grid connection delay time (s). Register 43106",
+      "category": "GridConnection",
+      "pollClass": "slow",
+      "function": "HR",
+      "address": 43106,
+      "ss40k": {
+        "name": "ConnectionDelayTime",
+        "model": "40104"
+      }
+    },
+    {
+      "id": "ReconnectionDelayTime",
+      "description": "Grid reconnection delay time (s). Register 43107",
+      "category": "GridConnection",
+      "pollClass": "slow",
+      "function": "HR",
+      "address": 43107,
+      "ss40k": {
+        "name": "ReconnectionDelayTime",
+        "model": "40104"
+      }
+    },
+    {
+      "id": "GridVoltLimit1Low",
+      "description": "Grid volt limit 1 low (0.1V). Register 43094",
+      "category": "GridProtection",
+      "pollClass": "slow",
+      "function": "HR",
+      "address": 43094,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 1000,
+        "scaledLow": 0,
+        "scaledHigh": 1
+      },
+      "ss40k": {
+        "name": "GridVoltLimit1Low",
+        "model": "40104"
+      }
+    },
+    {
+      "id": "GridVoltLimit1High",
+      "description": "Grid volt limit 1 high (0.1V). Register 43090",
+      "category": "GridProtection",
+      "pollClass": "slow",
+      "function": "HR",
+      "address": 43090,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 1000,
+        "scaledLow": 0,
+        "scaledHigh": 1
+      },
+      "ss40k": {
+        "name": "GridVoltLimit1High",
+        "model": "40104"
+      }
+    },
+    {
+      "id": "GridVoltLimit1LowTime",
+      "description": "Grid volt limit 1 low trip time (0.01s). Register 43095",
+      "category": "GridProtection",
+      "pollClass": "slow",
+      "function": "HR",
+      "address": 43095,
+      "ss40k": {
+        "name": "GridVoltLimit1LowTime",
+        "model": "40104"
+      }
+    },
+    {
+      "id": "GridVoltLimit1HighTime",
+      "description": "Grid volt limit 1 high trip time (0.01s). Register 43091",
+      "category": "GridProtection",
+      "pollClass": "slow",
+      "function": "HR",
+      "address": 43091,
+      "ss40k": {
+        "name": "GridVoltLimit1HighTime",
+        "model": "40104"
+      }
+    },
+    {
+      "id": "GridVoltLimit2Low",
+      "description": "Grid volt limit 2 low (0.1V). Register 43096",
+      "category": "GridProtection",
+      "pollClass": "slow",
+      "function": "HR",
+      "address": 43096,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 1000,
+        "scaledLow": 0,
+        "scaledHigh": 1
+      },
+      "ss40k": {
+        "name": "GridVoltLimit2Low",
+        "model": "40104"
+      }
+    },
+    {
+      "id": "GridVoltLimit2High",
+      "description": "Grid volt limit 2 high (0.1V). Register 43092",
+      "category": "GridProtection",
+      "pollClass": "slow",
+      "function": "HR",
+      "address": 43092,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 1000,
+        "scaledLow": 0,
+        "scaledHigh": 1
+      },
+      "ss40k": {
+        "name": "GridVoltLimit2High",
+        "model": "40104"
+      }
+    },
+    {
+      "id": "GridFreqLimit1Low",
+      "description": "Grid freq limit 1 low (0.01Hz). Register 43102",
+      "category": "GridProtection",
+      "pollClass": "slow",
+      "function": "HR",
+      "address": 43102,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 1000,
+        "scaledLow": 0,
+        "scaledHigh": 1
+      },
+      "ss40k": {
+        "name": "GridFreqLimit1Low",
+        "model": "40104"
+      }
+    },
+    {
+      "id": "GridFreqLimit1High",
+      "description": "Grid freq limit 1 high (0.01Hz). Register 43098",
+      "category": "GridProtection",
+      "pollClass": "slow",
+      "function": "HR",
+      "address": 43098,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 1000,
+        "scaledLow": 0,
+        "scaledHigh": 1
+      },
+      "ss40k": {
+        "name": "GridFreqLimit1High",
+        "model": "40104"
+      }
+    },
+    {
+      "id": "GridFreqLimit2Low",
+      "description": "Grid freq limit 2 low (0.01Hz). Register 43104",
+      "category": "GridProtection",
+      "pollClass": "slow",
+      "function": "HR",
+      "address": 43104,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 1000,
+        "scaledLow": 0,
+        "scaledHigh": 1
+      },
+      "ss40k": {
+        "name": "GridFreqLimit2Low",
+        "model": "40104"
+      }
+    },
+    {
+      "id": "GridFreqLimit2High",
+      "description": "Grid freq limit 2 high (0.01Hz). Register 43100",
+      "category": "GridProtection",
+      "pollClass": "slow",
+      "function": "HR",
+      "address": 43100,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 1000,
+        "scaledLow": 0,
+        "scaledHigh": 1
+      },
+      "ss40k": {
+        "name": "GridFreqLimit2High",
+        "model": "40104"
+      }
+    },
+    {
+      "id": "OverFrequencyDroop_dbOF",
+      "description": "Over-frequency droop deadband (0.01Hz). Register 43227 minus 6000",
+      "category": "FrequencyActivePowerMode",
+      "pollClass": "slow",
+      "function": "HR",
+      "address": 43227,
+      "ss40k": {
+        "name": "OverFrequencyDroop_dbOF",
+        "model": "40104"
+      }
+    },
+    {
+      "id": "OverFrequencyDroop_kOF",
+      "description": "Over-frequency droop rate (%). Register 43228",
+      "category": "FrequencyActivePowerMode",
+      "pollClass": "slow",
+      "function": "HR",
+      "address": 43228,
+      "ss40k": {
+        "name": "OverFrequencyDroop_kOF",
+        "model": "40104"
+      }
+    },
+    {
+      "id": "UnderFrequencyDroop_dbUF",
+      "description": "Under-frequency droop deadband (0.01Hz). 6000 minus register 43233",
+      "category": "FrequencyActivePowerMode",
+      "pollClass": "slow",
+      "function": "HR",
+      "address": 43233,
+      "ss40k": {
+        "name": "UnderFrequencyDroop_dbUF",
+        "model": "40104"
+      }
+    },
+    {
+      "id": "UnderFrequencyDroop_kUF",
+      "description": "Under-frequency droop rate (%). Register 43234",
+      "category": "FrequencyActivePowerMode",
+      "pollClass": "slow",
+      "function": "HR",
+      "address": 43234,
+      "ss40k": {
+        "name": "UnderFrequencyDroop_kUF",
+        "model": "40104"
+      }
+    },
+    {
+      "id": "FeedInGridStatus",
+      "description": "Feed-in grid enable. Register 43483 BIT03 - 0: enabled, 1: disabled",
+      "category": "FeedInGrid",
+      "pollClass": "normal",
+      "function": "HR",
+      "address": 43483,
+      "bitfieldStatus": true,
+      "ss40k": {
+        "name": "FeedInGridStatus",
+        "model": "40104"
+      }
+    },
+    {
+      "id": "FeedInGridMaxPower",
+      "description": "Feed-in grid max power (0.1kW). Register 43074",
+      "category": "FeedInGrid",
+      "pollClass": "slow",
+      "function": "HR",
+      "address": 43074,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 10,
+        "scaledLow": 0,
+        "scaledHigh": 1
+      },
+      "ss40k": {
+        "name": "FeedInGridMaxPower",
+        "model": "40104"
+      }
+    },
+    {
+      "id": "OffGridOutput",
+      "description": "Off-grid output enable. Register 43111 - 0: Disable, 1: Enable",
+      "category": "BackupPower",
+      "pollClass": "normal",
+      "function": "HR",
+      "address": 43111,
+      "enumStatus": true,
+      "ss40k": {
+        "name": "OffGridOutput",
+        "model": "40104"
+      }
+    },
+    {
+      "id": "EPSVoltage",
+      "description": "EPS/backup output voltage (V). Register 43112",
+      "category": "BackupPower",
+      "pollClass": "slow",
+      "function": "HR",
+      "address": 43112,
+      "ss40k": {
+        "name": "EPSVoltage",
+        "model": "40104"
+      }
+    },
+    {
+      "id": "GeneratorRatedPower",
+      "description": "Generator rated power (0.1kW). Register 43364",
+      "category": "Generator",
+      "pollClass": "slow",
+      "function": "HR",
+      "address": 43364,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 10,
+        "scaledLow": 0,
+        "scaledHigh": 1
+      },
+      "ss40k": {
+        "name": "GeneratorRatedPower",
+        "model": "40104"
+      }
+    },
+    {
+      "id": "socGenStart",
+      "description": "Generator start SOC %. Register 43344. Range 1-95%, default 20%",
+      "category": "Generator",
+      "pollClass": "slow",
+      "function": "HR",
+      "address": 43344,
+      "ss40k": {
+        "name": "socGenStart",
+        "model": "40104"
+      }
+    },
+    {
+      "id": "socGenEnd",
+      "description": "Generator stop SOC %. Register 43345",
+      "category": "Generator",
+      "pollClass": "slow",
+      "function": "HR",
+      "address": 43345,
+      "ss40k": {
+        "name": "socGenEnd",
+        "model": "40104"
+      }
+    },
+    {
+      "id": "GenDryContact",
+      "description": "Generator dry contact status. Register 33287 - value 7: Generator running (ON), other: OFF",
+      "category": "Generator",
+      "pollClass": "normal",
+      "function": "IR",
+      "address": 33287,
+      "enumStatus": true,
+      "ss40k": {
+        "name": "genDryContactState",
+        "model": "40101"
+      }
+    },
+    {
+      "id": "GenMaxChgPwr",
+      "description": "Generator max charging power (0.1kW). Register 43369",
+      "category": "Generator",
+      "pollClass": "slow",
+      "function": "HR",
+      "address": 43369,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 10,
+        "scaledLow": 0,
+        "scaledHigh": 1
+      }
+    },
+    {
+      "id": "GenCtrlMode",
+      "description": "Generator control mode. Register 43340 BIT00 - 0: Manual, 1: Auto",
+      "category": "Generator",
+      "pollClass": "slow",
+      "function": "HR",
+      "address": 43340,
+      "enumStatus": true
+    },
+    {
+      "id": "ACCoupledPV",
+      "description": "AC coupled PV enable. Register 43483 BIT01 - 1: Enable, 0: Disable",
+      "category": "ACCoupledPV",
+      "pollClass": "slow",
+      "function": "HR",
+      "address": 43483,
+      "bitfieldStatus": true,
+      "ss40k": {
+        "name": "ACCoupledPV",
+        "model": "40104"
+      }
+    },
+    {
+      "id": "ACCoupleMaxfreq",
+      "description": "AC coupling max frequency (0.01Hz). Register 43486",
+      "category": "ACCoupledPV",
+      "pollClass": "slow",
+      "function": "HR",
+      "address": 43486,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 100,
+        "scaledLow": 0,
+        "scaledHigh": 1
+      }
+    },
+    {
+      "id": "SmartLoad",
+      "description": "Smart load enable. Register 43483 BIT00 - 1: Enable, 0: Disable",
+      "category": "LoadShedding",
+      "pollClass": "slow",
+      "function": "HR",
+      "address": 43483,
+      "bitfieldStatus": true,
+      "ss40k": {
+        "name": "SmartLoad",
+        "model": "40104"
+      }
+    },
+    {
+      "id": "SmartLoadOnSoc",
+      "description": "Smart load on SOC %. Register 43673",
+      "category": "LoadShedding",
+      "pollClass": "slow",
+      "function": "HR",
+      "address": 43673,
+      "ss40k": {
+        "name": "SmartLoadOnSoc",
+        "model": "40104"
+      }
+    },
+    {
+      "id": "SmartLoadOffSoc",
+      "description": "Smart load off SOC %. Register 43672",
+      "category": "LoadShedding",
+      "pollClass": "slow",
+      "function": "HR",
+      "address": 43672,
+      "ss40k": {
+        "name": "SmartLoadOffSoc",
+        "model": "40104"
+      }
+    },
+    {
+      "id": "ModbusAddr",
+      "description": "Modbus device address. Register 43006. Range 1-99, default 1",
+      "category": "Parallel",
+      "pollClass": "startup",
+      "function": "HR",
+      "address": 43006,
+      "ss40k": {
+        "name": "ModbusAddr",
+        "model": "40104"
+      }
+    },
+    {
+      "id": "Role",
+      "description": "Parallel role. Register 43382 - 1: Master, 0: Slave",
+      "category": "Parallel",
+      "pollClass": "slow",
+      "function": "HR",
+      "address": 43382,
+      "enumStatus": true,
+      "ss40k": {
+        "name": "Role",
+        "model": "40104"
+      }
+    },
+    {
+      "id": "ParallelSystem",
+      "description": "Parallel system mode. Register 43391 - 0: Single, 1: Parallel",
+      "category": "Parallel",
+      "pollClass": "slow",
+      "function": "HR",
+      "address": 43391,
+      "enumStatus": true
+    },
+    {
+      "id": "ManufacturerName",
+      "description": "ManufacturerName identity constant",
+      "category": "Info",
+      "pollClass": "startup",
+      "constant": "Fortress Power",
+      "ss40k": {
+        "name": "Mn",
+        "model": "40100"
+      }
+    },
+    {
+      "id": "SerialNumber",
+      "description": "Inverter serial number. Register 33004, 16 Modbus words as big-endian ASCII.",
+      "category": "Info",
+      "pollClass": "slow",
+      "function": "IRUS",
+      "address": 33004,
+      "length": 16,
+      "parser": "STR16BE",
+      "ss40k": {
+        "name": "SN",
+        "model": "40100"
+      }
+    },
+    {
+      "id": "BatteryManufacturer42k",
+      "description": "Inverter-derived battery manufacturer identity for 42K reporting.",
+      "category": "Battery42k",
+      "pollClass": "startup",
+      "virtual": true,
+      "ss40k": {
+        "sourceTagID": "PCS.ManufacturerName",
+        "name": "Mn",
+        "model": "42100"
+      }
+    },
+    {
+      "id": "BatteryModel42k",
+      "description": "Inverter-derived battery product identity for 42K reporting.",
+      "category": "Battery42k",
+      "pollClass": "startup",
+      "constant": "NANO",
+      "ss40k": {
+        "name": "Md",
+        "model": "42100"
+      }
+    },
+    {
+      "id": "BatteryType42k",
+      "description": "Inverter-derived battery type for 42K reporting.",
+      "category": "Battery42k",
+      "pollClass": "startup",
+      "constant": 4,
+      "ss40k": {
+        "name": "Typ",
+        "model": "42100"
+      }
+    },
+    {
+      "id": "BatterySerial42k",
+      "description": "Inverter-derived battery serial identity for 42K reporting. Nano does not expose a separate BMS serial in this PCS map.",
+      "category": "Battery42k",
+      "pollClass": "startup",
+      "virtual": true,
+      "ss40k": {
+        "sourceTagID": "PCS.SerialNumber",
+        "name": "SN",
+        "model": "42100"
+      }
+    },
+    {
+      "id": "ModelCode",
+      "description": "Inverter model code. Register 33000.",
+      "category": "Info",
+      "pollClass": "startup",
+      "function": "IRUS",
+      "address": 33000,
+      "ss40k": {
+        "name": "Md",
+        "model": "40100"
+      }
+    },
+    {
+      "id": "DspVersionMain",
+      "description": "DSP version main word. Register 33001.",
+      "category": "Info",
+      "pollClass": "startup",
+      "function": "IRUS",
+      "address": 33001,
+      "supporting": true
+    },
+    {
+      "id": "DspVersionAux",
+      "description": "DSP version auxiliary word. Register 33021.",
+      "category": "Info",
+      "pollClass": "startup",
+      "function": "IRUS",
+      "address": 33021,
+      "supporting": true
+    },
+    {
+      "id": "RatedPowerVa",
+      "description": "Rated power. Register 33067, 10 VA/count.",
+      "category": "Info",
+      "pollClass": "startup",
+      "function": "IRUS",
+      "address": 33067,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 1,
+        "scaledLow": 0,
+        "scaledHigh": 10
+      },
+      "supporting": true
+    },
+    {
+      "id": "PvTotalPower",
+      "description": "PV total power. Register 33057.",
+      "category": "PV",
+      "pollClass": "normal",
+      "function": "IRUI",
+      "address": 33057,
+      "ss40k": {
+        "name": "pPvTotal",
+        "model": "40101"
+      }
+    },
+    {
+      "id": "GridFrequency",
+      "description": "Grid frequency. Register 33094, 0.01 Hz/count.",
+      "category": "Grid",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 33094,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 100,
+        "scaledLow": 0,
+        "scaledHigh": 1
+      },
+      "ss40k": {
+        "name": "fGrid",
+        "model": "40101"
+      }
+    },
+    {
+      "id": "GridL1NVoltage",
+      "description": "Grid phase L1-N voltage. Register 33073, 0.1 V/count.",
+      "category": "Grid",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 33073,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 10,
+        "scaledLow": 0,
+        "scaledHigh": 1
+      },
+      "ss40k": {
+        "name": "vGridL1N",
+        "model": "40101"
+      }
+    },
+    {
+      "id": "GridL2NVoltage",
+      "description": "Grid phase L2-N voltage. Register 33074, 0.1 V/count.",
+      "category": "Grid",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 33074,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 10,
+        "scaledLow": 0,
+        "scaledHigh": 1
+      },
+      "ss40k": {
+        "name": "vGridL2N",
+        "model": "40101"
+      }
+    },
+    {
+      "id": "GridL3NVoltage",
+      "description": "Grid phase L3-N voltage. Register 33075, 0.1 V/count.",
+      "category": "Grid",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 33075,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 10,
+        "scaledLow": 0,
+        "scaledHigh": 1
+      },
+      "ss40k": {
+        "name": "vGridL3N",
+        "model": "40101"
+      }
+    },
+    {
+      "id": "GridL1Current",
+      "description": "Grid phase L1 current. Register 33076, 0.1 A/count.",
+      "category": "Grid",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 33076,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 10,
+        "scaledLow": 0,
+        "scaledHigh": 1
+      },
+      "ss40k": {
+        "name": "iGridL1",
+        "model": "40101"
+      }
+    },
+    {
+      "id": "GridL2Current",
+      "description": "Grid phase L2 current. Register 33077, 0.1 A/count.",
+      "category": "Grid",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 33077,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 10,
+        "scaledLow": 0,
+        "scaledHigh": 1
+      },
+      "ss40k": {
+        "name": "iGridL2",
+        "model": "40101"
+      }
+    },
+    {
+      "id": "GridL3Current",
+      "description": "Grid phase L3 current. Register 33078, 0.1 A/count.",
+      "category": "Grid",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 33078,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 10,
+        "scaledLow": 0,
+        "scaledHigh": 1
+      },
+      "ss40k": {
+        "name": "iGridL3",
+        "model": "40101"
+      }
+    },
+    {
+      "id": "GridL1ActivePower",
+      "description": "Grid L1 active power. Register 33512, 10 W/count.",
+      "category": "Grid",
+      "pollClass": "normal",
+      "function": "IRI",
+      "address": 33512,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 1,
+        "scaledLow": 0,
+        "scaledHigh": 10
+      },
+      "ss40k": {
+        "name": "pGridL1",
+        "model": "40101"
+      }
+    },
+    {
+      "id": "GridL2ActivePower",
+      "description": "Grid L2 active power. Register 33515, 10 W/count.",
+      "category": "Grid",
+      "pollClass": "normal",
+      "function": "IRI",
+      "address": 33515,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 1,
+        "scaledLow": 0,
+        "scaledHigh": 10
+      },
+      "ss40k": {
+        "name": "pGridL2",
+        "model": "40101"
+      }
+    },
+    {
+      "id": "GridL3ActivePower",
+      "description": "Grid L3 active power. Register 33518, 10 W/count.",
+      "category": "Grid",
+      "pollClass": "normal",
+      "function": "IRI",
+      "address": 33518,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 1,
+        "scaledLow": 0,
+        "scaledHigh": 10
+      },
+      "ss40k": {
+        "name": "pGridL3",
+        "model": "40101"
+      }
+    },
+    {
+      "id": "GridTotalPower",
+      "description": "Grid total active power signed. Register 33151. Positive import, negative export.",
+      "category": "Grid",
+      "pollClass": "normal",
+      "function": "IRI",
+      "address": 33151,
+      "ss40k": {
+        "name": "pGridImpTot",
+        "model": "40101",
+        "exportExpr": "max(value, 0)"
+      }
+    },
+    {
+      "id": "MeterGridPower",
+      "description": "Meter/grid-side power signed. Register 33263.",
+      "category": "Grid",
+      "pollClass": "normal",
+      "function": "IRI",
+      "address": 33263,
+      "supporting": true
+    },
+    {
+      "id": "MeterL1Power",
+      "description": "Meter L1 power. Register 33257.",
+      "category": "Grid",
+      "pollClass": "normal",
+      "function": "IRI",
+      "address": 33257,
+      "supporting": true
+    },
+    {
+      "id": "MeterL2Power",
+      "description": "Meter L2 power. Register 33259.",
+      "category": "Grid",
+      "pollClass": "normal",
+      "function": "IRI",
+      "address": 33259,
+      "supporting": true
+    },
+    {
+      "id": "MeterL3Power",
+      "description": "Meter L3 power. Register 33261.",
+      "category": "Grid",
+      "pollClass": "normal",
+      "function": "IRI",
+      "address": 33261,
+      "supporting": true
+    },
+    {
+      "id": "GridExportPower",
+      "description": "Derived SS40K export grid power from signed GridTotalPower.",
+      "category": "Grid",
+      "pollClass": "normal",
+      "calc": {
+        "inputs": {
+          "p": "GridTotalPower"
+        },
+        "expr": "max(-p, 0)"
+      },
+      "ss40k": {
+        "sourceTagID": "PCS.GridExportPower",
+        "name": "pGridExpTot",
+        "model": "40101"
+      }
+    },
+    {
+      "id": "LoadPowerLow",
+      "description": "Load active power low word. Register 33147.",
+      "category": "Load",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 33147,
+      "supporting": true
+    },
+    {
+      "id": "LoadPowerHigh",
+      "description": "Load active power high word for >50 kW cases. Register 34343.",
+      "category": "Load",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 34343,
+      "supporting": true
+    },
+    {
+      "id": "LoadTotalPower",
+      "description": "Load total active power derived from high/low words.",
+      "category": "Load",
+      "pollClass": "normal",
+      "calc": {
+        "inputs": {
+          "hi": "LoadPowerHigh",
+          "lo": "LoadPowerLow"
+        },
+        "expr": "hi * 65536 + lo"
+      },
+      "ss40k": {
+        "name": "pLoad",
+        "model": "40101"
+      }
+    },
+    {
+      "id": "BackupLoadPower",
+      "description": "Backup load total active power. Register 33148.",
+      "category": "BackupLoad",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 33148,
+      "ss40k": {
+        "name": "pBkupTot",
+        "model": "40101"
+      }
+    },
+    {
+      "id": "BackupL1Voltage",
+      "description": "Backup L1 voltage. Register 33137, 0.1 V/count.",
+      "category": "BackupLoad",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 33137,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 10,
+        "scaledLow": 0,
+        "scaledHigh": 1
+      }
+    },
+    {
+      "id": "BackupL2Voltage",
+      "description": "Backup L2 voltage. Register 33153, 0.1 V/count.",
+      "category": "BackupLoad",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 33153,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 10,
+        "scaledLow": 0,
+        "scaledHigh": 1
+      }
+    },
+    {
+      "id": "BackupL3Voltage",
+      "description": "Backup L3 voltage. Register 33155, 0.1 V/count.",
+      "category": "BackupLoad",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 33155,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 10,
+        "scaledLow": 0,
+        "scaledHigh": 1
+      }
+    },
+    {
+      "id": "BackupL1Current",
+      "description": "Backup L1 current. Register 33138, 0.1 A/count.",
+      "category": "BackupLoad",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 33138,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 10,
+        "scaledLow": 0,
+        "scaledHigh": 1
+      }
+    },
+    {
+      "id": "BackupL2Current",
+      "description": "Backup L2 current. Register 33154, 0.1 A/count.",
+      "category": "BackupLoad",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 33154,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 10,
+        "scaledLow": 0,
+        "scaledHigh": 1
+      }
+    },
+    {
+      "id": "BackupL3Current",
+      "description": "Backup L3 current. Register 33156, 0.1 A/count.",
+      "category": "BackupLoad",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 33156,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 10,
+        "scaledLow": 0,
+        "scaledHigh": 1
+      }
+    },
+    {
+      "id": "BackupL1Power",
+      "description": "Backup L1 active power. Register 33521, 10 W/count.",
+      "category": "BackupLoad",
+      "pollClass": "normal",
+      "function": "IRI",
+      "address": 33521,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 1,
+        "scaledLow": 0,
+        "scaledHigh": 10
+      },
+      "ss40k": {
+        "name": "pLoadL1",
+        "model": "40101"
+      }
+    },
+    {
+      "id": "BackupL2Power",
+      "description": "Backup L2 active power. Register 33524, 10 W/count.",
+      "category": "BackupLoad",
+      "pollClass": "normal",
+      "function": "IRI",
+      "address": 33524,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 1,
+        "scaledLow": 0,
+        "scaledHigh": 10
+      },
+      "ss40k": {
+        "name": "pLoadL2",
+        "model": "40101"
+      }
+    },
+    {
+      "id": "BackupL3Power",
+      "description": "Backup L3 active power. Register 33527, 10 W/count.",
+      "category": "BackupLoad",
+      "pollClass": "normal",
+      "function": "IRI",
+      "address": 33527,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 1,
+        "scaledLow": 0,
+        "scaledHigh": 10
+      },
+      "ss40k": {
+        "name": "pLoadL3",
+        "model": "40101"
+      }
+    },
+    {
+      "id": "BatteryPower",
+      "description": "Battery power signed summary. Register 33149. Positive discharge, negative charge.",
+      "category": "Battery",
+      "pollClass": "normal",
+      "function": "IRI",
+      "address": 33149,
+      "ss40k": {
+        "name": "pBatDischg",
+        "model": "40101",
+        "exportExpr": "max(value, 0)"
+      }
+    },
+    {
+      "id": "BatteryChargePower",
+      "description": "Derived SS40K battery charge power from signed BatteryPower.",
+      "category": "Battery",
+      "pollClass": "normal",
+      "calc": {
+        "inputs": {
+          "p": "BatteryPower"
+        },
+        "expr": "max(-p, 0)"
+      },
+      "ss40k": {
+        "sourceTagID": "PCS.BatteryChargePower",
+        "name": "pBatChg",
+        "model": "40101"
+      }
+    },
+    {
+      "id": "BatteryVoltage",
+      "description": "Battery voltage summary. Register 33133, 0.1 V/count.",
+      "category": "Battery",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 33133,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 10,
+        "scaledLow": 0,
+        "scaledHigh": 1
+      },
+      "ss40k": {
+        "name": "vBat",
+        "model": "40101"
+      }
+    },
+    {
+      "id": "BatteryCurrent",
+      "description": "Battery current summary. Register 33134, 0.1 A/count.",
+      "category": "Battery",
+      "pollClass": "normal",
+      "function": "IRI",
+      "address": 33134,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 10,
+        "scaledLow": 0,
+        "scaledHigh": 1
+      },
+      "ss40k": {
+        "name": "iBat",
+        "model": "40101"
+      }
+    },
+    {
+      "id": "BatteryDirection",
+      "description": "Battery charge/discharge direction. Register 33135.",
+      "category": "Battery",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 33135,
+      "supporting": true
+    },
+    {
+      "id": "BmsSoc",
+      "description": "BMS SOC. Register 33139, 1%/count.",
+      "category": "Battery",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 33139,
+      "ss40k": {
+        "name": "socBat",
+        "model": "40101"
+      }
+    },
+    {
+      "id": "BmsSoh",
+      "description": "BMS SOH. Register 33140, 1%/count.",
+      "category": "Battery",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 33140,
+      "ss40k": {
+        "name": "sohBat",
+        "model": "40101"
+      }
+    },
+    {
+      "id": "BmsVoltageHigh",
+      "description": "BMS voltage high word. Register 33045.",
+      "category": "Battery",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 33045,
+      "supporting": true
+    },
+    {
+      "id": "BmsVoltageLow",
+      "description": "BMS voltage low word. Register 33141.",
+      "category": "Battery",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 33141,
+      "supporting": true
+    },
+    {
+      "id": "BmsVoltage",
+      "description": "BMS voltage derived from high/low words, 0.01 V/count.",
+      "category": "Battery",
+      "pollClass": "normal",
+      "calc": {
+        "inputs": {
+          "hi": "BmsVoltageHigh",
+          "lo": "BmsVoltageLow"
+        },
+        "expr": "(hi * 65536 + lo) * 0.01"
+      },
+      "ss40k": {
+        "name": "vBat",
+        "model": "40101"
+      }
+    },
+    {
+      "id": "BmsCurrent",
+      "description": "BMS current. Register 33142, 0.1 A/count.",
+      "category": "Battery",
+      "pollClass": "normal",
+      "function": "IRI",
+      "address": 33142,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 10,
+        "scaledLow": 0,
+        "scaledHigh": 1
+      },
+      "ss40k": {
+        "name": "iBat",
+        "model": "40101"
+      }
+    },
+    {
+      "id": "BmsChargeCurrentLimit",
+      "description": "BMS charge current limit. Register 33143.",
+      "category": "Battery",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 33143,
+      "supporting": true
+    },
+    {
+      "id": "BmsDischargeCurrentLimit",
+      "description": "BMS discharge current limit. Register 33144.",
+      "category": "Battery",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 33144,
+      "supporting": true
+    },
+    {
+      "id": "BatteryVoltage42k",
+      "description": "Inverter-derived 42K battery voltage from PCS battery voltage summary.",
+      "category": "Battery42k",
+      "pollClass": "normal",
+      "virtual": true,
+      "ss40k": {
+        "sourceTagID": "PCS.BatteryVoltage",
+        "name": "V",
+        "model": "42101"
+      }
+    },
+    {
+      "id": "BatterySerialMonitoring42k",
+      "description": "Inverter-derived battery serial identity stamped onto 42K monitoring payloads. Nano does not expose a separate BMS serial in this PCS map.",
+      "category": "Battery42k",
+      "pollClass": "normal",
+      "virtual": true,
+      "ss40k": {
+        "sourceTagID": "PCS.SerialNumber",
+        "name": "SN",
+        "model": "42101"
+      }
+    },
+    {
+      "id": "BatteryPower42k",
+      "description": "Inverter-derived 42K battery power from PCS battery power summary.",
+      "category": "Battery42k",
+      "pollClass": "normal",
+      "virtual": true,
+      "ss40k": {
+        "sourceTagID": "PCS.BatteryPower",
+        "name": "W",
+        "model": "42101"
+      }
+    },
+    {
+      "id": "BatteryCurrent42k",
+      "description": "Inverter-derived 42K battery current calculated from signed battery power and voltage. Avoids the Nano PCS battery-current register ambiguity.",
+      "category": "Battery42k",
+      "pollClass": "normal",
+      "calc": {
+        "inputs": {
+          "power": "BatteryPower",
+          "voltage": "BatteryVoltage"
+        },
+        "expr": "voltage ? power / voltage : 0"
+      },
+      "ss40k": {
+        "name": "A",
+        "model": "42101"
+      }
+    },
+    {
+      "id": "BatterySoc42k",
+      "description": "Inverter-derived 42K battery SOC from PCS BMS SOC summary.",
+      "category": "Battery42k",
+      "pollClass": "normal",
+      "virtual": true,
+      "ss40k": {
+        "sourceTagID": "PCS.BmsSoc",
+        "name": "SoC",
+        "model": "42101"
+      }
+    },
+    {
+      "id": "BatterySoh42k",
+      "description": "Inverter-derived 42K battery SOH from PCS BMS SOH summary.",
+      "category": "Battery42k",
+      "pollClass": "normal",
+      "virtual": true,
+      "ss40k": {
+        "sourceTagID": "PCS.BmsSoh",
+        "name": "SoH",
+        "model": "42101"
+      }
+    },
+    {
+      "id": "BatteryChargeCurrentLimit42k",
+      "description": "Inverter-derived 42K maximum battery charge current from PCS BMS limit summary.",
+      "category": "Battery42k",
+      "pollClass": "normal",
+      "virtual": true,
+      "ss40k": {
+        "sourceTagID": "PCS.BmsChargeCurrentLimit",
+        "name": "AChaMax",
+        "model": "42101"
+      }
+    },
+    {
+      "id": "BatteryDischargeCurrentLimit42k",
+      "description": "Inverter-derived 42K maximum battery discharge current from PCS BMS limit summary.",
+      "category": "Battery42k",
+      "pollClass": "normal",
+      "virtual": true,
+      "ss40k": {
+        "sourceTagID": "PCS.BmsDischargeCurrentLimit",
+        "name": "ADisChaMax",
+        "model": "42101"
+      }
+    },
+    {
+      "id": "PvEnergyToday",
+      "description": "PV energy today. Register 33035, 0.1 kWh/count.",
+      "category": "Energy",
+      "pollClass": "slow",
+      "function": "IRUI",
+      "address": 33035,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 10,
+        "scaledLow": 0,
+        "scaledHigh": 1
+      },
+      "ss40k": {
+        "name": "ePvTdy",
+        "model": "40102",
+        "exportMultiplier": 1000
+      }
+    },
+    {
+      "id": "PvEnergyTotal",
+      "description": "PV energy total. Register 33029, kWh/count.",
+      "category": "Energy",
+      "pollClass": "slow",
+      "function": "IRUI",
+      "address": 33029,
+      "ss40k": {
+        "name": "ePvTot",
+        "model": "40102",
+        "exportMultiplier": 1000
+      }
+    },
+    {
+      "id": "BatteryChargeEnergyToday",
+      "description": "Battery charge energy today. Register 33163, kWh/count.",
+      "category": "Energy",
+      "pollClass": "slow",
+      "function": "IRUI",
+      "address": 33163,
+      "ss40k": {
+        "name": "eBatChgTdy",
+        "model": "40102",
+        "exportMultiplier": 1000
+      }
+    },
+    {
+      "id": "BatteryChargeEnergyTotal",
+      "description": "Battery charge energy total. Register 33161, kWh/count.",
+      "category": "Energy",
+      "pollClass": "slow",
+      "function": "IRUI",
+      "address": 33161,
+      "ss40k": {
+        "name": "eBatChgTot",
+        "model": "40102",
+        "exportMultiplier": 1000
+      }
+    },
+    {
+      "id": "BatteryChargeEnergyTotal42k",
+      "description": "Inverter-derived 42K battery charge energy total from PCS energy summary.",
+      "category": "Battery42k",
+      "pollClass": "slow",
+      "virtual": true,
+      "ss40k": {
+        "sourceTagID": "PCS.BatteryChargeEnergyTotal",
+        "name": "eBatChgTot",
+        "model": "42101",
+        "exportMultiplier": 1000
+      }
+    },
+    {
+      "id": "BatteryDischargeEnergyToday",
+      "description": "Battery discharge energy today. Register 33167, kWh/count.",
+      "category": "Energy",
+      "pollClass": "slow",
+      "function": "IRUI",
+      "address": 33167,
+      "ss40k": {
+        "name": "eBatDischgTdy",
+        "model": "40102",
+        "exportMultiplier": 1000
+      }
+    },
+    {
+      "id": "BatteryDischargeEnergyTotal",
+      "description": "Battery discharge energy total. Register 33165, kWh/count.",
+      "category": "Energy",
+      "pollClass": "slow",
+      "function": "IRUI",
+      "address": 33165,
+      "ss40k": {
+        "name": "eBatDischgTot",
+        "model": "40102",
+        "exportMultiplier": 1000
+      }
+    },
+    {
+      "id": "BatteryDischargeEnergyTotal42k",
+      "description": "Inverter-derived 42K battery discharge energy total from PCS energy summary.",
+      "category": "Battery42k",
+      "pollClass": "slow",
+      "virtual": true,
+      "ss40k": {
+        "sourceTagID": "PCS.BatteryDischargeEnergyTotal",
+        "name": "eBatDischgTot",
+        "model": "42101",
+        "exportMultiplier": 1000
+      }
+    },
+    {
+      "id": "GridImportEnergyToday",
+      "description": "Grid import energy today. Register 33171, kWh/count.",
+      "category": "Energy",
+      "pollClass": "slow",
+      "function": "IRUI",
+      "address": 33171,
+      "ss40k": {
+        "name": "eGridImpTdy",
+        "model": "40102",
+        "exportMultiplier": 1000
+      }
+    },
+    {
+      "id": "GridImportEnergyTotal",
+      "description": "Grid import energy total. Register 33169, kWh/count.",
+      "category": "Energy",
+      "pollClass": "slow",
+      "function": "IRUI",
+      "address": 33169,
+      "ss40k": {
+        "name": "eGridImpTot",
+        "model": "40102",
+        "exportMultiplier": 1000
+      }
+    },
+    {
+      "id": "GridExportEnergyToday",
+      "description": "Grid export energy today. Register 33175, kWh/count.",
+      "category": "Energy",
+      "pollClass": "slow",
+      "function": "IRUI",
+      "address": 33175,
+      "ss40k": {
+        "name": "eGridExpTdy",
+        "model": "40102",
+        "exportMultiplier": 1000
+      }
+    },
+    {
+      "id": "GridExportEnergyTotal",
+      "description": "Grid export energy total. Register 33173, kWh/count.",
+      "category": "Energy",
+      "pollClass": "slow",
+      "function": "IRUI",
+      "address": 33173,
+      "ss40k": {
+        "name": "eGridExpTot",
+        "model": "40102",
+        "exportMultiplier": 1000
+      }
+    },
+    {
+      "id": "LoadEnergyToday",
+      "description": "Load energy today. Register 33586, kWh/count.",
+      "category": "Energy",
+      "pollClass": "slow",
+      "function": "IRUI",
+      "address": 33586,
+      "ss40k": {
+        "name": "eLoadTdy",
+        "model": "40102",
+        "exportMultiplier": 1000
+      }
+    },
+    {
+      "id": "LoadEnergyTotal",
+      "description": "Load energy total. Register 33580, kWh/count.",
+      "category": "Energy",
+      "pollClass": "slow",
+      "function": "IRUI",
+      "address": 33580,
+      "ss40k": {
+        "name": "eLoadTot",
+        "model": "40102",
+        "exportMultiplier": 1000
+      }
+    },
+    {
+      "id": "BackupLoadEnergyToday",
+      "description": "Backup load energy today. Register 33596, kWh/count.",
+      "category": "Energy",
+      "pollClass": "slow",
+      "function": "IRUI",
+      "address": 33596,
+      "ss40k": {
+        "name": "eBkupTdy",
+        "model": "40102",
+        "exportMultiplier": 1000
+      }
+    },
+    {
+      "id": "BackupLoadEnergyTotal",
+      "description": "Backup load energy total. Register 33590, kWh/count.",
+      "category": "Energy",
+      "pollClass": "slow",
+      "function": "IRUI",
+      "address": 33590,
+      "ss40k": {
+        "name": "eBkupTot",
+        "model": "40102",
+        "exportMultiplier": 1000
+      }
+    },
+    {
+      "id": "WarningWord33339",
+      "description": "Nano warning word. Register 33339.",
+      "category": "Fault",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 33339,
+      "supporting": true,
+      "alarm": true
+    },
+    {
+      "id": "FaultWord33116",
+      "description": "Nano fault word. Register 33116.",
+      "category": "Fault",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 33116,
+      "supporting": true,
+      "alarm": true
+    },
+    {
+      "id": "FaultWord33117",
+      "description": "Nano fault word. Register 33117.",
+      "category": "Fault",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 33117,
+      "supporting": true,
+      "alarm": true
+    },
+    {
+      "id": "FaultWord33118",
+      "description": "Nano fault word. Register 33118.",
+      "category": "Fault",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 33118,
+      "supporting": true,
+      "alarm": true
+    },
+    {
+      "id": "FaultWord33119",
+      "description": "Nano fault word. Register 33119.",
+      "category": "Fault",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 33119,
+      "supporting": true,
+      "alarm": true
+    },
+    {
+      "id": "FaultWord33120",
+      "description": "Nano fault word. Register 33120.",
+      "category": "Fault",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 33120,
+      "supporting": true,
+      "alarm": true
+    },
+    {
+      "id": "FanStatusWord33121",
+      "description": "Nano fan/status word. Register 33121.",
+      "category": "Fault",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 33121,
+      "supporting": true,
+      "alarm": true
+    },
+    {
+      "id": "FaultWord33124",
+      "description": "Nano fault word. Register 33124.",
+      "category": "Fault",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 33124,
+      "supporting": true,
+      "alarm": true
+    },
+    {
+      "id": "FaultWord33125",
+      "description": "Nano fault word. Register 33125.",
+      "category": "Fault",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 33125,
+      "supporting": true,
+      "alarm": true
+    },
+    {
+      "id": "FaultWord33510",
+      "description": "Nano fault word. Register 33510.",
+      "category": "Fault",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 33510,
+      "supporting": true,
+      "alarm": true
+    },
+    {
+      "id": "pcsWarning",
+      "description": "Standard 40103 warning aggregate from Nano warning word.",
+      "category": "Fault",
+      "pollClass": "normal",
+      "calc": {
+        "inputs": {
+          "w": "WarningWord33339"
+        },
+        "expr": "w"
+      },
+      "ss40k": {
+        "name": "pcsWarning",
+        "model": "40103"
+      },
+      "alarm": true
+    },
+    {
+      "id": "pcsFault",
+      "description": "Standard 40103 fault aggregate from Nano fault/status words.",
+      "category": "Fault",
+      "pollClass": "normal",
+      "calc": {
+        "inputs": {
+          "w1": "FaultWord33116",
+          "w2": "FaultWord33117",
+          "w3": "FaultWord33118",
+          "w4": "FaultWord33119",
+          "w5": "FaultWord33120",
+          "w6": "FanStatusWord33121",
+          "w7": "FaultWord33124",
+          "w8": "FaultWord33125",
+          "w9": "FaultWord33510"
+        },
+        "expr": "w1 | w2 | w3 | w4 | w5 | w6 | w7 | w8 | w9"
+      },
+      "ss40k": {
+        "name": "pcsFault",
+        "model": "40103"
+      },
+      "alarm": true
+    },
+    {
+      "id": "Mppt1Voltage",
+      "description": "PV MPPT 1 voltage. Register 33049, 0.1 V/count.",
+      "category": "PV",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 33049,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 10,
+        "scaledLow": 0,
+        "scaledHigh": 1
+      },
+      "ss40k": {
+        "name": "vMppt1",
+        "model": "40101"
+      }
+    },
+    {
+      "id": "Mppt1Current",
+      "description": "PV MPPT 1 current. Register 33050, 0.1 A/count.",
+      "category": "PV",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 33050,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 10,
+        "scaledLow": 0,
+        "scaledHigh": 1
+      },
+      "ss40k": {
+        "name": "iMppt1",
+        "model": "40101"
+      }
+    },
+    {
+      "id": "Mppt1Power",
+      "description": "PV MPPT 1 calculated power.",
+      "category": "PV",
+      "pollClass": "normal",
+      "calc": {
+        "inputs": {
+          "v": "Mppt1Voltage",
+          "i": "Mppt1Current"
+        },
+        "expr": "v * i"
+      },
+      "ss40k": {
+        "name": "pMppt1",
+        "model": "40101"
+      }
+    },
+    {
+      "id": "Mppt2Voltage",
+      "description": "PV MPPT 2 voltage. Register 33051, 0.1 V/count.",
+      "category": "PV",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 33051,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 10,
+        "scaledLow": 0,
+        "scaledHigh": 1
+      },
+      "ss40k": {
+        "name": "vMppt2",
+        "model": "40101"
+      }
+    },
+    {
+      "id": "Mppt2Current",
+      "description": "PV MPPT 2 current. Register 33052, 0.1 A/count.",
+      "category": "PV",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 33052,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 10,
+        "scaledLow": 0,
+        "scaledHigh": 1
+      },
+      "ss40k": {
+        "name": "iMppt2",
+        "model": "40101"
+      }
+    },
+    {
+      "id": "Mppt2Power",
+      "description": "PV MPPT 2 calculated power.",
+      "category": "PV",
+      "pollClass": "normal",
+      "calc": {
+        "inputs": {
+          "v": "Mppt2Voltage",
+          "i": "Mppt2Current"
+        },
+        "expr": "v * i"
+      },
+      "ss40k": {
+        "name": "pMppt2",
+        "model": "40101"
+      }
+    },
+    {
+      "id": "Mppt3Voltage",
+      "description": "PV MPPT 3 voltage. Register 33053, 0.1 V/count.",
+      "category": "PV",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 33053,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 10,
+        "scaledLow": 0,
+        "scaledHigh": 1
+      },
+      "ss40k": {
+        "name": "vMppt3",
+        "model": "40101"
+      }
+    },
+    {
+      "id": "Mppt3Current",
+      "description": "PV MPPT 3 current. Register 33054, 0.1 A/count.",
+      "category": "PV",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 33054,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 10,
+        "scaledLow": 0,
+        "scaledHigh": 1
+      },
+      "ss40k": {
+        "name": "iMppt3",
+        "model": "40101"
+      }
+    },
+    {
+      "id": "Mppt3Power",
+      "description": "PV MPPT 3 calculated power.",
+      "category": "PV",
+      "pollClass": "normal",
+      "calc": {
+        "inputs": {
+          "v": "Mppt3Voltage",
+          "i": "Mppt3Current"
+        },
+        "expr": "v * i"
+      },
+      "ss40k": {
+        "name": "pMppt3",
+        "model": "40101"
+      }
+    },
+    {
+      "id": "Mppt4Voltage",
+      "description": "PV MPPT 4 voltage. Register 33055, 0.1 V/count.",
+      "category": "PV",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 33055,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 10,
+        "scaledLow": 0,
+        "scaledHigh": 1
+      },
+      "ss40k": {
+        "name": "vMppt4",
+        "model": "40101"
+      }
+    },
+    {
+      "id": "Mppt4Current",
+      "description": "PV MPPT 4 current. Register 33056, 0.1 A/count.",
+      "category": "PV",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 33056,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 10,
+        "scaledLow": 0,
+        "scaledHigh": 1
+      },
+      "ss40k": {
+        "name": "iMppt4",
+        "model": "40101"
+      }
+    },
+    {
+      "id": "Mppt4Power",
+      "description": "PV MPPT 4 calculated power.",
+      "category": "PV",
+      "pollClass": "normal",
+      "calc": {
+        "inputs": {
+          "v": "Mppt4Voltage",
+          "i": "Mppt4Current"
+        },
+        "expr": "v * i"
+      },
+      "ss40k": {
+        "name": "pMppt4",
+        "model": "40101"
+      }
+    },
+    {
+      "id": "Mppt5Voltage",
+      "description": "PV MPPT 5 voltage. Register 33057, 0.1 V/count.",
+      "category": "PV",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 33057,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 10,
+        "scaledLow": 0,
+        "scaledHigh": 1
+      }
+    },
+    {
+      "id": "Mppt5Current",
+      "description": "PV MPPT 5 current. Register 33058, 0.1 A/count.",
+      "category": "PV",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 33058,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 10,
+        "scaledLow": 0,
+        "scaledHigh": 1
+      }
+    },
+    {
+      "id": "Mppt5Power",
+      "description": "PV MPPT 5 calculated power.",
+      "category": "PV",
+      "pollClass": "normal",
+      "calc": {
+        "inputs": {
+          "v": "Mppt5Voltage",
+          "i": "Mppt5Current"
+        },
+        "expr": "v * i"
+      }
+    },
+    {
+      "id": "Mppt6Voltage",
+      "description": "PV MPPT 6 voltage. Register 33059, 0.1 V/count.",
+      "category": "PV",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 33059,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 10,
+        "scaledLow": 0,
+        "scaledHigh": 1
+      }
+    },
+    {
+      "id": "Mppt6Current",
+      "description": "PV MPPT 6 current. Register 33060, 0.1 A/count.",
+      "category": "PV",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 33060,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 10,
+        "scaledLow": 0,
+        "scaledHigh": 1
+      }
+    },
+    {
+      "id": "Mppt6Power",
+      "description": "PV MPPT 6 calculated power.",
+      "category": "PV",
+      "pollClass": "normal",
+      "calc": {
+        "inputs": {
+          "v": "Mppt6Voltage",
+          "i": "Mppt6Current"
+        },
+        "expr": "v * i"
+      }
+    },
+    {
+      "id": "Mppt7Voltage",
+      "description": "PV MPPT 7 voltage. Register 33061, 0.1 V/count.",
+      "category": "PV",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 33061,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 10,
+        "scaledLow": 0,
+        "scaledHigh": 1
+      }
+    },
+    {
+      "id": "Mppt7Current",
+      "description": "PV MPPT 7 current. Register 33062, 0.1 A/count.",
+      "category": "PV",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 33062,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 10,
+        "scaledLow": 0,
+        "scaledHigh": 1
+      }
+    },
+    {
+      "id": "Mppt7Power",
+      "description": "PV MPPT 7 calculated power.",
+      "category": "PV",
+      "pollClass": "normal",
+      "calc": {
+        "inputs": {
+          "v": "Mppt7Voltage",
+          "i": "Mppt7Current"
+        },
+        "expr": "v * i"
+      }
+    },
+    {
+      "id": "Mppt8Voltage",
+      "description": "PV MPPT 8 voltage. Register 33063, 0.1 V/count.",
+      "category": "PV",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 33063,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 10,
+        "scaledLow": 0,
+        "scaledHigh": 1
+      }
+    },
+    {
+      "id": "Mppt8Current",
+      "description": "PV MPPT 8 current. Register 33064, 0.1 A/count.",
+      "category": "PV",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 33064,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 10,
+        "scaledLow": 0,
+        "scaledHigh": 1
+      }
+    },
+    {
+      "id": "Mppt8Power",
+      "description": "PV MPPT 8 calculated power.",
+      "category": "PV",
+      "pollClass": "normal",
+      "calc": {
+        "inputs": {
+          "v": "Mppt8Voltage",
+          "i": "Mppt8Current"
+        },
+        "expr": "v * i"
+      }
+    },
+    {
+      "id": "Mppt9Voltage",
+      "description": "PV MPPT 9 voltage. Register 34498, 0.1 V/count.",
+      "category": "PV",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 34498,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 10,
+        "scaledLow": 0,
+        "scaledHigh": 1
+      }
+    },
+    {
+      "id": "Mppt9Current",
+      "description": "PV MPPT 9 current. Register 34499, 0.1 A/count.",
+      "category": "PV",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 34499,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 10,
+        "scaledLow": 0,
+        "scaledHigh": 1
+      }
+    },
+    {
+      "id": "Mppt9Power",
+      "description": "PV MPPT 9 calculated power.",
+      "category": "PV",
+      "pollClass": "normal",
+      "calc": {
+        "inputs": {
+          "v": "Mppt9Voltage",
+          "i": "Mppt9Current"
+        },
+        "expr": "v * i"
+      }
+    },
+    {
+      "id": "Mppt10Voltage",
+      "description": "PV MPPT 10 voltage. Register 34500, 0.1 V/count.",
+      "category": "PV",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 34500,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 10,
+        "scaledLow": 0,
+        "scaledHigh": 1
+      }
+    },
+    {
+      "id": "Mppt10Current",
+      "description": "PV MPPT 10 current. Register 34501, 0.1 A/count.",
+      "category": "PV",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 34501,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 10,
+        "scaledLow": 0,
+        "scaledHigh": 1
+      }
+    },
+    {
+      "id": "Mppt10Power",
+      "description": "PV MPPT 10 calculated power.",
+      "category": "PV",
+      "pollClass": "normal",
+      "calc": {
+        "inputs": {
+          "v": "Mppt10Voltage",
+          "i": "Mppt10Current"
+        },
+        "expr": "v * i"
+      }
+    }
+  ],
+  "commands": [
+    {
+      "id": "PowerControl",
+      "description": "Control inverter power state - 0xDE: Standby, 0xBE: PowerOn",
+      "function": "HR",
+      "address": 43007,
+      "readback": true
+    },
+    {
+      "id": "OffGridOutput",
+      "description": "Enable or disable off-grid output - 0: Disable, 1: Enable",
+      "function": "HR",
+      "address": 43111,
+      "readback": true
+    },
+    {
+      "id": "GenCtrlMode",
+      "description": "Set generator control mode - 0: Manual, 1: Auto",
+      "function": "HR",
+      "address": 43340,
+      "readback": true
+    },
+    {
+      "id": "GenEnable",
+      "description": "Trigger generator start - write 1 to start",
+      "function": "HR",
+      "address": 43363,
+      "readback": false
+    },
+    {
+      "id": "FeedInGridMaxPower",
+      "description": "Set feed-in grid max power (0.1kW)",
+      "function": "HR",
+      "address": 43074,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 10,
+        "scaledLow": 0,
+        "scaledHigh": 1
+      },
+      "readback": true
+    },
+    {
+      "id": "ChargeLimitSoc",
+      "description": "Set charge limit SOC %",
+      "function": "HR",
+      "address": 43010,
+      "readback": true
+    },
+    {
+      "id": "TOUMaximumChargingPower",
+      "description": "Set TOU max charging power - write to 48101, 48103, 48105 together",
+      "function": "HR",
+      "address": 48101,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 10,
+        "scaledLow": 0,
+        "scaledHigh": 1
+      },
+      "readback": true
+    },
+    {
+      "id": "TOUMaximumDischargingPower",
+      "description": "Set TOU max discharging power - write to 48113, 48115, 48117 together",
+      "function": "HR",
+      "address": 48113,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 10,
+        "scaledLow": 0,
+        "scaledHigh": 1
+      },
+      "readback": true
+    }
+  ]
+}

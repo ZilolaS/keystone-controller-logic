@@ -45,7 +45,7 @@ export interface SystemNominal {
 
 export interface SystemConfig {
   /**
-   * "eSpire280" or Mini model code like "MINI-60-90-163-480"
+   * "eSpire280", "NANO", or Mini model code like "MINI-60-90-163-480"
    */
   systemProfile: string;
 
@@ -58,7 +58,7 @@ export interface ModbusServerConfig {
   port: number; // usually 502
 }
 
-export type SiteAssetProductLine = "280" | "Mini" | "all";
+export type SiteAssetProductLine = "280" | "Mini" | "NANO" | "all";
 
 export type SiteAssetRole =
   | "pcs"
@@ -355,6 +355,7 @@ export type MeteringRegisterFunction =
 
 export type MeteringRegisterSignalKey =
   | MeteringReadingKey
+  | "acCoupledPvKw"
   | "gridImportPowerKw"
   | "gridExportPowerKw"
   | "backupLoadKw"
@@ -367,6 +368,13 @@ export type MeteringRegisterSignalKey =
   | "voltageL3L1"
   | "energyImportKwh"
   | "energyExportKwh"
+  | "gridImportEnergyKwh"
+  | "gridExportEnergyKwh"
+  | "gridNetEnergyKwh"
+  | "loadEnergyKwh"
+  | "pvEnergyKwh"
+  | "acCoupledPvEnergyKwh"
+  | "generatorEnergyKwh"
   | "custom";
 
 export interface MeteringRegisterMapping {
@@ -410,6 +418,23 @@ export type MeteringCalculationConfig = Partial<
   Record<MeteringReadingKey, MeteringReadingCalculation>
 >;
 
+export interface SiteMeterConfig {
+  /**
+   * Stable equipment id used by the telemetry runtime, for example "Meter" or
+   * "Meter2". Site-specific eGauge register layouts live here instead of in
+   * committed template files.
+   */
+  id: string;
+  meterType: string;
+  modbusProfile?: string;
+  baseProfile?: string;
+  ip: string;
+  port?: number;
+  unitId?: number;
+  route?: string;
+  registerMap: MeteringRegisterMapping[];
+}
+
 export interface MeteringConfig {
   meterType: string;      // "eGauge-4015", "Accuenergy-AcuRev", etc.
   modbusProfile: string;  // "udt_eGauge_V1", "acurev_v1", etc.
@@ -417,6 +442,12 @@ export interface MeteringConfig {
   port?: number;
   unitId?: number;
   reads: MeterReadsConfig;
+  /**
+   * Multi-meter site-specific register definitions. Preferred for new and
+   * migrated eGauge sites. The legacy top-level registerMap remains supported
+   * as a single "Meter" definition.
+   */
+  meters?: SiteMeterConfig[];
   registerMap?: MeteringRegisterMapping[];
   calculations?: MeteringCalculationConfig;
 }
@@ -434,6 +465,40 @@ export interface SignalMappingSourceConfig {
   profile?: string;
   profileName?: string;
   modbusProfile?: string;
+  /**
+   * Defaults to direct Modbus. Use "legacyGlobal" only as a transition bridge
+   * for existing Node-RED sites where another flow already owns the device
+   * connection.
+   */
+  source?: "modbus" | "legacyGlobal";
+  sourceType?: "modbus" | "legacyGlobal";
+  legacyEquipment?: string;
+  legacyKey?: string;
+  staleMs?: number;
+  tagMap?: Record<string, string | string[]>;
+  supplements?: {
+    bcuTelemetry?: {
+      enabled?: boolean;
+      source?: "modbus";
+      pollMs?: number;
+    };
+  };
+  /**
+   * Optional compatibility bridge for migrated Node-RED sites. When enabled,
+   * samples read by unified telemetry are republished into the legacy
+   * global.telemetry equipment name expected by older control/Azure flows.
+   */
+  publishToLegacy?: {
+    enabled?: boolean;
+    legacyEquipment?: string;
+    legacyKey?: string;
+    tagMap?: Record<string, string | string[]>;
+  } | Array<{
+    enabled?: boolean;
+    legacyEquipment?: string;
+    legacyKey?: string;
+    tagMap?: Record<string, string | string[]>;
+  }>;
   role?: string;
   ip?: string;
   host?: string;
@@ -447,6 +512,24 @@ export interface SignalMappingSourceConfig {
 export interface SignalMappingSignalConfig {
   expr: string;
   invertSign?: boolean;
+  model?: string;
+  modelIndex?: string;
+}
+
+export interface EnergyAccumulatorSourceTagsConfig {
+  utilityNetKwh?: string;
+  acCoupledPvKwh?: string;
+  generatorKwh?: string;
+  batteryPowerKw?: string | string[];
+}
+
+export interface EnergyAccumulatorConfig {
+  enabled?: boolean;
+  dailyEnabled?: boolean;
+  timezone?: string;
+  maxGapMs?: number;
+  outputMultiplier?: number;
+  sourceTagIDs?: EnergyAccumulatorSourceTagsConfig;
 }
 
 export interface SignalMappingConfig {
@@ -459,6 +542,53 @@ export interface SignalMappingConfig {
    * instead of product-default telemetry.
    */
   ss40k?: Partial<Record<string, SignalMappingSignalConfig>>;
+  energyAccumulator?: EnergyAccumulatorConfig;
+}
+
+export interface EquipmentSerialOverrideConfig {
+  id?: string;
+  serialNumber?: string;
+  sn?: string;
+  SN?: string;
+}
+
+export interface EquipmentIdentityConfig {
+  useManualSerialNumbers?: boolean;
+  pcs?: EquipmentSerialOverrideConfig;
+  batteries?: EquipmentSerialOverrideConfig[];
+}
+
+export interface UnifiedToLegacyTelemetryBridgeConfig {
+  equipmentId: string;
+  legacyEquipment?: string;
+  legacyKey?: string;
+  enabled?: boolean;
+  tagMap?: Record<string, string | string[]>;
+}
+
+export interface TelemetryCompatibilityConfig {
+  publishUnifiedToLegacy?:
+    | UnifiedToLegacyTelemetryBridgeConfig[]
+    | Record<string, Omit<UnifiedToLegacyTelemetryBridgeConfig, "equipmentId">>;
+}
+
+export type LegacyCompatibilityPreset =
+  | "mini_non_alarm_telemetry"
+  | "mini-non-alarm-telemetry";
+
+export interface LegacyCompatibilityConfig {
+  enabled?: boolean;
+  preset?: LegacyCompatibilityPreset;
+  /**
+   * Mini DC PV module count. If omitted, the runtime derives it from the Mini
+   * system profile, where 45/90/135 kW maps to 1/2/3 PVDC modules.
+   */
+  pvdcCount?: number;
+  includeDashboardAliases?: boolean;
+  includeMeter?: boolean;
+  includeAcPv?: boolean;
+  acPvEquipmentId?: string;
+  meterEquipmentId?: string;
 }
 
 // ---- Generator ----
@@ -485,5 +615,8 @@ export interface SiteConfig {
   islanding?: IslandingConfig;
   metering: MeteringConfig;
   signalMapping?: SignalMappingConfig;
+  equipmentIdentity?: EquipmentIdentityConfig;
+  telemetryCompatibility?: TelemetryCompatibilityConfig;
+  legacyCompatibility?: LegacyCompatibilityConfig;
   generator?: GeneratorConfig;
 }

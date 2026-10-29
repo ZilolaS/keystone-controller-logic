@@ -383,6 +383,42 @@ describe("unified control cycle", () => {
     expect(result.pipeline.warnings).toEqual([]);
   });
 
+  test("uses DC-only pvKw for Mini PCS dispatch", () => {
+    const config = makeMiniConfig();
+    config.metering.calculations = undefined;
+    config.pv = {
+      acInverters: [],
+      curtailmentMethod: null,
+      dcCoupledToMiniPcs: true,
+    };
+    config.signalMapping = {
+      signals: {
+        pvPowerKw: {
+          expr: "PVDC1.Power + PVDC2.Power + Meter.AcPvPower",
+        },
+        pvKw: {
+          expr: "PVDC1.Power + PVDC2.Power",
+        },
+      },
+    };
+
+    const result = runUnifiedControlCycle(config, {
+      telemetry: {
+        PVDC1: [{ tagID: "PVDC1.Power", value: 2 }],
+        PVDC2: [{ tagID: "PVDC2.Power", value: 3 }],
+        Meter: [{ tagID: "Meter.AcPvPower", value: 20 }],
+      },
+      baseTelemetry: {
+        soc: 0.5,
+        gridStatus: "normal",
+        machineStatus: miniMachineStatus(),
+      },
+    });
+
+    expect(result.telemetry.pvKw).toBe(5);
+    expect(result.command.pcsActivePowerKw).toBe(5);
+  });
+
   test("keeps metering diagnostics with the cycle result", () => {
     const config = makeConfig();
     delete config.metering.calculations!.pvKw;
@@ -1877,7 +1913,7 @@ describe("unified control cycle", () => {
     expect(result.pipeline.blocked).toBe(true);
   });
 
-  test("Mini self-consumption correction adjusts DC PV passthrough from battery power feedback", () => {
+  test("Mini neutral PV hunt adjusts DC PV passthrough from battery power feedback", () => {
     const state = {};
     const result = runUnifiedControlCycle(makeMiniConfig(), {
       state,
@@ -1900,13 +1936,16 @@ describe("unified control cycle", () => {
     });
 
     expect(result.command.reasons).toEqual(
-      expect.arrayContaining(["mini-self-consumption-correction"])
+      expect.arrayContaining([
+        "mini-neutral-pv-hunt-reduce-discharge",
+        "mini-neutral-pv-hunt",
+      ])
     );
     expect(result.command.batteryActivePowerKw).toBe(0);
-    expect(result.command.pcsActivePowerKw).toBe(18.6);
+    expect(result.command.pcsActivePowerKw).toBe(16.8);
     expect(result.writerEnvelopes[0].payload[0]).toEqual({
       tagID: "ActivePowerSetpoint",
-      value: -18.6,
+      value: -16.8,
     });
   });
 

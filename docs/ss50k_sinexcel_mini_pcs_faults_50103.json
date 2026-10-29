@@ -1,0 +1,340 @@
+{
+  "model": 50103,
+  "modelIndex": "53",
+  "name": "Sinexcel Mini PCS Raw Fault Diagnostics",
+  "equipment": "PCS",
+  "sourceTemplate": "src/templates/Sinexcel_Mini_PCS_ss40k.json",
+  "purpose": "Supplement existing 40103 aggregate inverter fault fields with raw Sinexcel Mini PCS status/fault words for detailed diagnostics.",
+  "keepExisting40103Aggregates": [
+    "pcsWarning",
+    "pcsFault",
+    "pcsParaWarning",
+    "PCSParaFault",
+    "batWarning",
+    "batFault",
+    "gridWarning",
+    "gridFault",
+    "meterWarning",
+    "bkupFault",
+    "rsdEPOFault"
+  ],
+  "telemetry": [
+    {
+      "tagId": "SinexcelStatusWord36",
+      "name": "sinexcelStatusWord36",
+      "source": { "function": "HRUS", "address": 36 },
+      "type": "bitfield16",
+      "description": "Raw Sinexcel PCS status word 36: grid reconnect/access state, online state, and fan stop status.",
+      "bits": {
+        "0": "Grid reconnection accessing",
+        "1": "Grid recovery delaying",
+        "2": "Master String online",
+        "3": "Master System online",
+        "4": "Master Cabinet online",
+        "5": "Electrical room fan stop",
+        "6": "Transformer fan stop"
+      }
+    },
+    {
+      "tagId": "SinexcelStatusWord37",
+      "name": "sinexcelStatusWord37",
+      "source": { "function": "HRUS", "address": 37 },
+      "type": "bitfield16",
+      "description": "Raw Sinexcel PCS status word 37: switch and galvanic-break-device closed states.",
+      "bits": {
+        "1": "AC bus switch closed",
+        "2": "Grid switch closed",
+        "3": "Load switch closed",
+        "4": "PV switch closed",
+        "5": "Bypass switch closed",
+        "6": "PV galvanic-break-device closed",
+        "7": "Grid-tied galvanic-break-device closed",
+        "8": "AC galvanic-break-device closed",
+        "9": "DC galvanic-break-device closed",
+        "10": "PE-N galvanic-break-device closed",
+        "11": "ATS Grid relay L2 closed",
+        "12": "ATS Grid relay N2 closed"
+      }
+    },
+    {
+      "tagId": "SinexcelFaultWord106",
+      "name": "sinexcelFaultWord106",
+      "source": { "function": "HRUS", "address": 106 },
+      "type": "bitfield16",
+      "description": "Raw Sinexcel PCS fault/alarm word 106: EPO, calibration, initialization, version, parameter, DRM, and module quantity faults.",
+      "bits": {
+        "0": "EPO",
+        "1": "Calibration parameter abnormal",
+        "2": "Sampling zero abnormal",
+        "3": "Flash abnormal",
+        "4": "DSP initializing abnormal",
+        "5": "Monitor initializing abnormal",
+        "6": "DSP version abnormal",
+        "7": "CPLD version abnormal",
+        "8": "Hardware version abnormal",
+        "9": "ID reduplicated fault",
+        "10": "Master Conflict Fault",
+        "11": "DSP Parameter mismatch",
+        "12": "Monitor Parameter mismatch",
+        "13": "Drm0 Shutdown",
+        "14": "Module quantity abnormal"
+      }
+    },
+    {
+      "tagId": "SinexcelFaultWord107",
+      "name": "sinexcelFaultWord107",
+      "source": { "function": "HRUS", "address": 107 },
+      "type": "bitfield16",
+      "description": "Raw Sinexcel PCS fault/alarm word 107: internal, CAN, SPI, EMS, BMS, RS485, and grid-meter communication faults.",
+      "bits": {
+        "0": "Total communication fault",
+        "1": "CAN A communication fault",
+        "2": "CAN B communication fault",
+        "3": "CAN C communication fault",
+        "4": "Synchronous signal 1 fault",
+        "5": "Synchronous signal 2 fault",
+        "6": "Auxiliary board communication fault",
+        "7": "SPI communication fault",
+        "8": "EMS communication connection timeout",
+        "9": "BMS communication connection timeout",
+        "10": "RJ485 communication fault",
+        "11": "Grid ammeter communication timeout"
+      }
+    },
+    {
+      "tagId": "SinexcelFaultWord108",
+      "name": "sinexcelFaultWord108",
+      "source": { "function": "HRUS", "address": 108 },
+      "type": "bitfield16",
+      "description": "Raw Sinexcel PCS fault/alarm word 108: module/cabinet fan and auxiliary power faults.",
+      "bits": {
+        "0": "Total fan fault",
+        "1": "Module fan fault 1",
+        "2": "Module fan fault 2",
+        "3": "Module fan fault 3",
+        "4": "Module fan fault 4",
+        "5": "Cabinet fan fault 1",
+        "6": "Cabinet fan fault 2",
+        "7": "Cabinet fan fault 3",
+        "8": "Cabinet fan fault 4",
+        "10": "Total auxiliary power fault",
+        "11": "Auxiliary power fault 1",
+        "12": "Auxiliary power fault 2",
+        "13": "Auxiliary power fault 3",
+        "14": "Auxiliary power fault 4",
+        "15": "Auxiliary power fault 5"
+      }
+    },
+    {
+      "tagId": "SinexcelFaultWord109",
+      "name": "sinexcelFaultWord109",
+      "source": { "function": "HRUS", "address": 109 },
+      "type": "bitfield16",
+      "description": "Raw Sinexcel PCS fault/alarm word 109: over-temperature faults and thermal derating alarms.",
+      "bits": {
+        "0": "Total over-temperature fault",
+        "1": "Module over temperature 1",
+        "2": "Module over temperature 2",
+        "3": "Module over temperature 3",
+        "4": "Module over temperature 4",
+        "5": "Cabinet over temperature 1",
+        "6": "Cabinet over temperature 2",
+        "7": "Cabinet over temperature 3",
+        "8": "Cabinet over temperature 4",
+        "9": "Ambient over-temperature fault",
+        "10": "Total derating abnormal",
+        "11": "Module over-temperature derating",
+        "12": "Cabinet over-temperature derating",
+        "13": "Ambient over-temperature derating"
+      }
+    },
+    {
+      "tagId": "SinexcelFaultWord110",
+      "name": "sinexcelFaultWord110",
+      "source": { "function": "HRUS", "address": 110 },
+      "type": "bitfield16",
+      "description": "Raw Sinexcel PCS fault/alarm word 110: temperature sensor, fuse, asymmetry, insulation, and battery-under-energy faults.",
+      "bits": {
+        "0": "Temperature sensor 1 fault",
+        "1": "Temperature sensor 2 fault",
+        "2": "Temperature sensor 3 fault",
+        "3": "Temperature sensor 4 fault",
+        "4": "Temperature sensor 5 fault",
+        "5": "Temperature sensor 6 fault",
+        "6": "Module current asymmetric",
+        "7": "DC fuse blown",
+        "8": "AC fuse blown",
+        "9": "Start frequently",
+        "10": "Controller sampling difference",
+        "11": "Battery under energy",
+        "12": "Insulation detect 1 abnormal",
+        "13": "Insulation detect 2 abnormal",
+        "14": "Cabinet temperature sensor lost",
+        "15": "Ambient temperature sensor lost"
+      }
+    },
+    {
+      "tagId": "SinexcelFaultWord112",
+      "name": "sinexcelFaultWord112",
+      "source": { "function": "HRUS", "address": 112 },
+      "type": "bitfield16",
+      "description": "Raw Sinexcel PCS fault/alarm word 112: module over-current faults and current-limit alarms.",
+      "bits": {
+        "0": "Total module over current fault",
+        "1": "Module over current fault 1",
+        "2": "Module over current fault 2",
+        "3": "Module over current fault 3",
+        "4": "Module over current fault 4",
+        "5": "Module over current fault 5",
+        "6": "Module over current fault 6",
+        "7": "Module over current fault 7",
+        "8": "Total module current limit alarm",
+        "9": "Module current limit alarm 1",
+        "10": "Module current limit alarm 2",
+        "11": "Module current limit alarm 3",
+        "12": "Module current limit alarm 4",
+        "13": "Module current limit alarm 5",
+        "14": "Module current limit alarm 6",
+        "15": "Module current limit alarm 7"
+      }
+    },
+    {
+      "tagId": "SinexcelFaultWord113",
+      "name": "sinexcelFaultWord113",
+      "source": { "function": "HRUS", "address": 113 },
+      "type": "bitfield16",
+      "description": "Raw Sinexcel PCS fault/alarm word 113: module current abnormal faults.",
+      "bits": {
+        "0": "Total module current abnormal",
+        "1": "Module current abnormal 1",
+        "2": "Module current abnormal 2",
+        "3": "Module current abnormal 3",
+        "4": "Module current abnormal 4",
+        "5": "Module current abnormal 5",
+        "6": "Module current abnormal 6",
+        "7": "Module current abnormal 7"
+      }
+    },
+    {
+      "tagId": "SinexcelFaultWord114",
+      "name": "sinexcelFaultWord114",
+      "source": { "function": "HRUS", "address": 114 },
+      "type": "bitfield16",
+      "description": "Raw Sinexcel PCS fault/alarm word 114: DC input voltage, overload, soft-start, contactor, and dry-contact faults.",
+      "bits": {
+        "0": "DC input over voltage",
+        "1": "DC input under voltage",
+        "2": "DC input reverse connection",
+        "3": "DC overload alarm",
+        "4": "DC overload timeout",
+        "5": "DC input soft start failed",
+        "6": "DC input galvanic-break-device open circuit",
+        "7": "DC input galvanic-break-device short circuit",
+        "8": "DC input galvanic-break-device hardware fault",
+        "9": "DC input soft galvanic-break-device fault",
+        "10": "DC access dry contact open circuit"
+      }
+    },
+    {
+      "tagId": "SinexcelFaultWord115",
+      "name": "sinexcelFaultWord115",
+      "source": { "function": "HRUS", "address": 115 },
+      "type": "bitfield16",
+      "description": "Raw Sinexcel PCS fault/alarm word 115: DC bus voltage, contactor, insulation, and BMS shutdown/contact faults.",
+      "bits": {
+        "0": "DC bus over voltage",
+        "1": "DC bus under voltage",
+        "2": "DC bus voltage unbalanced",
+        "3": "DC bus soft start failed",
+        "4": "DC bus galvanic-break-device open circuit",
+        "5": "DC bus galvanic-break-device short circuit",
+        "6": "DC bus galvanic-break-device hardware fault",
+        "7": "DC bus soft galvanic-break-device fault",
+        "8": "DC insulation detect abnormal",
+        "9": "BMS shutdown fault",
+        "10": "BMS dry contact fully charged",
+        "11": "BMS dry contact totally discharged"
+      }
+    },
+    {
+      "tagId": "SinexcelFaultWord118",
+      "name": "sinexcelFaultWord118",
+      "source": { "function": "HRUS", "address": 118 },
+      "type": "bitfield16",
+      "description": "Raw Sinexcel PCS fault/alarm word 118: grid voltage, frequency, phase, power-down, and connection forbidden states.",
+      "bits": {
+        "0": "Grid over voltage",
+        "1": "Grid under voltage",
+        "2": "Grid over frequency",
+        "3": "Grid under frequency",
+        "4": "Grid phase reversed",
+        "5": "Grid voltage asymmetric",
+        "6": "Grid voltage abnormal",
+        "7": "Grid phase lost",
+        "8": "Grid neutral lost",
+        "9": "Grid power down",
+        "10": "Grid connection forbidden"
+      }
+    },
+    {
+      "tagId": "SinexcelFaultWord119",
+      "name": "sinexcelFaultWord119",
+      "source": { "function": "HRUS", "address": 119 },
+      "type": "bitfield16",
+      "description": "Raw Sinexcel PCS fault/alarm word 119: grid overload, frequent switching, synchronization, and grid-tied contactor faults.",
+      "bits": {
+        "0": "Grid overload alarm",
+        "1": "Grid overload timeout",
+        "2": "Frequently switching fault",
+        "3": "Synchronization failed",
+        "4": "Grid-tied galvanic-break-device open circuit",
+        "5": "Grid-tied galvanic-break-device short circuit"
+      }
+    },
+    {
+      "tagId": "SinexcelFaultWord120",
+      "name": "sinexcelFaultWord120",
+      "source": { "function": "HRUS", "address": 120 },
+      "type": "bitfield16",
+      "description": "Raw Sinexcel PCS fault/alarm word 120: AC bus voltage, frequency, phase, islanding, PLL, current, overload, and neutral faults.",
+      "bits": {
+        "0": "AC bus over voltage",
+        "1": "AC bus under voltage",
+        "2": "AC bus over frequency",
+        "3": "AC bus under frequency",
+        "4": "AC bus phase reversed",
+        "5": "AC bus voltage asymmetric",
+        "6": "AC bus voltage abnormal",
+        "7": "AC bus phase lost",
+        "8": "Islanding protection",
+        "9": "PLL failed",
+        "10": "AC current DC component excess",
+        "11": "AC overload alarm",
+        "12": "AC overload timeout",
+        "13": "AC bus connection forbidden",
+        "14": "AC bus neutral lost"
+      }
+    },
+    {
+      "tagId": "SinexcelFaultWord121",
+      "name": "sinexcelFaultWord121",
+      "source": { "function": "HRUS", "address": 121 },
+      "type": "bitfield16",
+      "description": "Raw Sinexcel PCS fault/alarm word 121: off-grid voltage/frequency/phase, AC soft-start, and AC contactor faults.",
+      "bits": {
+        "0": "Off-grid voltage abnormal",
+        "1": "Off-grid voltage oscillation",
+        "2": "Off-grid frequency abnormal",
+        "3": "Off-grid voltage phase reversed",
+        "4": "Off-grid voltage phase lost",
+        "5": "AC voltage DC component excess",
+        "6": "On/off-grid toggling error",
+        "7": "AC soft start failed",
+        "8": "AC galvanic-break-device open circuit",
+        "9": "AC galvanic-break-device short circuit",
+        "10": "AC galvanic-break-device hardware fault",
+        "11": "AC soft galvanic-break-device fault"
+      }
+    }
+  ]
+}

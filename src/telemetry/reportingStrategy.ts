@@ -41,7 +41,7 @@ const DEFAULT_PERIODIC_MS = 5 * 60 * 1000;
 
 const INFO_MODELS = new Set(["40100", "41100", "42100", "43100"]);
 const MONITORING_MODELS = new Set(["40101", "40102", "40201", "42101"]);
-const FAULT_MODELS = new Set(["40103", "41103", "42103", "50103"]);
+const FAULT_MODELS = new Set(["40103", "41103", "42103", "50103", "52103"]);
 const CONFIG_MODELS = new Set(["40104", "40204", "41104", "42104"]);
 const PERIODIC_CONFIG_MODELS = new Set(["40104"]);
 
@@ -109,6 +109,7 @@ function reportingReason(args: {
     args.previous.lastFingerprint !== args.fingerprint;
 
   if (FAULT_MODELS.has(args.model) && changed) return "fault-changed";
+  if (FAULT_MODELS.has(args.model)) return undefined;
   if ((INFO_MODELS.has(args.model) || CONFIG_MODELS.has(args.model)) && changed) {
     return "changed";
   }

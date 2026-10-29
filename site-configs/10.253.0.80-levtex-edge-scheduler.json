@@ -1,0 +1,4213 @@
+{
+  "conversion": {
+    "sourceNodeId": "74a1805935e1b5fd",
+    "sourceNodeName": "Inject Schedule",
+    "timezone": "America/Los_Angeles",
+    "cutoff": "2026-09-04T00:00:00.000Z",
+    "legacyTimedCount": 1078,
+    "convertedTimedCount": 573,
+    "firstStart": "2026-09-03T23:00:00.000Z",
+    "lastEnd": "2027-03-05T08:00:00.000Z",
+    "legacyDefaultOmitted": true,
+    "compression": "exact-month-day-of-month-cron",
+    "sourceJobCount": 573,
+    "sourceSegmentCount": 703,
+    "compressedJobCount": 45
+  },
+  "edgeSchedulerJobs": {
+    "2400010000": {
+      "protocolVer": 1,
+      "flags": 0,
+      "jobId": 2400010000,
+      "jobName": "Levtex SEP 00:00 1",
+      "priority": 50,
+      "owner": "LocalSchedule",
+      "execType": "Cron",
+      "timezone": "America/Los_Angeles",
+      "startTs": 0,
+      "expireTs": 1804233600,
+      "cronExpr": "0 0 0 4,7-11,14-18,21-25,28-30 SEP ? 2026",
+      "durationSec": 57600,
+      "payload": {
+        "chargeThresholdKw": 0,
+        "command": "peakShaving",
+        "deadbandKw": 0.5,
+        "dischargeThresholdKw": 17.850407591572896,
+        "holdAtThreshold": true,
+        "maxChargePowerPct": 100,
+        "maxDischargePowerPct": 100,
+        "maxSocPct": 95,
+        "minSocPct": 30,
+        "port": "utilityGrid"
+      },
+      "payloadJson": "{\"chargeThresholdKw\":0,\"command\":\"peakShaving\",\"deadbandKw\":0.5,\"dischargeThresholdKw\":17.850407591572896,\"holdAtThreshold\":true,\"maxChargePowerPct\":100,\"maxDischargePowerPct\":100,\"maxSocPct\":95,\"minSocPct\":30,\"port\":\"utilityGrid\"}",
+      "state": "Pending"
+    },
+    "2400010001": {
+      "protocolVer": 1,
+      "flags": 0,
+      "jobId": 2400010001,
+      "jobName": "Levtex SEP 00:00 2",
+      "priority": 50,
+      "owner": "LocalSchedule",
+      "execType": "Cron",
+      "timezone": "America/Los_Angeles",
+      "startTs": 0,
+      "expireTs": 1804233600,
+      "cronExpr": "0 0 0 5-6,12-13,19-20,26-27 SEP ? 2026",
+      "durationSec": 57600,
+      "payload": {
+        "chargeThresholdKw": 0,
+        "command": "peakShaving",
+        "deadbandKw": 0.5,
+        "dischargeThresholdKw": 5.209000000000003,
+        "holdAtThreshold": true,
+        "maxChargePowerPct": 100,
+        "maxDischargePowerPct": 100,
+        "maxSocPct": 95,
+        "minSocPct": 30,
+        "port": "utilityGrid"
+      },
+      "payloadJson": "{\"chargeThresholdKw\":0,\"command\":\"peakShaving\",\"deadbandKw\":0.5,\"dischargeThresholdKw\":5.209000000000003,\"holdAtThreshold\":true,\"maxChargePowerPct\":100,\"maxDischargePowerPct\":100,\"maxSocPct\":95,\"minSocPct\":30,\"port\":\"utilityGrid\"}",
+      "state": "Pending"
+    },
+    "2400010002": {
+      "protocolVer": 1,
+      "flags": 0,
+      "jobId": 2400010002,
+      "jobName": "Levtex SEP 16:00 3",
+      "priority": 50,
+      "owner": "LocalSchedule",
+      "execType": "Cron",
+      "timezone": "America/Los_Angeles",
+      "startTs": 0,
+      "expireTs": 1804233600,
+      "cronExpr": "0 0 16 3-30 SEP ? 2026",
+      "durationSec": 18000,
+      "payload": {
+        "chargeThresholdKw": -999999,
+        "command": "peakShaving",
+        "deadbandKw": 0.5,
+        "dischargeThresholdKw": 0,
+        "holdAtThreshold": true,
+        "maxChargePowerPct": 100,
+        "maxDischargePowerPct": 100,
+        "maxSocPct": 95,
+        "minSocPct": 30,
+        "port": "utilityGrid"
+      },
+      "payloadJson": "{\"chargeThresholdKw\":-999999,\"command\":\"peakShaving\",\"deadbandKw\":0.5,\"dischargeThresholdKw\":0,\"holdAtThreshold\":true,\"maxChargePowerPct\":100,\"maxDischargePowerPct\":100,\"maxSocPct\":95,\"minSocPct\":30,\"port\":\"utilityGrid\"}",
+      "state": "Pending"
+    },
+    "2400010003": {
+      "protocolVer": 1,
+      "flags": 0,
+      "jobId": 2400010003,
+      "jobName": "Levtex SEP 21:00 4",
+      "priority": 50,
+      "owner": "LocalSchedule",
+      "execType": "Cron",
+      "timezone": "America/Los_Angeles",
+      "startTs": 0,
+      "expireTs": 1804233600,
+      "cronExpr": "0 0 21 3-4,7-11,14-18,21-25,28-30 SEP ? 2026",
+      "durationSec": 10800,
+      "payload": {
+        "chargeThresholdKw": 0,
+        "command": "peakShaving",
+        "deadbandKw": 0.5,
+        "dischargeThresholdKw": 17.850407591572896,
+        "holdAtThreshold": true,
+        "maxChargePowerPct": 100,
+        "maxDischargePowerPct": 100,
+        "maxSocPct": 95,
+        "minSocPct": 30,
+        "port": "utilityGrid"
+      },
+      "payloadJson": "{\"chargeThresholdKw\":0,\"command\":\"peakShaving\",\"deadbandKw\":0.5,\"dischargeThresholdKw\":17.850407591572896,\"holdAtThreshold\":true,\"maxChargePowerPct\":100,\"maxDischargePowerPct\":100,\"maxSocPct\":95,\"minSocPct\":30,\"port\":\"utilityGrid\"}",
+      "state": "Pending"
+    },
+    "2400010004": {
+      "protocolVer": 1,
+      "flags": 0,
+      "jobId": 2400010004,
+      "jobName": "Levtex SEP 21:00 5",
+      "priority": 50,
+      "owner": "LocalSchedule",
+      "execType": "Cron",
+      "timezone": "America/Los_Angeles",
+      "startTs": 0,
+      "expireTs": 1804233600,
+      "cronExpr": "0 0 21 5-6,12-13,19-20,26-27 SEP ? 2026",
+      "durationSec": 10800,
+      "payload": {
+        "chargeThresholdKw": 0,
+        "command": "peakShaving",
+        "deadbandKw": 0.5,
+        "dischargeThresholdKw": 5.209000000000003,
+        "holdAtThreshold": true,
+        "maxChargePowerPct": 100,
+        "maxDischargePowerPct": 100,
+        "maxSocPct": 95,
+        "minSocPct": 30,
+        "port": "utilityGrid"
+      },
+      "payloadJson": "{\"chargeThresholdKw\":0,\"command\":\"peakShaving\",\"deadbandKw\":0.5,\"dischargeThresholdKw\":5.209000000000003,\"holdAtThreshold\":true,\"maxChargePowerPct\":100,\"maxDischargePowerPct\":100,\"maxSocPct\":95,\"minSocPct\":30,\"port\":\"utilityGrid\"}",
+      "state": "Pending"
+    },
+    "2400010005": {
+      "protocolVer": 1,
+      "flags": 0,
+      "jobId": 2400010005,
+      "jobName": "Levtex OCT 00:00 6",
+      "priority": 50,
+      "owner": "LocalSchedule",
+      "execType": "Cron",
+      "timezone": "America/Los_Angeles",
+      "startTs": 0,
+      "expireTs": 1804233600,
+      "cronExpr": "0 0 0 2,5-9,12-16,19-23,26-30 OCT ? 2026",
+      "durationSec": 28800,
+      "payload": {
+        "chargeThresholdKw": 0,
+        "command": "peakShaving",
+        "deadbandKw": 0.5,
+        "dischargeThresholdKw": 11.247769937612198,
+        "holdAtThreshold": true,
+        "maxChargePowerPct": 100,
+        "maxDischargePowerPct": 100,
+        "maxSocPct": 95,
+        "minSocPct": 30,
+        "port": "utilityGrid"
+      },
+      "payloadJson": "{\"chargeThresholdKw\":0,\"command\":\"peakShaving\",\"deadbandKw\":0.5,\"dischargeThresholdKw\":11.247769937612198,\"holdAtThreshold\":true,\"maxChargePowerPct\":100,\"maxDischargePowerPct\":100,\"maxSocPct\":95,\"minSocPct\":30,\"port\":\"utilityGrid\"}",
+      "state": "Pending"
+    },
+    "2400010006": {
+      "protocolVer": 1,
+      "flags": 0,
+      "jobId": 2400010006,
+      "jobName": "Levtex OCT 00:00 7",
+      "priority": 50,
+      "owner": "LocalSchedule",
+      "execType": "Cron",
+      "timezone": "America/Los_Angeles",
+      "startTs": 0,
+      "expireTs": 1804233600,
+      "cronExpr": "0 0 0 1 OCT ? 2026",
+      "durationSec": 28800,
+      "payload": {
+        "chargeThresholdKw": 0,
+        "command": "peakShaving",
+        "deadbandKw": 0.5,
+        "dischargeThresholdKw": 17.850407591572896,
+        "holdAtThreshold": true,
+        "maxChargePowerPct": 100,
+        "maxDischargePowerPct": 100,
+        "maxSocPct": 95,
+        "minSocPct": 30,
+        "port": "utilityGrid"
+      },
+      "payloadJson": "{\"chargeThresholdKw\":0,\"command\":\"peakShaving\",\"deadbandKw\":0.5,\"dischargeThresholdKw\":17.850407591572896,\"holdAtThreshold\":true,\"maxChargePowerPct\":100,\"maxDischargePowerPct\":100,\"maxSocPct\":95,\"minSocPct\":30,\"port\":\"utilityGrid\"}",
+      "state": "Pending"
+    },
+    "2400010007": {
+      "protocolVer": 1,
+      "flags": 0,
+      "jobId": 2400010007,
+      "jobName": "Levtex OCT 00:00 8",
+      "priority": 50,
+      "owner": "LocalSchedule",
+      "execType": "Cron",
+      "timezone": "America/Los_Angeles",
+      "startTs": 0,
+      "expireTs": 1804233600,
+      "cronExpr": "0 0 0 3-4,10-11,17-18,24-25,31 OCT ? 2026",
+      "durationSec": 28800,
+      "payload": {
+        "chargeThresholdKw": 0,
+        "command": "peakShaving",
+        "deadbandKw": 0.5,
+        "dischargeThresholdKw": 2.75659652112953,
+        "holdAtThreshold": true,
+        "maxChargePowerPct": 100,
+        "maxDischargePowerPct": 100,
+        "maxSocPct": 95,
+        "minSocPct": 30,
+        "port": "utilityGrid"
+      },
+      "payloadJson": "{\"chargeThresholdKw\":0,\"command\":\"peakShaving\",\"deadbandKw\":0.5,\"dischargeThresholdKw\":2.75659652112953,\"holdAtThreshold\":true,\"maxChargePowerPct\":100,\"maxDischargePowerPct\":100,\"maxSocPct\":95,\"minSocPct\":30,\"port\":\"utilityGrid\"}",
+      "state": "Pending"
+    },
+    "2400010008": {
+      "protocolVer": 1,
+      "flags": 0,
+      "jobId": 2400010008,
+      "jobName": "Levtex OCT 08:00 9",
+      "priority": 50,
+      "owner": "LocalSchedule",
+      "execType": "Cron",
+      "timezone": "America/Los_Angeles",
+      "startTs": 0,
+      "expireTs": 1804233600,
+      "cronExpr": "0 0 8 3-4,10-11,17-18,24-25,31 OCT ? 2026",
+      "durationSec": 28800,
+      "payload": {
+        "chargeThresholdKw": -999999,
+        "command": "peakShaving",
+        "deadbandKw": 0.5,
+        "dischargeThresholdKw": 0,
+        "holdAtThreshold": true,
+        "maxChargePowerPct": 100,
+        "maxDischargePowerPct": 100,
+        "maxSocPct": 95,
+        "minSocPct": 30,
+        "port": "utilityGrid"
+      },
+      "payloadJson": "{\"chargeThresholdKw\":-999999,\"command\":\"peakShaving\",\"deadbandKw\":0.5,\"dischargeThresholdKw\":0,\"holdAtThreshold\":true,\"maxChargePowerPct\":100,\"maxDischargePowerPct\":100,\"maxSocPct\":95,\"minSocPct\":30,\"port\":\"utilityGrid\"}",
+      "state": "Pending"
+    },
+    "2400010009": {
+      "protocolVer": 1,
+      "flags": 0,
+      "jobId": 2400010009,
+      "jobName": "Levtex OCT 08:00 10",
+      "priority": 50,
+      "owner": "LocalSchedule",
+      "execType": "Cron",
+      "timezone": "America/Los_Angeles",
+      "startTs": 0,
+      "expireTs": 1804233600,
+      "cronExpr": "0 0 8 1-2,5-9,12-16,19-23,26-30 OCT ? 2026",
+      "durationSec": 28800,
+      "payload": {
+        "chargeThresholdKw": 0,
+        "command": "peakShaving",
+        "deadbandKw": 0.5,
+        "dischargeThresholdKw": 11.247769937612198,
+        "holdAtThreshold": true,
+        "maxChargePowerPct": 100,
+        "maxDischargePowerPct": 100,
+        "maxSocPct": 95,
+        "minSocPct": 30,
+        "port": "utilityGrid"
+      },
+      "payloadJson": "{\"chargeThresholdKw\":0,\"command\":\"peakShaving\",\"deadbandKw\":0.5,\"dischargeThresholdKw\":11.247769937612198,\"holdAtThreshold\":true,\"maxChargePowerPct\":100,\"maxDischargePowerPct\":100,\"maxSocPct\":95,\"minSocPct\":30,\"port\":\"utilityGrid\"}",
+      "state": "Pending"
+    },
+    "2400010010": {
+      "protocolVer": 1,
+      "flags": 0,
+      "jobId": 2400010010,
+      "jobName": "Levtex OCT 16:00 11",
+      "priority": 50,
+      "owner": "LocalSchedule",
+      "execType": "Cron",
+      "timezone": "America/Los_Angeles",
+      "startTs": 0,
+      "expireTs": 1804233600,
+      "cronExpr": "0 0 16 1-31 OCT ? 2026",
+      "durationSec": 18000,
+      "payload": {
+        "chargeThresholdKw": -999999,
+        "command": "peakShaving",
+        "deadbandKw": 0.5,
+        "dischargeThresholdKw": 0,
+        "holdAtThreshold": true,
+        "maxChargePowerPct": 100,
+        "maxDischargePowerPct": 100,
+        "maxSocPct": 95,
+        "minSocPct": 30,
+        "port": "utilityGrid"
+      },
+      "payloadJson": "{\"chargeThresholdKw\":-999999,\"command\":\"peakShaving\",\"deadbandKw\":0.5,\"dischargeThresholdKw\":0,\"holdAtThreshold\":true,\"maxChargePowerPct\":100,\"maxDischargePowerPct\":100,\"maxSocPct\":95,\"minSocPct\":30,\"port\":\"utilityGrid\"}",
+      "state": "Pending"
+    },
+    "2400010011": {
+      "protocolVer": 1,
+      "flags": 0,
+      "jobId": 2400010011,
+      "jobName": "Levtex OCT 21:00 12",
+      "priority": 50,
+      "owner": "LocalSchedule",
+      "execType": "Cron",
+      "timezone": "America/Los_Angeles",
+      "startTs": 0,
+      "expireTs": 1804233600,
+      "cronExpr": "0 0 21 1-2,5-9,12-16,19-23,26-30 OCT ? 2026",
+      "durationSec": 10800,
+      "payload": {
+        "chargeThresholdKw": 0,
+        "command": "peakShaving",
+        "deadbandKw": 0.5,
+        "dischargeThresholdKw": 11.247769937612198,
+        "holdAtThreshold": true,
+        "maxChargePowerPct": 100,
+        "maxDischargePowerPct": 100,
+        "maxSocPct": 95,
+        "minSocPct": 30,
+        "port": "utilityGrid"
+      },
+      "payloadJson": "{\"chargeThresholdKw\":0,\"command\":\"peakShaving\",\"deadbandKw\":0.5,\"dischargeThresholdKw\":11.247769937612198,\"holdAtThreshold\":true,\"maxChargePowerPct\":100,\"maxDischargePowerPct\":100,\"maxSocPct\":95,\"minSocPct\":30,\"port\":\"utilityGrid\"}",
+      "state": "Pending"
+    },
+    "2400010012": {
+      "protocolVer": 1,
+      "flags": 0,
+      "jobId": 2400010012,
+      "jobName": "Levtex OCT 21:00 13",
+      "priority": 50,
+      "owner": "LocalSchedule",
+      "execType": "Cron",
+      "timezone": "America/Los_Angeles",
+      "startTs": 0,
+      "expireTs": 1804233600,
+      "cronExpr": "0 0 21 3-4,10-11,17-18,24-25,31 OCT ? 2026",
+      "durationSec": 10800,
+      "payload": {
+        "chargeThresholdKw": 0,
+        "command": "peakShaving",
+        "deadbandKw": 0.5,
+        "dischargeThresholdKw": 2.75659652112953,
+        "holdAtThreshold": true,
+        "maxChargePowerPct": 100,
+        "maxDischargePowerPct": 100,
+        "maxSocPct": 95,
+        "minSocPct": 30,
+        "port": "utilityGrid"
+      },
+      "payloadJson": "{\"chargeThresholdKw\":0,\"command\":\"peakShaving\",\"deadbandKw\":0.5,\"dischargeThresholdKw\":2.75659652112953,\"holdAtThreshold\":true,\"maxChargePowerPct\":100,\"maxDischargePowerPct\":100,\"maxSocPct\":95,\"minSocPct\":30,\"port\":\"utilityGrid\"}",
+      "state": "Pending"
+    },
+    "2400010013": {
+      "protocolVer": 1,
+      "flags": 0,
+      "jobId": 2400010013,
+      "jobName": "Levtex NOV 00:00 14",
+      "priority": 50,
+      "owner": "LocalSchedule",
+      "execType": "Cron",
+      "timezone": "America/Los_Angeles",
+      "startTs": 0,
+      "expireTs": 1804233600,
+      "cronExpr": "0 0 0 2-30 NOV ? 2026",
+      "durationSec": 28800,
+      "payload": {
+        "chargeThresholdKw": 0,
+        "command": "peakShaving",
+        "deadbandKw": 0.5,
+        "dischargeThresholdKw": 19.096139511990753,
+        "holdAtThreshold": true,
+        "maxChargePowerPct": 100,
+        "maxDischargePowerPct": 100,
+        "maxSocPct": 95,
+        "minSocPct": 30,
+        "port": "utilityGrid"
+      },
+      "payloadJson": "{\"chargeThresholdKw\":0,\"command\":\"peakShaving\",\"deadbandKw\":0.5,\"dischargeThresholdKw\":19.096139511990753,\"holdAtThreshold\":true,\"maxChargePowerPct\":100,\"maxDischargePowerPct\":100,\"maxSocPct\":95,\"minSocPct\":30,\"port\":\"utilityGrid\"}",
+      "state": "Pending"
+    },
+    "2400010014": {
+      "protocolVer": 1,
+      "flags": 0,
+      "jobId": 2400010014,
+      "jobName": "Levtex NOV 00:00 15",
+      "priority": 50,
+      "owner": "LocalSchedule",
+      "execType": "Cron",
+      "timezone": "America/Los_Angeles",
+      "startTs": 0,
+      "expireTs": 1804233600,
+      "cronExpr": "0 0 0 1 NOV ? 2026",
+      "durationSec": 28800,
+      "payload": {
+        "chargeThresholdKw": 0,
+        "command": "peakShaving",
+        "deadbandKw": 0.5,
+        "dischargeThresholdKw": 2.75659652112953,
+        "holdAtThreshold": true,
+        "maxChargePowerPct": 100,
+        "maxDischargePowerPct": 100,
+        "maxSocPct": 95,
+        "minSocPct": 30,
+        "port": "utilityGrid"
+      },
+      "payloadJson": "{\"chargeThresholdKw\":0,\"command\":\"peakShaving\",\"deadbandKw\":0.5,\"dischargeThresholdKw\":2.75659652112953,\"holdAtThreshold\":true,\"maxChargePowerPct\":100,\"maxDischargePowerPct\":100,\"maxSocPct\":95,\"minSocPct\":30,\"port\":\"utilityGrid\"}",
+      "state": "Pending"
+    },
+    "2400010015": {
+      "protocolVer": 1,
+      "flags": 0,
+      "jobId": 2400010015,
+      "jobName": "Levtex NOV 08:00 16",
+      "priority": 50,
+      "owner": "LocalSchedule",
+      "execType": "Cron",
+      "timezone": "America/Los_Angeles",
+      "startTs": 0,
+      "expireTs": 1804233600,
+      "cronExpr": "0 0 8 1-30 NOV ? 2026",
+      "durationSec": 28800,
+      "payload": {
+        "chargeThresholdKw": 0,
+        "command": "peakShaving",
+        "deadbandKw": 0.5,
+        "dischargeThresholdKw": 19.096139511990753,
+        "holdAtThreshold": true,
+        "maxChargePowerPct": 100,
+        "maxDischargePowerPct": 100,
+        "maxSocPct": 95,
+        "minSocPct": 30,
+        "port": "utilityGrid"
+      },
+      "payloadJson": "{\"chargeThresholdKw\":0,\"command\":\"peakShaving\",\"deadbandKw\":0.5,\"dischargeThresholdKw\":19.096139511990753,\"holdAtThreshold\":true,\"maxChargePowerPct\":100,\"maxDischargePowerPct\":100,\"maxSocPct\":95,\"minSocPct\":30,\"port\":\"utilityGrid\"}",
+      "state": "Pending"
+    },
+    "2400010016": {
+      "protocolVer": 1,
+      "flags": 0,
+      "jobId": 2400010016,
+      "jobName": "Levtex NOV 16:00 17",
+      "priority": 50,
+      "owner": "LocalSchedule",
+      "execType": "Cron",
+      "timezone": "America/Los_Angeles",
+      "startTs": 0,
+      "expireTs": 1804233600,
+      "cronExpr": "0 0 16 1-30 NOV ? 2026",
+      "durationSec": 18000,
+      "payload": {
+        "chargeThresholdKw": -999999,
+        "command": "peakShaving",
+        "deadbandKw": 0.5,
+        "dischargeThresholdKw": 0,
+        "holdAtThreshold": true,
+        "maxChargePowerPct": 100,
+        "maxDischargePowerPct": 100,
+        "maxSocPct": 95,
+        "minSocPct": 30,
+        "port": "utilityGrid"
+      },
+      "payloadJson": "{\"chargeThresholdKw\":-999999,\"command\":\"peakShaving\",\"deadbandKw\":0.5,\"dischargeThresholdKw\":0,\"holdAtThreshold\":true,\"maxChargePowerPct\":100,\"maxDischargePowerPct\":100,\"maxSocPct\":95,\"minSocPct\":30,\"port\":\"utilityGrid\"}",
+      "state": "Pending"
+    },
+    "2400010017": {
+      "protocolVer": 1,
+      "flags": 0,
+      "jobId": 2400010017,
+      "jobName": "Levtex NOV 21:00 18",
+      "priority": 50,
+      "owner": "LocalSchedule",
+      "execType": "Cron",
+      "timezone": "America/Los_Angeles",
+      "startTs": 0,
+      "expireTs": 1804233600,
+      "cronExpr": "0 0 21 1-30 NOV ? 2026",
+      "durationSec": 10800,
+      "payload": {
+        "chargeThresholdKw": 0,
+        "command": "peakShaving",
+        "deadbandKw": 0.5,
+        "dischargeThresholdKw": 19.096139511990753,
+        "holdAtThreshold": true,
+        "maxChargePowerPct": 100,
+        "maxDischargePowerPct": 100,
+        "maxSocPct": 95,
+        "minSocPct": 30,
+        "port": "utilityGrid"
+      },
+      "payloadJson": "{\"chargeThresholdKw\":0,\"command\":\"peakShaving\",\"deadbandKw\":0.5,\"dischargeThresholdKw\":19.096139511990753,\"holdAtThreshold\":true,\"maxChargePowerPct\":100,\"maxDischargePowerPct\":100,\"maxSocPct\":95,\"minSocPct\":30,\"port\":\"utilityGrid\"}",
+      "state": "Pending"
+    },
+    "2400010018": {
+      "protocolVer": 1,
+      "flags": 0,
+      "jobId": 2400010018,
+      "jobName": "Levtex DEC 00:00 19",
+      "priority": 50,
+      "owner": "LocalSchedule",
+      "execType": "Cron",
+      "timezone": "America/Los_Angeles",
+      "startTs": 0,
+      "expireTs": 1804233600,
+      "cronExpr": "0 0 0 5-6,12-13,19-20,26-27 DEC ? 2026",
+      "durationSec": 28800,
+      "payload": {
+        "chargeThresholdKw": 0,
+        "command": "peakShaving",
+        "deadbandKw": 0.5,
+        "dischargeThresholdKw": 14.6307415873312,
+        "holdAtThreshold": true,
+        "maxChargePowerPct": 100,
+        "maxDischargePowerPct": 100,
+        "maxSocPct": 95,
+        "minSocPct": 30,
+        "port": "utilityGrid"
+      },
+      "payloadJson": "{\"chargeThresholdKw\":0,\"command\":\"peakShaving\",\"deadbandKw\":0.5,\"dischargeThresholdKw\":14.6307415873312,\"holdAtThreshold\":true,\"maxChargePowerPct\":100,\"maxDischargePowerPct\":100,\"maxSocPct\":95,\"minSocPct\":30,\"port\":\"utilityGrid\"}",
+      "state": "Pending"
+    },
+    "2400010019": {
+      "protocolVer": 1,
+      "flags": 0,
+      "jobId": 2400010019,
+      "jobName": "Levtex DEC 00:00 20",
+      "priority": 50,
+      "owner": "LocalSchedule",
+      "execType": "Cron",
+      "timezone": "America/Los_Angeles",
+      "startTs": 0,
+      "expireTs": 1804233600,
+      "cronExpr": "0 0 0 2-4,7-11,14-18,21-25,28-31 DEC ? 2026",
+      "durationSec": 28800,
+      "payload": {
+        "chargeThresholdKw": 0,
+        "command": "peakShaving",
+        "deadbandKw": 0.5,
+        "dischargeThresholdKw": 14.630741587331201,
+        "holdAtThreshold": true,
+        "maxChargePowerPct": 100,
+        "maxDischargePowerPct": 100,
+        "maxSocPct": 95,
+        "minSocPct": 30,
+        "port": "utilityGrid"
+      },
+      "payloadJson": "{\"chargeThresholdKw\":0,\"command\":\"peakShaving\",\"deadbandKw\":0.5,\"dischargeThresholdKw\":14.630741587331201,\"holdAtThreshold\":true,\"maxChargePowerPct\":100,\"maxDischargePowerPct\":100,\"maxSocPct\":95,\"minSocPct\":30,\"port\":\"utilityGrid\"}",
+      "state": "Pending"
+    },
+    "2400010020": {
+      "protocolVer": 1,
+      "flags": 0,
+      "jobId": 2400010020,
+      "jobName": "Levtex DEC 00:00 21",
+      "priority": 50,
+      "owner": "LocalSchedule",
+      "execType": "Cron",
+      "timezone": "America/Los_Angeles",
+      "startTs": 0,
+      "expireTs": 1804233600,
+      "cronExpr": "0 0 0 1 DEC ? 2026",
+      "durationSec": 28800,
+      "payload": {
+        "chargeThresholdKw": 0,
+        "command": "peakShaving",
+        "deadbandKw": 0.5,
+        "dischargeThresholdKw": 19.096139511990753,
+        "holdAtThreshold": true,
+        "maxChargePowerPct": 100,
+        "maxDischargePowerPct": 100,
+        "maxSocPct": 95,
+        "minSocPct": 30,
+        "port": "utilityGrid"
+      },
+      "payloadJson": "{\"chargeThresholdKw\":0,\"command\":\"peakShaving\",\"deadbandKw\":0.5,\"dischargeThresholdKw\":19.096139511990753,\"holdAtThreshold\":true,\"maxChargePowerPct\":100,\"maxDischargePowerPct\":100,\"maxSocPct\":95,\"minSocPct\":30,\"port\":\"utilityGrid\"}",
+      "state": "Pending"
+    },
+    "2400010021": {
+      "protocolVer": 1,
+      "flags": 0,
+      "jobId": 2400010021,
+      "jobName": "Levtex DEC 08:00 22",
+      "priority": 50,
+      "owner": "LocalSchedule",
+      "execType": "Cron",
+      "timezone": "America/Los_Angeles",
+      "startTs": 0,
+      "expireTs": 1804233600,
+      "cronExpr": "0 0 8 1-4,7-11,14-18,21-25,28-31 DEC ? 2026",
+      "durationSec": 28800,
+      "payload": {
+        "chargeThresholdKw": 0,
+        "command": "peakShaving",
+        "deadbandKw": 0.5,
+        "dischargeThresholdKw": 14.630741587331201,
+        "holdAtThreshold": true,
+        "maxChargePowerPct": 100,
+        "maxDischargePowerPct": 100,
+        "maxSocPct": 95,
+        "minSocPct": 30,
+        "port": "utilityGrid"
+      },
+      "payloadJson": "{\"chargeThresholdKw\":0,\"command\":\"peakShaving\",\"deadbandKw\":0.5,\"dischargeThresholdKw\":14.630741587331201,\"holdAtThreshold\":true,\"maxChargePowerPct\":100,\"maxDischargePowerPct\":100,\"maxSocPct\":95,\"minSocPct\":30,\"port\":\"utilityGrid\"}",
+      "state": "Pending"
+    },
+    "2400010022": {
+      "protocolVer": 1,
+      "flags": 0,
+      "jobId": 2400010022,
+      "jobName": "Levtex DEC 08:00 23",
+      "priority": 50,
+      "owner": "LocalSchedule",
+      "execType": "Cron",
+      "timezone": "America/Los_Angeles",
+      "startTs": 0,
+      "expireTs": 1804233600,
+      "cronExpr": "0 0 8 5-6,12-13,19-20,26-27 DEC ? 2026",
+      "durationSec": 28800,
+      "payload": {
+        "chargeThresholdKw": 0,
+        "command": "peakShaving",
+        "deadbandKw": 0.5,
+        "dischargeThresholdKw": 3.127566659999996,
+        "holdAtThreshold": true,
+        "maxChargePowerPct": 100,
+        "maxDischargePowerPct": 100,
+        "maxSocPct": 95,
+        "minSocPct": 30,
+        "port": "utilityGrid"
+      },
+      "payloadJson": "{\"chargeThresholdKw\":0,\"command\":\"peakShaving\",\"deadbandKw\":0.5,\"dischargeThresholdKw\":3.127566659999996,\"holdAtThreshold\":true,\"maxChargePowerPct\":100,\"maxDischargePowerPct\":100,\"maxSocPct\":95,\"minSocPct\":30,\"port\":\"utilityGrid\"}",
+      "state": "Pending"
+    },
+    "2400010023": {
+      "protocolVer": 1,
+      "flags": 0,
+      "jobId": 2400010023,
+      "jobName": "Levtex DEC 16:00 24",
+      "priority": 50,
+      "owner": "LocalSchedule",
+      "execType": "Cron",
+      "timezone": "America/Los_Angeles",
+      "startTs": 0,
+      "expireTs": 1804233600,
+      "cronExpr": "0 0 16 1-31 DEC ? 2026",
+      "durationSec": 18000,
+      "payload": {
+        "chargeThresholdKw": -999999,
+        "command": "peakShaving",
+        "deadbandKw": 0.5,
+        "dischargeThresholdKw": 0,
+        "holdAtThreshold": true,
+        "maxChargePowerPct": 100,
+        "maxDischargePowerPct": 100,
+        "maxSocPct": 95,
+        "minSocPct": 30,
+        "port": "utilityGrid"
+      },
+      "payloadJson": "{\"chargeThresholdKw\":-999999,\"command\":\"peakShaving\",\"deadbandKw\":0.5,\"dischargeThresholdKw\":0,\"holdAtThreshold\":true,\"maxChargePowerPct\":100,\"maxDischargePowerPct\":100,\"maxSocPct\":95,\"minSocPct\":30,\"port\":\"utilityGrid\"}",
+      "state": "Pending"
+    },
+    "2400010024": {
+      "protocolVer": 1,
+      "flags": 0,
+      "jobId": 2400010024,
+      "jobName": "Levtex DEC 21:00 25",
+      "priority": 50,
+      "owner": "LocalSchedule",
+      "execType": "Cron",
+      "timezone": "America/Los_Angeles",
+      "startTs": 0,
+      "expireTs": 1804233600,
+      "cronExpr": "0 0 21 5-6,12-13,19-20,26-27 DEC ? 2026",
+      "durationSec": 10800,
+      "payload": {
+        "chargeThresholdKw": 0,
+        "command": "peakShaving",
+        "deadbandKw": 0.5,
+        "dischargeThresholdKw": 14.6307415873312,
+        "holdAtThreshold": true,
+        "maxChargePowerPct": 100,
+        "maxDischargePowerPct": 100,
+        "maxSocPct": 95,
+        "minSocPct": 30,
+        "port": "utilityGrid"
+      },
+      "payloadJson": "{\"chargeThresholdKw\":0,\"command\":\"peakShaving\",\"deadbandKw\":0.5,\"dischargeThresholdKw\":14.6307415873312,\"holdAtThreshold\":true,\"maxChargePowerPct\":100,\"maxDischargePowerPct\":100,\"maxSocPct\":95,\"minSocPct\":30,\"port\":\"utilityGrid\"}",
+      "state": "Pending"
+    },
+    "2400010025": {
+      "protocolVer": 1,
+      "flags": 0,
+      "jobId": 2400010025,
+      "jobName": "Levtex DEC 21:00 26",
+      "priority": 50,
+      "owner": "LocalSchedule",
+      "execType": "Cron",
+      "timezone": "America/Los_Angeles",
+      "startTs": 0,
+      "expireTs": 1804233600,
+      "cronExpr": "0 0 21 1-4,7-11,14-18,21-25,28-31 DEC ? 2026",
+      "durationSec": 10800,
+      "payload": {
+        "chargeThresholdKw": 0,
+        "command": "peakShaving",
+        "deadbandKw": 0.5,
+        "dischargeThresholdKw": 14.630741587331201,
+        "holdAtThreshold": true,
+        "maxChargePowerPct": 100,
+        "maxDischargePowerPct": 100,
+        "maxSocPct": 95,
+        "minSocPct": 30,
+        "port": "utilityGrid"
+      },
+      "payloadJson": "{\"chargeThresholdKw\":0,\"command\":\"peakShaving\",\"deadbandKw\":0.5,\"dischargeThresholdKw\":14.630741587331201,\"holdAtThreshold\":true,\"maxChargePowerPct\":100,\"maxDischargePowerPct\":100,\"maxSocPct\":95,\"minSocPct\":30,\"port\":\"utilityGrid\"}",
+      "state": "Pending"
+    },
+    "2400010026": {
+      "protocolVer": 1,
+      "flags": 0,
+      "jobId": 2400010026,
+      "jobName": "Levtex JAN 00:00 27",
+      "priority": 50,
+      "owner": "LocalSchedule",
+      "execType": "Cron",
+      "timezone": "America/Los_Angeles",
+      "startTs": 0,
+      "expireTs": 1804233600,
+      "cronExpr": "0 0 0 1 JAN ? 2027",
+      "durationSec": 28800,
+      "payload": {
+        "chargeThresholdKw": 0,
+        "command": "peakShaving",
+        "deadbandKw": 0.5,
+        "dischargeThresholdKw": 14.630741587331201,
+        "holdAtThreshold": true,
+        "maxChargePowerPct": 100,
+        "maxDischargePowerPct": 100,
+        "maxSocPct": 95,
+        "minSocPct": 30,
+        "port": "utilityGrid"
+      },
+      "payloadJson": "{\"chargeThresholdKw\":0,\"command\":\"peakShaving\",\"deadbandKw\":0.5,\"dischargeThresholdKw\":14.630741587331201,\"holdAtThreshold\":true,\"maxChargePowerPct\":100,\"maxDischargePowerPct\":100,\"maxSocPct\":95,\"minSocPct\":30,\"port\":\"utilityGrid\"}",
+      "state": "Pending"
+    },
+    "2400010027": {
+      "protocolVer": 1,
+      "flags": 0,
+      "jobId": 2400010027,
+      "jobName": "Levtex JAN 00:00 28",
+      "priority": 50,
+      "owner": "LocalSchedule",
+      "execType": "Cron",
+      "timezone": "America/Los_Angeles",
+      "startTs": 0,
+      "expireTs": 1804233600,
+      "cronExpr": "0 0 0 4-8,11-15,18-22,25-29 JAN ? 2027",
+      "durationSec": 28800,
+      "payload": {
+        "chargeThresholdKw": 0,
+        "command": "peakShaving",
+        "deadbandKw": 0.5,
+        "dischargeThresholdKw": 17.07118375355623,
+        "holdAtThreshold": true,
+        "maxChargePowerPct": 100,
+        "maxDischargePowerPct": 100,
+        "maxSocPct": 95,
+        "minSocPct": 30,
+        "port": "utilityGrid"
+      },
+      "payloadJson": "{\"chargeThresholdKw\":0,\"command\":\"peakShaving\",\"deadbandKw\":0.5,\"dischargeThresholdKw\":17.07118375355623,\"holdAtThreshold\":true,\"maxChargePowerPct\":100,\"maxDischargePowerPct\":100,\"maxSocPct\":95,\"minSocPct\":30,\"port\":\"utilityGrid\"}",
+      "state": "Pending"
+    },
+    "2400010028": {
+      "protocolVer": 1,
+      "flags": 0,
+      "jobId": 2400010028,
+      "jobName": "Levtex JAN 00:00 29",
+      "priority": 50,
+      "owner": "LocalSchedule",
+      "execType": "Cron",
+      "timezone": "America/Los_Angeles",
+      "startTs": 0,
+      "expireTs": 1804233600,
+      "cronExpr": "0 0 0 2-3,9-10,16-17,23-24,30-31 JAN ? 2027",
+      "durationSec": 28800,
+      "payload": {
+        "chargeThresholdKw": 0,
+        "command": "peakShaving",
+        "deadbandKw": 0.5,
+        "dischargeThresholdKw": 9.093333333,
+        "holdAtThreshold": true,
+        "maxChargePowerPct": 100,
+        "maxDischargePowerPct": 100,
+        "maxSocPct": 95,
+        "minSocPct": 30,
+        "port": "utilityGrid"
+      },
+      "payloadJson": "{\"chargeThresholdKw\":0,\"command\":\"peakShaving\",\"deadbandKw\":0.5,\"dischargeThresholdKw\":9.093333333,\"holdAtThreshold\":true,\"maxChargePowerPct\":100,\"maxDischargePowerPct\":100,\"maxSocPct\":95,\"minSocPct\":30,\"port\":\"utilityGrid\"}",
+      "state": "Pending"
+    },
+    "2400010029": {
+      "protocolVer": 1,
+      "flags": 0,
+      "jobId": 2400010029,
+      "jobName": "Levtex JAN 08:00 30",
+      "priority": 50,
+      "owner": "LocalSchedule",
+      "execType": "Cron",
+      "timezone": "America/Los_Angeles",
+      "startTs": 0,
+      "expireTs": 1804233600,
+      "cronExpr": "0 0 8 1,4-8,11-15,18-22,25-29 JAN ? 2027",
+      "durationSec": 28800,
+      "payload": {
+        "chargeThresholdKw": 0,
+        "command": "peakShaving",
+        "deadbandKw": 0.5,
+        "dischargeThresholdKw": 17.07118375355623,
+        "holdAtThreshold": true,
+        "maxChargePowerPct": 100,
+        "maxDischargePowerPct": 100,
+        "maxSocPct": 95,
+        "minSocPct": 30,
+        "port": "utilityGrid"
+      },
+      "payloadJson": "{\"chargeThresholdKw\":0,\"command\":\"peakShaving\",\"deadbandKw\":0.5,\"dischargeThresholdKw\":17.07118375355623,\"holdAtThreshold\":true,\"maxChargePowerPct\":100,\"maxDischargePowerPct\":100,\"maxSocPct\":95,\"minSocPct\":30,\"port\":\"utilityGrid\"}",
+      "state": "Pending"
+    },
+    "2400010030": {
+      "protocolVer": 1,
+      "flags": 0,
+      "jobId": 2400010030,
+      "jobName": "Levtex JAN 08:00 31",
+      "priority": 50,
+      "owner": "LocalSchedule",
+      "execType": "Cron",
+      "timezone": "America/Los_Angeles",
+      "startTs": 0,
+      "expireTs": 1804233600,
+      "cronExpr": "0 0 8 2-3,9-10,16-17,23-24,30-31 JAN ? 2027",
+      "durationSec": 28800,
+      "payload": {
+        "chargeThresholdKw": 0,
+        "command": "peakShaving",
+        "deadbandKw": 0.5,
+        "dischargeThresholdKw": 4.722041666499999,
+        "holdAtThreshold": true,
+        "maxChargePowerPct": 100,
+        "maxDischargePowerPct": 100,
+        "maxSocPct": 95,
+        "minSocPct": 30,
+        "port": "utilityGrid"
+      },
+      "payloadJson": "{\"chargeThresholdKw\":0,\"command\":\"peakShaving\",\"deadbandKw\":0.5,\"dischargeThresholdKw\":4.722041666499999,\"holdAtThreshold\":true,\"maxChargePowerPct\":100,\"maxDischargePowerPct\":100,\"maxSocPct\":95,\"minSocPct\":30,\"port\":\"utilityGrid\"}",
+      "state": "Pending"
+    },
+    "2400010031": {
+      "protocolVer": 1,
+      "flags": 0,
+      "jobId": 2400010031,
+      "jobName": "Levtex JAN 16:00 32",
+      "priority": 50,
+      "owner": "LocalSchedule",
+      "execType": "Cron",
+      "timezone": "America/Los_Angeles",
+      "startTs": 0,
+      "expireTs": 1804233600,
+      "cronExpr": "0 0 16 1-31 JAN ? 2027",
+      "durationSec": 18000,
+      "payload": {
+        "chargeThresholdKw": -999999,
+        "command": "peakShaving",
+        "deadbandKw": 0.5,
+        "dischargeThresholdKw": 0,
+        "holdAtThreshold": true,
+        "maxChargePowerPct": 100,
+        "maxDischargePowerPct": 100,
+        "maxSocPct": 95,
+        "minSocPct": 30,
+        "port": "utilityGrid"
+      },
+      "payloadJson": "{\"chargeThresholdKw\":-999999,\"command\":\"peakShaving\",\"deadbandKw\":0.5,\"dischargeThresholdKw\":0,\"holdAtThreshold\":true,\"maxChargePowerPct\":100,\"maxDischargePowerPct\":100,\"maxSocPct\":95,\"minSocPct\":30,\"port\":\"utilityGrid\"}",
+      "state": "Pending"
+    },
+    "2400010032": {
+      "protocolVer": 1,
+      "flags": 0,
+      "jobId": 2400010032,
+      "jobName": "Levtex JAN 21:00 33",
+      "priority": 50,
+      "owner": "LocalSchedule",
+      "execType": "Cron",
+      "timezone": "America/Los_Angeles",
+      "startTs": 0,
+      "expireTs": 1804233600,
+      "cronExpr": "0 0 21 1,4-8,11-15,18-22,25-29 JAN ? 2027",
+      "durationSec": 10800,
+      "payload": {
+        "chargeThresholdKw": 0,
+        "command": "peakShaving",
+        "deadbandKw": 0.5,
+        "dischargeThresholdKw": 17.07118375355623,
+        "holdAtThreshold": true,
+        "maxChargePowerPct": 100,
+        "maxDischargePowerPct": 100,
+        "maxSocPct": 95,
+        "minSocPct": 30,
+        "port": "utilityGrid"
+      },
+      "payloadJson": "{\"chargeThresholdKw\":0,\"command\":\"peakShaving\",\"deadbandKw\":0.5,\"dischargeThresholdKw\":17.07118375355623,\"holdAtThreshold\":true,\"maxChargePowerPct\":100,\"maxDischargePowerPct\":100,\"maxSocPct\":95,\"minSocPct\":30,\"port\":\"utilityGrid\"}",
+      "state": "Pending"
+    },
+    "2400010033": {
+      "protocolVer": 1,
+      "flags": 0,
+      "jobId": 2400010033,
+      "jobName": "Levtex JAN 21:00 34",
+      "priority": 50,
+      "owner": "LocalSchedule",
+      "execType": "Cron",
+      "timezone": "America/Los_Angeles",
+      "startTs": 0,
+      "expireTs": 1804233600,
+      "cronExpr": "0 0 21 2-3,9-10,16-17,23-24,30-31 JAN ? 2027",
+      "durationSec": 10800,
+      "payload": {
+        "chargeThresholdKw": 0,
+        "command": "peakShaving",
+        "deadbandKw": 0.5,
+        "dischargeThresholdKw": 9.093333333,
+        "holdAtThreshold": true,
+        "maxChargePowerPct": 100,
+        "maxDischargePowerPct": 100,
+        "maxSocPct": 95,
+        "minSocPct": 30,
+        "port": "utilityGrid"
+      },
+      "payloadJson": "{\"chargeThresholdKw\":0,\"command\":\"peakShaving\",\"deadbandKw\":0.5,\"dischargeThresholdKw\":9.093333333,\"holdAtThreshold\":true,\"maxChargePowerPct\":100,\"maxDischargePowerPct\":100,\"maxSocPct\":95,\"minSocPct\":30,\"port\":\"utilityGrid\"}",
+      "state": "Pending"
+    },
+    "2400010034": {
+      "protocolVer": 1,
+      "flags": 0,
+      "jobId": 2400010034,
+      "jobName": "Levtex FEB 00:00 35",
+      "priority": 50,
+      "owner": "LocalSchedule",
+      "execType": "Cron",
+      "timezone": "America/Los_Angeles",
+      "startTs": 0,
+      "expireTs": 1804233600,
+      "cronExpr": "0 0 0 6-7,13-14,20-21,27-28 FEB ? 2027",
+      "durationSec": 28800,
+      "payload": {
+        "chargeThresholdKw": 0,
+        "command": "peakShaving",
+        "deadbandKw": 0.5,
+        "dischargeThresholdKw": 4.947,
+        "holdAtThreshold": true,
+        "maxChargePowerPct": 100,
+        "maxDischargePowerPct": 100,
+        "maxSocPct": 95,
+        "minSocPct": 30,
+        "port": "utilityGrid"
+      },
+      "payloadJson": "{\"chargeThresholdKw\":0,\"command\":\"peakShaving\",\"deadbandKw\":0.5,\"dischargeThresholdKw\":4.947,\"holdAtThreshold\":true,\"maxChargePowerPct\":100,\"maxDischargePowerPct\":100,\"maxSocPct\":95,\"minSocPct\":30,\"port\":\"utilityGrid\"}",
+      "state": "Pending"
+    },
+    "2400010035": {
+      "protocolVer": 1,
+      "flags": 0,
+      "jobId": 2400010035,
+      "jobName": "Levtex FEB 00:00 36",
+      "priority": 50,
+      "owner": "LocalSchedule",
+      "execType": "Cron",
+      "timezone": "America/Los_Angeles",
+      "startTs": 0,
+      "expireTs": 1804233600,
+      "cronExpr": "0 0 0 1-5,8-12,15-19,22-26 FEB ? 2027",
+      "durationSec": 28800,
+      "payload": {
+        "chargeThresholdKw": 0,
+        "command": "peakShaving",
+        "deadbandKw": 0.5,
+        "dischargeThresholdKw": 8.073930935219762,
+        "holdAtThreshold": true,
+        "maxChargePowerPct": 100,
+        "maxDischargePowerPct": 100,
+        "maxSocPct": 95,
+        "minSocPct": 30,
+        "port": "utilityGrid"
+      },
+      "payloadJson": "{\"chargeThresholdKw\":0,\"command\":\"peakShaving\",\"deadbandKw\":0.5,\"dischargeThresholdKw\":8.073930935219762,\"holdAtThreshold\":true,\"maxChargePowerPct\":100,\"maxDischargePowerPct\":100,\"maxSocPct\":95,\"minSocPct\":30,\"port\":\"utilityGrid\"}",
+      "state": "Pending"
+    },
+    "2400010036": {
+      "protocolVer": 1,
+      "flags": 0,
+      "jobId": 2400010036,
+      "jobName": "Levtex FEB 08:00 37",
+      "priority": 50,
+      "owner": "LocalSchedule",
+      "execType": "Cron",
+      "timezone": "America/Los_Angeles",
+      "startTs": 0,
+      "expireTs": 1804233600,
+      "cronExpr": "0 0 8 6-7,13-14,20-21,27-28 FEB ? 2027",
+      "durationSec": 28800,
+      "payload": {
+        "chargeThresholdKw": -999999,
+        "command": "peakShaving",
+        "deadbandKw": 0.5,
+        "dischargeThresholdKw": 0,
+        "holdAtThreshold": true,
+        "maxChargePowerPct": 100,
+        "maxDischargePowerPct": 100,
+        "maxSocPct": 95,
+        "minSocPct": 30,
+        "port": "utilityGrid"
+      },
+      "payloadJson": "{\"chargeThresholdKw\":-999999,\"command\":\"peakShaving\",\"deadbandKw\":0.5,\"dischargeThresholdKw\":0,\"holdAtThreshold\":true,\"maxChargePowerPct\":100,\"maxDischargePowerPct\":100,\"maxSocPct\":95,\"minSocPct\":30,\"port\":\"utilityGrid\"}",
+      "state": "Pending"
+    },
+    "2400010037": {
+      "protocolVer": 1,
+      "flags": 0,
+      "jobId": 2400010037,
+      "jobName": "Levtex FEB 08:00 38",
+      "priority": 50,
+      "owner": "LocalSchedule",
+      "execType": "Cron",
+      "timezone": "America/Los_Angeles",
+      "startTs": 0,
+      "expireTs": 1804233600,
+      "cronExpr": "0 0 8 1-5,8-12,15-19,22-26 FEB ? 2027",
+      "durationSec": 28800,
+      "payload": {
+        "chargeThresholdKw": 0,
+        "command": "peakShaving",
+        "deadbandKw": 0.5,
+        "dischargeThresholdKw": 8.073930935219762,
+        "holdAtThreshold": true,
+        "maxChargePowerPct": 100,
+        "maxDischargePowerPct": 100,
+        "maxSocPct": 95,
+        "minSocPct": 30,
+        "port": "utilityGrid"
+      },
+      "payloadJson": "{\"chargeThresholdKw\":0,\"command\":\"peakShaving\",\"deadbandKw\":0.5,\"dischargeThresholdKw\":8.073930935219762,\"holdAtThreshold\":true,\"maxChargePowerPct\":100,\"maxDischargePowerPct\":100,\"maxSocPct\":95,\"minSocPct\":30,\"port\":\"utilityGrid\"}",
+      "state": "Pending"
+    },
+    "2400010038": {
+      "protocolVer": 1,
+      "flags": 0,
+      "jobId": 2400010038,
+      "jobName": "Levtex FEB 16:00 39",
+      "priority": 50,
+      "owner": "LocalSchedule",
+      "execType": "Cron",
+      "timezone": "America/Los_Angeles",
+      "startTs": 0,
+      "expireTs": 1804233600,
+      "cronExpr": "0 0 16 1-28 FEB ? 2027",
+      "durationSec": 18000,
+      "payload": {
+        "chargeThresholdKw": -999999,
+        "command": "peakShaving",
+        "deadbandKw": 0.5,
+        "dischargeThresholdKw": 0,
+        "holdAtThreshold": true,
+        "maxChargePowerPct": 100,
+        "maxDischargePowerPct": 100,
+        "maxSocPct": 95,
+        "minSocPct": 30,
+        "port": "utilityGrid"
+      },
+      "payloadJson": "{\"chargeThresholdKw\":-999999,\"command\":\"peakShaving\",\"deadbandKw\":0.5,\"dischargeThresholdKw\":0,\"holdAtThreshold\":true,\"maxChargePowerPct\":100,\"maxDischargePowerPct\":100,\"maxSocPct\":95,\"minSocPct\":30,\"port\":\"utilityGrid\"}",
+      "state": "Pending"
+    },
+    "2400010039": {
+      "protocolVer": 1,
+      "flags": 0,
+      "jobId": 2400010039,
+      "jobName": "Levtex FEB 21:00 40",
+      "priority": 50,
+      "owner": "LocalSchedule",
+      "execType": "Cron",
+      "timezone": "America/Los_Angeles",
+      "startTs": 0,
+      "expireTs": 1804233600,
+      "cronExpr": "0 0 21 6-7,13-14,20-21,27-28 FEB ? 2027",
+      "durationSec": 10800,
+      "payload": {
+        "chargeThresholdKw": 0,
+        "command": "peakShaving",
+        "deadbandKw": 0.5,
+        "dischargeThresholdKw": 4.947,
+        "holdAtThreshold": true,
+        "maxChargePowerPct": 100,
+        "maxDischargePowerPct": 100,
+        "maxSocPct": 95,
+        "minSocPct": 30,
+        "port": "utilityGrid"
+      },
+      "payloadJson": "{\"chargeThresholdKw\":0,\"command\":\"peakShaving\",\"deadbandKw\":0.5,\"dischargeThresholdKw\":4.947,\"holdAtThreshold\":true,\"maxChargePowerPct\":100,\"maxDischargePowerPct\":100,\"maxSocPct\":95,\"minSocPct\":30,\"port\":\"utilityGrid\"}",
+      "state": "Pending"
+    },
+    "2400010040": {
+      "protocolVer": 1,
+      "flags": 0,
+      "jobId": 2400010040,
+      "jobName": "Levtex FEB 21:00 41",
+      "priority": 50,
+      "owner": "LocalSchedule",
+      "execType": "Cron",
+      "timezone": "America/Los_Angeles",
+      "startTs": 0,
+      "expireTs": 1804233600,
+      "cronExpr": "0 0 21 1-5,8-12,15-19,22-26 FEB ? 2027",
+      "durationSec": 10800,
+      "payload": {
+        "chargeThresholdKw": 0,
+        "command": "peakShaving",
+        "deadbandKw": 0.5,
+        "dischargeThresholdKw": 8.073930935219762,
+        "holdAtThreshold": true,
+        "maxChargePowerPct": 100,
+        "maxDischargePowerPct": 100,
+        "maxSocPct": 95,
+        "minSocPct": 30,
+        "port": "utilityGrid"
+      },
+      "payloadJson": "{\"chargeThresholdKw\":0,\"command\":\"peakShaving\",\"deadbandKw\":0.5,\"dischargeThresholdKw\":8.073930935219762,\"holdAtThreshold\":true,\"maxChargePowerPct\":100,\"maxDischargePowerPct\":100,\"maxSocPct\":95,\"minSocPct\":30,\"port\":\"utilityGrid\"}",
+      "state": "Pending"
+    },
+    "2400010041": {
+      "protocolVer": 1,
+      "flags": 0,
+      "jobId": 2400010041,
+      "jobName": "Levtex MAR 00:00 42",
+      "priority": 50,
+      "owner": "LocalSchedule",
+      "execType": "Cron",
+      "timezone": "America/Los_Angeles",
+      "startTs": 0,
+      "expireTs": 1804233600,
+      "cronExpr": "0 0 0 1-4 MAR ? 2027",
+      "durationSec": 28800,
+      "payload": {
+        "chargeThresholdKw": 0,
+        "command": "peakShaving",
+        "deadbandKw": 0.5,
+        "dischargeThresholdKw": 6.135784632248374,
+        "holdAtThreshold": true,
+        "maxChargePowerPct": 100,
+        "maxDischargePowerPct": 100,
+        "maxSocPct": 95,
+        "minSocPct": 30,
+        "port": "utilityGrid"
+      },
+      "payloadJson": "{\"chargeThresholdKw\":0,\"command\":\"peakShaving\",\"deadbandKw\":0.5,\"dischargeThresholdKw\":6.135784632248374,\"holdAtThreshold\":true,\"maxChargePowerPct\":100,\"maxDischargePowerPct\":100,\"maxSocPct\":95,\"minSocPct\":30,\"port\":\"utilityGrid\"}",
+      "state": "Pending"
+    },
+    "2400010042": {
+      "protocolVer": 1,
+      "flags": 0,
+      "jobId": 2400010042,
+      "jobName": "Levtex MAR 08:00 43",
+      "priority": 50,
+      "owner": "LocalSchedule",
+      "execType": "Cron",
+      "timezone": "America/Los_Angeles",
+      "startTs": 0,
+      "expireTs": 1804233600,
+      "cronExpr": "0 0 8 1-4 MAR ? 2027",
+      "durationSec": 28800,
+      "payload": {
+        "chargeThresholdKw": 0,
+        "command": "peakShaving",
+        "deadbandKw": 0.5,
+        "dischargeThresholdKw": 6.135784632248374,
+        "holdAtThreshold": true,
+        "maxChargePowerPct": 100,
+        "maxDischargePowerPct": 100,
+        "maxSocPct": 95,
+        "minSocPct": 30,
+        "port": "utilityGrid"
+      },
+      "payloadJson": "{\"chargeThresholdKw\":0,\"command\":\"peakShaving\",\"deadbandKw\":0.5,\"dischargeThresholdKw\":6.135784632248374,\"holdAtThreshold\":true,\"maxChargePowerPct\":100,\"maxDischargePowerPct\":100,\"maxSocPct\":95,\"minSocPct\":30,\"port\":\"utilityGrid\"}",
+      "state": "Pending"
+    },
+    "2400010043": {
+      "protocolVer": 1,
+      "flags": 0,
+      "jobId": 2400010043,
+      "jobName": "Levtex MAR 16:00 44",
+      "priority": 50,
+      "owner": "LocalSchedule",
+      "execType": "Cron",
+      "timezone": "America/Los_Angeles",
+      "startTs": 0,
+      "expireTs": 1804233600,
+      "cronExpr": "0 0 16 1-4 MAR ? 2027",
+      "durationSec": 18000,
+      "payload": {
+        "chargeThresholdKw": -999999,
+        "command": "peakShaving",
+        "deadbandKw": 0.5,
+        "dischargeThresholdKw": 0,
+        "holdAtThreshold": true,
+        "maxChargePowerPct": 100,
+        "maxDischargePowerPct": 100,
+        "maxSocPct": 95,
+        "minSocPct": 30,
+        "port": "utilityGrid"
+      },
+      "payloadJson": "{\"chargeThresholdKw\":-999999,\"command\":\"peakShaving\",\"deadbandKw\":0.5,\"dischargeThresholdKw\":0,\"holdAtThreshold\":true,\"maxChargePowerPct\":100,\"maxDischargePowerPct\":100,\"maxSocPct\":95,\"minSocPct\":30,\"port\":\"utilityGrid\"}",
+      "state": "Pending"
+    },
+    "2400010044": {
+      "protocolVer": 1,
+      "flags": 0,
+      "jobId": 2400010044,
+      "jobName": "Levtex MAR 21:00 45",
+      "priority": 50,
+      "owner": "LocalSchedule",
+      "execType": "Cron",
+      "timezone": "America/Los_Angeles",
+      "startTs": 0,
+      "expireTs": 1804233600,
+      "cronExpr": "0 0 21 1-4 MAR ? 2027",
+      "durationSec": 10800,
+      "payload": {
+        "chargeThresholdKw": 0,
+        "command": "peakShaving",
+        "deadbandKw": 0.5,
+        "dischargeThresholdKw": 6.135784632248374,
+        "holdAtThreshold": true,
+        "maxChargePowerPct": 100,
+        "maxDischargePowerPct": 100,
+        "maxSocPct": 95,
+        "minSocPct": 30,
+        "port": "utilityGrid"
+      },
+      "payloadJson": "{\"chargeThresholdKw\":0,\"command\":\"peakShaving\",\"deadbandKw\":0.5,\"dischargeThresholdKw\":6.135784632248374,\"holdAtThreshold\":true,\"maxChargePowerPct\":100,\"maxDischargePowerPct\":100,\"maxSocPct\":95,\"minSocPct\":30,\"port\":\"utilityGrid\"}",
+      "state": "Pending"
+    }
+  },
+  "schedulePlans": [
+    {
+      "version": "3.0",
+      "source": "compressed-from-dated-edge-schedule",
+      "timezone": "America/Los_Angeles",
+      "timed": [
+        {
+          "planID": "2400010000",
+          "jobId": 2400010000,
+          "name": "Levtex SEP 00:00 1",
+          "version": "3.0",
+          "owner": "LocalSchedule",
+          "priority": 50,
+          "execType": "Cron",
+          "timezone": "America/Los_Angeles",
+          "cron": "0 0 0 4,7-11,14-18,21-25,28-30 SEP ? 2026",
+          "until": "2027-03-05T08:00:00Z",
+          "duration": {
+            "unit": "minutes",
+            "value": 960.0
+          },
+          "payload": {
+            "chargeThresholdKw": 0,
+            "command": "peakShaving",
+            "deadbandKw": 0.5,
+            "dischargeThresholdKw": 17.850407591572896,
+            "holdAtThreshold": true,
+            "maxChargePowerPct": 100,
+            "maxDischargePowerPct": 100,
+            "maxSocPct": 95,
+            "minSocPct": 30,
+            "port": "utilityGrid"
+          },
+          "strategy": {
+            "meter_rule": {
+              "discharge": {
+                "net_load_threshold": {
+                  "value": 17.850407591572896,
+                  "unit": "kW"
+                }
+              },
+              "charge": {
+                "net_load_threshold": {
+                  "value": 0,
+                  "unit": "kW"
+                }
+              }
+            },
+            "pv_rule": {
+              "name": "GridSupplement"
+            }
+          },
+          "constraints": {
+            "min_soc": {
+              "value": 30,
+              "unit": "%"
+            },
+            "max_soc": {
+              "value": 95,
+              "unit": "%"
+            },
+            "max_charge_power": {
+              "value": 100,
+              "unit": "%"
+            },
+            "max_discharge_power": {
+              "value": 100,
+              "unit": "%"
+            }
+          }
+        },
+        {
+          "planID": "2400010001",
+          "jobId": 2400010001,
+          "name": "Levtex SEP 00:00 2",
+          "version": "3.0",
+          "owner": "LocalSchedule",
+          "priority": 50,
+          "execType": "Cron",
+          "timezone": "America/Los_Angeles",
+          "cron": "0 0 0 5-6,12-13,19-20,26-27 SEP ? 2026",
+          "until": "2027-03-05T08:00:00Z",
+          "duration": {
+            "unit": "minutes",
+            "value": 960.0
+          },
+          "payload": {
+            "chargeThresholdKw": 0,
+            "command": "peakShaving",
+            "deadbandKw": 0.5,
+            "dischargeThresholdKw": 5.209000000000003,
+            "holdAtThreshold": true,
+            "maxChargePowerPct": 100,
+            "maxDischargePowerPct": 100,
+            "maxSocPct": 95,
+            "minSocPct": 30,
+            "port": "utilityGrid"
+          },
+          "strategy": {
+            "meter_rule": {
+              "discharge": {
+                "net_load_threshold": {
+                  "value": 5.209000000000003,
+                  "unit": "kW"
+                }
+              },
+              "charge": {
+                "net_load_threshold": {
+                  "value": 0,
+                  "unit": "kW"
+                }
+              }
+            },
+            "pv_rule": {
+              "name": "GridSupplement"
+            }
+          },
+          "constraints": {
+            "min_soc": {
+              "value": 30,
+              "unit": "%"
+            },
+            "max_soc": {
+              "value": 95,
+              "unit": "%"
+            },
+            "max_charge_power": {
+              "value": 100,
+              "unit": "%"
+            },
+            "max_discharge_power": {
+              "value": 100,
+              "unit": "%"
+            }
+          }
+        },
+        {
+          "planID": "2400010002",
+          "jobId": 2400010002,
+          "name": "Levtex SEP 16:00 3",
+          "version": "3.0",
+          "owner": "LocalSchedule",
+          "priority": 50,
+          "execType": "Cron",
+          "timezone": "America/Los_Angeles",
+          "cron": "0 0 16 3-30 SEP ? 2026",
+          "until": "2027-03-05T08:00:00Z",
+          "duration": {
+            "unit": "minutes",
+            "value": 300.0
+          },
+          "payload": {
+            "chargeThresholdKw": -999999,
+            "command": "peakShaving",
+            "deadbandKw": 0.5,
+            "dischargeThresholdKw": 0,
+            "holdAtThreshold": true,
+            "maxChargePowerPct": 100,
+            "maxDischargePowerPct": 100,
+            "maxSocPct": 95,
+            "minSocPct": 30,
+            "port": "utilityGrid"
+          },
+          "strategy": {
+            "meter_rule": {
+              "discharge": {
+                "net_load_threshold": {
+                  "value": 0,
+                  "unit": "kW"
+                }
+              },
+              "charge": {
+                "net_load_threshold": {
+                  "value": -999999,
+                  "unit": "kW"
+                }
+              }
+            },
+            "pv_rule": {
+              "name": "GridSupplement"
+            }
+          },
+          "constraints": {
+            "min_soc": {
+              "value": 30,
+              "unit": "%"
+            },
+            "max_soc": {
+              "value": 95,
+              "unit": "%"
+            },
+            "max_charge_power": {
+              "value": 100,
+              "unit": "%"
+            },
+            "max_discharge_power": {
+              "value": 100,
+              "unit": "%"
+            }
+          }
+        },
+        {
+          "planID": "2400010003",
+          "jobId": 2400010003,
+          "name": "Levtex SEP 21:00 4",
+          "version": "3.0",
+          "owner": "LocalSchedule",
+          "priority": 50,
+          "execType": "Cron",
+          "timezone": "America/Los_Angeles",
+          "cron": "0 0 21 3-4,7-11,14-18,21-25,28-30 SEP ? 2026",
+          "until": "2027-03-05T08:00:00Z",
+          "duration": {
+            "unit": "minutes",
+            "value": 180.0
+          },
+          "payload": {
+            "chargeThresholdKw": 0,
+            "command": "peakShaving",
+            "deadbandKw": 0.5,
+            "dischargeThresholdKw": 17.850407591572896,
+            "holdAtThreshold": true,
+            "maxChargePowerPct": 100,
+            "maxDischargePowerPct": 100,
+            "maxSocPct": 95,
+            "minSocPct": 30,
+            "port": "utilityGrid"
+          },
+          "strategy": {
+            "meter_rule": {
+              "discharge": {
+                "net_load_threshold": {
+                  "value": 17.850407591572896,
+                  "unit": "kW"
+                }
+              },
+              "charge": {
+                "net_load_threshold": {
+                  "value": 0,
+                  "unit": "kW"
+                }
+              }
+            },
+            "pv_rule": {
+              "name": "GridSupplement"
+            }
+          },
+          "constraints": {
+            "min_soc": {
+              "value": 30,
+              "unit": "%"
+            },
+            "max_soc": {
+              "value": 95,
+              "unit": "%"
+            },
+            "max_charge_power": {
+              "value": 100,
+              "unit": "%"
+            },
+            "max_discharge_power": {
+              "value": 100,
+              "unit": "%"
+            }
+          }
+        },
+        {
+          "planID": "2400010004",
+          "jobId": 2400010004,
+          "name": "Levtex SEP 21:00 5",
+          "version": "3.0",
+          "owner": "LocalSchedule",
+          "priority": 50,
+          "execType": "Cron",
+          "timezone": "America/Los_Angeles",
+          "cron": "0 0 21 5-6,12-13,19-20,26-27 SEP ? 2026",
+          "until": "2027-03-05T08:00:00Z",
+          "duration": {
+            "unit": "minutes",
+            "value": 180.0
+          },
+          "payload": {
+            "chargeThresholdKw": 0,
+            "command": "peakShaving",
+            "deadbandKw": 0.5,
+            "dischargeThresholdKw": 5.209000000000003,
+            "holdAtThreshold": true,
+            "maxChargePowerPct": 100,
+            "maxDischargePowerPct": 100,
+            "maxSocPct": 95,
+            "minSocPct": 30,
+            "port": "utilityGrid"
+          },
+          "strategy": {
+            "meter_rule": {
+              "discharge": {
+                "net_load_threshold": {
+                  "value": 5.209000000000003,
+                  "unit": "kW"
+                }
+              },
+              "charge": {
+                "net_load_threshold": {
+                  "value": 0,
+                  "unit": "kW"
+                }
+              }
+            },
+            "pv_rule": {
+              "name": "GridSupplement"
+            }
+          },
+          "constraints": {
+            "min_soc": {
+              "value": 30,
+              "unit": "%"
+            },
+            "max_soc": {
+              "value": 95,
+              "unit": "%"
+            },
+            "max_charge_power": {
+              "value": 100,
+              "unit": "%"
+            },
+            "max_discharge_power": {
+              "value": 100,
+              "unit": "%"
+            }
+          }
+        },
+        {
+          "planID": "2400010005",
+          "jobId": 2400010005,
+          "name": "Levtex OCT 00:00 6",
+          "version": "3.0",
+          "owner": "LocalSchedule",
+          "priority": 50,
+          "execType": "Cron",
+          "timezone": "America/Los_Angeles",
+          "cron": "0 0 0 2,5-9,12-16,19-23,26-30 OCT ? 2026",
+          "until": "2027-03-05T08:00:00Z",
+          "duration": {
+            "unit": "minutes",
+            "value": 480.0
+          },
+          "payload": {
+            "chargeThresholdKw": 0,
+            "command": "peakShaving",
+            "deadbandKw": 0.5,
+            "dischargeThresholdKw": 11.247769937612198,
+            "holdAtThreshold": true,
+            "maxChargePowerPct": 100,
+            "maxDischargePowerPct": 100,
+            "maxSocPct": 95,
+            "minSocPct": 30,
+            "port": "utilityGrid"
+          },
+          "strategy": {
+            "meter_rule": {
+              "discharge": {
+                "net_load_threshold": {
+                  "value": 11.247769937612198,
+                  "unit": "kW"
+                }
+              },
+              "charge": {
+                "net_load_threshold": {
+                  "value": 0,
+                  "unit": "kW"
+                }
+              }
+            },
+            "pv_rule": {
+              "name": "GridSupplement"
+            }
+          },
+          "constraints": {
+            "min_soc": {
+              "value": 30,
+              "unit": "%"
+            },
+            "max_soc": {
+              "value": 95,
+              "unit": "%"
+            },
+            "max_charge_power": {
+              "value": 100,
+              "unit": "%"
+            },
+            "max_discharge_power": {
+              "value": 100,
+              "unit": "%"
+            }
+          }
+        },
+        {
+          "planID": "2400010006",
+          "jobId": 2400010006,
+          "name": "Levtex OCT 00:00 7",
+          "version": "3.0",
+          "owner": "LocalSchedule",
+          "priority": 50,
+          "execType": "Cron",
+          "timezone": "America/Los_Angeles",
+          "cron": "0 0 0 1 OCT ? 2026",
+          "until": "2027-03-05T08:00:00Z",
+          "duration": {
+            "unit": "minutes",
+            "value": 480.0
+          },
+          "payload": {
+            "chargeThresholdKw": 0,
+            "command": "peakShaving",
+            "deadbandKw": 0.5,
+            "dischargeThresholdKw": 17.850407591572896,
+            "holdAtThreshold": true,
+            "maxChargePowerPct": 100,
+            "maxDischargePowerPct": 100,
+            "maxSocPct": 95,
+            "minSocPct": 30,
+            "port": "utilityGrid"
+          },
+          "strategy": {
+            "meter_rule": {
+              "discharge": {
+                "net_load_threshold": {
+                  "value": 17.850407591572896,
+                  "unit": "kW"
+                }
+              },
+              "charge": {
+                "net_load_threshold": {
+                  "value": 0,
+                  "unit": "kW"
+                }
+              }
+            },
+            "pv_rule": {
+              "name": "GridSupplement"
+            }
+          },
+          "constraints": {
+            "min_soc": {
+              "value": 30,
+              "unit": "%"
+            },
+            "max_soc": {
+              "value": 95,
+              "unit": "%"
+            },
+            "max_charge_power": {
+              "value": 100,
+              "unit": "%"
+            },
+            "max_discharge_power": {
+              "value": 100,
+              "unit": "%"
+            }
+          }
+        },
+        {
+          "planID": "2400010007",
+          "jobId": 2400010007,
+          "name": "Levtex OCT 00:00 8",
+          "version": "3.0",
+          "owner": "LocalSchedule",
+          "priority": 50,
+          "execType": "Cron",
+          "timezone": "America/Los_Angeles",
+          "cron": "0 0 0 3-4,10-11,17-18,24-25,31 OCT ? 2026",
+          "until": "2027-03-05T08:00:00Z",
+          "duration": {
+            "unit": "minutes",
+            "value": 480.0
+          },
+          "payload": {
+            "chargeThresholdKw": 0,
+            "command": "peakShaving",
+            "deadbandKw": 0.5,
+            "dischargeThresholdKw": 2.75659652112953,
+            "holdAtThreshold": true,
+            "maxChargePowerPct": 100,
+            "maxDischargePowerPct": 100,
+            "maxSocPct": 95,
+            "minSocPct": 30,
+            "port": "utilityGrid"
+          },
+          "strategy": {
+            "meter_rule": {
+              "discharge": {
+                "net_load_threshold": {
+                  "value": 2.75659652112953,
+                  "unit": "kW"
+                }
+              },
+              "charge": {
+                "net_load_threshold": {
+                  "value": 0,
+                  "unit": "kW"
+                }
+              }
+            },
+            "pv_rule": {
+              "name": "GridSupplement"
+            }
+          },
+          "constraints": {
+            "min_soc": {
+              "value": 30,
+              "unit": "%"
+            },
+            "max_soc": {
+              "value": 95,
+              "unit": "%"
+            },
+            "max_charge_power": {
+              "value": 100,
+              "unit": "%"
+            },
+            "max_discharge_power": {
+              "value": 100,
+              "unit": "%"
+            }
+          }
+        },
+        {
+          "planID": "2400010008",
+          "jobId": 2400010008,
+          "name": "Levtex OCT 08:00 9",
+          "version": "3.0",
+          "owner": "LocalSchedule",
+          "priority": 50,
+          "execType": "Cron",
+          "timezone": "America/Los_Angeles",
+          "cron": "0 0 8 3-4,10-11,17-18,24-25,31 OCT ? 2026",
+          "until": "2027-03-05T08:00:00Z",
+          "duration": {
+            "unit": "minutes",
+            "value": 480.0
+          },
+          "payload": {
+            "chargeThresholdKw": -999999,
+            "command": "peakShaving",
+            "deadbandKw": 0.5,
+            "dischargeThresholdKw": 0,
+            "holdAtThreshold": true,
+            "maxChargePowerPct": 100,
+            "maxDischargePowerPct": 100,
+            "maxSocPct": 95,
+            "minSocPct": 30,
+            "port": "utilityGrid"
+          },
+          "strategy": {
+            "meter_rule": {
+              "discharge": {
+                "net_load_threshold": {
+                  "value": 0,
+                  "unit": "kW"
+                }
+              },
+              "charge": {
+                "net_load_threshold": {
+                  "value": -999999,
+                  "unit": "kW"
+                }
+              }
+            },
+            "pv_rule": {
+              "name": "GridSupplement"
+            }
+          },
+          "constraints": {
+            "min_soc": {
+              "value": 30,
+              "unit": "%"
+            },
+            "max_soc": {
+              "value": 95,
+              "unit": "%"
+            },
+            "max_charge_power": {
+              "value": 100,
+              "unit": "%"
+            },
+            "max_discharge_power": {
+              "value": 100,
+              "unit": "%"
+            }
+          }
+        },
+        {
+          "planID": "2400010009",
+          "jobId": 2400010009,
+          "name": "Levtex OCT 08:00 10",
+          "version": "3.0",
+          "owner": "LocalSchedule",
+          "priority": 50,
+          "execType": "Cron",
+          "timezone": "America/Los_Angeles",
+          "cron": "0 0 8 1-2,5-9,12-16,19-23,26-30 OCT ? 2026",
+          "until": "2027-03-05T08:00:00Z",
+          "duration": {
+            "unit": "minutes",
+            "value": 480.0
+          },
+          "payload": {
+            "chargeThresholdKw": 0,
+            "command": "peakShaving",
+            "deadbandKw": 0.5,
+            "dischargeThresholdKw": 11.247769937612198,
+            "holdAtThreshold": true,
+            "maxChargePowerPct": 100,
+            "maxDischargePowerPct": 100,
+            "maxSocPct": 95,
+            "minSocPct": 30,
+            "port": "utilityGrid"
+          },
+          "strategy": {
+            "meter_rule": {
+              "discharge": {
+                "net_load_threshold": {
+                  "value": 11.247769937612198,
+                  "unit": "kW"
+                }
+              },
+              "charge": {
+                "net_load_threshold": {
+                  "value": 0,
+                  "unit": "kW"
+                }
+              }
+            },
+            "pv_rule": {
+              "name": "GridSupplement"
+            }
+          },
+          "constraints": {
+            "min_soc": {
+              "value": 30,
+              "unit": "%"
+            },
+            "max_soc": {
+              "value": 95,
+              "unit": "%"
+            },
+            "max_charge_power": {
+              "value": 100,
+              "unit": "%"
+            },
+            "max_discharge_power": {
+              "value": 100,
+              "unit": "%"
+            }
+          }
+        },
+        {
+          "planID": "2400010010",
+          "jobId": 2400010010,
+          "name": "Levtex OCT 16:00 11",
+          "version": "3.0",
+          "owner": "LocalSchedule",
+          "priority": 50,
+          "execType": "Cron",
+          "timezone": "America/Los_Angeles",
+          "cron": "0 0 16 1-31 OCT ? 2026",
+          "until": "2027-03-05T08:00:00Z",
+          "duration": {
+            "unit": "minutes",
+            "value": 300.0
+          },
+          "payload": {
+            "chargeThresholdKw": -999999,
+            "command": "peakShaving",
+            "deadbandKw": 0.5,
+            "dischargeThresholdKw": 0,
+            "holdAtThreshold": true,
+            "maxChargePowerPct": 100,
+            "maxDischargePowerPct": 100,
+            "maxSocPct": 95,
+            "minSocPct": 30,
+            "port": "utilityGrid"
+          },
+          "strategy": {
+            "meter_rule": {
+              "discharge": {
+                "net_load_threshold": {
+                  "value": 0,
+                  "unit": "kW"
+                }
+              },
+              "charge": {
+                "net_load_threshold": {
+                  "value": -999999,
+                  "unit": "kW"
+                }
+              }
+            },
+            "pv_rule": {
+              "name": "GridSupplement"
+            }
+          },
+          "constraints": {
+            "min_soc": {
+              "value": 30,
+              "unit": "%"
+            },
+            "max_soc": {
+              "value": 95,
+              "unit": "%"
+            },
+            "max_charge_power": {
+              "value": 100,
+              "unit": "%"
+            },
+            "max_discharge_power": {
+              "value": 100,
+              "unit": "%"
+            }
+          }
+        },
+        {
+          "planID": "2400010011",
+          "jobId": 2400010011,
+          "name": "Levtex OCT 21:00 12",
+          "version": "3.0",
+          "owner": "LocalSchedule",
+          "priority": 50,
+          "execType": "Cron",
+          "timezone": "America/Los_Angeles",
+          "cron": "0 0 21 1-2,5-9,12-16,19-23,26-30 OCT ? 2026",
+          "until": "2027-03-05T08:00:00Z",
+          "duration": {
+            "unit": "minutes",
+            "value": 180.0
+          },
+          "payload": {
+            "chargeThresholdKw": 0,
+            "command": "peakShaving",
+            "deadbandKw": 0.5,
+            "dischargeThresholdKw": 11.247769937612198,
+            "holdAtThreshold": true,
+            "maxChargePowerPct": 100,
+            "maxDischargePowerPct": 100,
+            "maxSocPct": 95,
+            "minSocPct": 30,
+            "port": "utilityGrid"
+          },
+          "strategy": {
+            "meter_rule": {
+              "discharge": {
+                "net_load_threshold": {
+                  "value": 11.247769937612198,
+                  "unit": "kW"
+                }
+              },
+              "charge": {
+                "net_load_threshold": {
+                  "value": 0,
+                  "unit": "kW"
+                }
+              }
+            },
+            "pv_rule": {
+              "name": "GridSupplement"
+            }
+          },
+          "constraints": {
+            "min_soc": {
+              "value": 30,
+              "unit": "%"
+            },
+            "max_soc": {
+              "value": 95,
+              "unit": "%"
+            },
+            "max_charge_power": {
+              "value": 100,
+              "unit": "%"
+            },
+            "max_discharge_power": {
+              "value": 100,
+              "unit": "%"
+            }
+          }
+        },
+        {
+          "planID": "2400010012",
+          "jobId": 2400010012,
+          "name": "Levtex OCT 21:00 13",
+          "version": "3.0",
+          "owner": "LocalSchedule",
+          "priority": 50,
+          "execType": "Cron",
+          "timezone": "America/Los_Angeles",
+          "cron": "0 0 21 3-4,10-11,17-18,24-25,31 OCT ? 2026",
+          "until": "2027-03-05T08:00:00Z",
+          "duration": {
+            "unit": "minutes",
+            "value": 180.0
+          },
+          "payload": {
+            "chargeThresholdKw": 0,
+            "command": "peakShaving",
+            "deadbandKw": 0.5,
+            "dischargeThresholdKw": 2.75659652112953,
+            "holdAtThreshold": true,
+            "maxChargePowerPct": 100,
+            "maxDischargePowerPct": 100,
+            "maxSocPct": 95,
+            "minSocPct": 30,
+            "port": "utilityGrid"
+          },
+          "strategy": {
+            "meter_rule": {
+              "discharge": {
+                "net_load_threshold": {
+                  "value": 2.75659652112953,
+                  "unit": "kW"
+                }
+              },
+              "charge": {
+                "net_load_threshold": {
+                  "value": 0,
+                  "unit": "kW"
+                }
+              }
+            },
+            "pv_rule": {
+              "name": "GridSupplement"
+            }
+          },
+          "constraints": {
+            "min_soc": {
+              "value": 30,
+              "unit": "%"
+            },
+            "max_soc": {
+              "value": 95,
+              "unit": "%"
+            },
+            "max_charge_power": {
+              "value": 100,
+              "unit": "%"
+            },
+            "max_discharge_power": {
+              "value": 100,
+              "unit": "%"
+            }
+          }
+        },
+        {
+          "planID": "2400010013",
+          "jobId": 2400010013,
+          "name": "Levtex NOV 00:00 14",
+          "version": "3.0",
+          "owner": "LocalSchedule",
+          "priority": 50,
+          "execType": "Cron",
+          "timezone": "America/Los_Angeles",
+          "cron": "0 0 0 2-30 NOV ? 2026",
+          "until": "2027-03-05T08:00:00Z",
+          "duration": {
+            "unit": "minutes",
+            "value": 480.0
+          },
+          "payload": {
+            "chargeThresholdKw": 0,
+            "command": "peakShaving",
+            "deadbandKw": 0.5,
+            "dischargeThresholdKw": 19.096139511990753,
+            "holdAtThreshold": true,
+            "maxChargePowerPct": 100,
+            "maxDischargePowerPct": 100,
+            "maxSocPct": 95,
+            "minSocPct": 30,
+            "port": "utilityGrid"
+          },
+          "strategy": {
+            "meter_rule": {
+              "discharge": {
+                "net_load_threshold": {
+                  "value": 19.096139511990753,
+                  "unit": "kW"
+                }
+              },
+              "charge": {
+                "net_load_threshold": {
+                  "value": 0,
+                  "unit": "kW"
+                }
+              }
+            },
+            "pv_rule": {
+              "name": "GridSupplement"
+            }
+          },
+          "constraints": {
+            "min_soc": {
+              "value": 30,
+              "unit": "%"
+            },
+            "max_soc": {
+              "value": 95,
+              "unit": "%"
+            },
+            "max_charge_power": {
+              "value": 100,
+              "unit": "%"
+            },
+            "max_discharge_power": {
+              "value": 100,
+              "unit": "%"
+            }
+          }
+        },
+        {
+          "planID": "2400010014",
+          "jobId": 2400010014,
+          "name": "Levtex NOV 00:00 15",
+          "version": "3.0",
+          "owner": "LocalSchedule",
+          "priority": 50,
+          "execType": "Cron",
+          "timezone": "America/Los_Angeles",
+          "cron": "0 0 0 1 NOV ? 2026",
+          "until": "2027-03-05T08:00:00Z",
+          "duration": {
+            "unit": "minutes",
+            "value": 480.0
+          },
+          "payload": {
+            "chargeThresholdKw": 0,
+            "command": "peakShaving",
+            "deadbandKw": 0.5,
+            "dischargeThresholdKw": 2.75659652112953,
+            "holdAtThreshold": true,
+            "maxChargePowerPct": 100,
+            "maxDischargePowerPct": 100,
+            "maxSocPct": 95,
+            "minSocPct": 30,
+            "port": "utilityGrid"
+          },
+          "strategy": {
+            "meter_rule": {
+              "discharge": {
+                "net_load_threshold": {
+                  "value": 2.75659652112953,
+                  "unit": "kW"
+                }
+              },
+              "charge": {
+                "net_load_threshold": {
+                  "value": 0,
+                  "unit": "kW"
+                }
+              }
+            },
+            "pv_rule": {
+              "name": "GridSupplement"
+            }
+          },
+          "constraints": {
+            "min_soc": {
+              "value": 30,
+              "unit": "%"
+            },
+            "max_soc": {
+              "value": 95,
+              "unit": "%"
+            },
+            "max_charge_power": {
+              "value": 100,
+              "unit": "%"
+            },
+            "max_discharge_power": {
+              "value": 100,
+              "unit": "%"
+            }
+          }
+        },
+        {
+          "planID": "2400010015",
+          "jobId": 2400010015,
+          "name": "Levtex NOV 08:00 16",
+          "version": "3.0",
+          "owner": "LocalSchedule",
+          "priority": 50,
+          "execType": "Cron",
+          "timezone": "America/Los_Angeles",
+          "cron": "0 0 8 1-30 NOV ? 2026",
+          "until": "2027-03-05T08:00:00Z",
+          "duration": {
+            "unit": "minutes",
+            "value": 480.0
+          },
+          "payload": {
+            "chargeThresholdKw": 0,
+            "command": "peakShaving",
+            "deadbandKw": 0.5,
+            "dischargeThresholdKw": 19.096139511990753,
+            "holdAtThreshold": true,
+            "maxChargePowerPct": 100,
+            "maxDischargePowerPct": 100,
+            "maxSocPct": 95,
+            "minSocPct": 30,
+            "port": "utilityGrid"
+          },
+          "strategy": {
+            "meter_rule": {
+              "discharge": {
+                "net_load_threshold": {
+                  "value": 19.096139511990753,
+                  "unit": "kW"
+                }
+              },
+              "charge": {
+                "net_load_threshold": {
+                  "value": 0,
+                  "unit": "kW"
+                }
+              }
+            },
+            "pv_rule": {
+              "name": "GridSupplement"
+            }
+          },
+          "constraints": {
+            "min_soc": {
+              "value": 30,
+              "unit": "%"
+            },
+            "max_soc": {
+              "value": 95,
+              "unit": "%"
+            },
+            "max_charge_power": {
+              "value": 100,
+              "unit": "%"
+            },
+            "max_discharge_power": {
+              "value": 100,
+              "unit": "%"
+            }
+          }
+        },
+        {
+          "planID": "2400010016",
+          "jobId": 2400010016,
+          "name": "Levtex NOV 16:00 17",
+          "version": "3.0",
+          "owner": "LocalSchedule",
+          "priority": 50,
+          "execType": "Cron",
+          "timezone": "America/Los_Angeles",
+          "cron": "0 0 16 1-30 NOV ? 2026",
+          "until": "2027-03-05T08:00:00Z",
+          "duration": {
+            "unit": "minutes",
+            "value": 300.0
+          },
+          "payload": {
+            "chargeThresholdKw": -999999,
+            "command": "peakShaving",
+            "deadbandKw": 0.5,
+            "dischargeThresholdKw": 0,
+            "holdAtThreshold": true,
+            "maxChargePowerPct": 100,
+            "maxDischargePowerPct": 100,
+            "maxSocPct": 95,
+            "minSocPct": 30,
+            "port": "utilityGrid"
+          },
+          "strategy": {
+            "meter_rule": {
+              "discharge": {
+                "net_load_threshold": {
+                  "value": 0,
+                  "unit": "kW"
+                }
+              },
+              "charge": {
+                "net_load_threshold": {
+                  "value": -999999,
+                  "unit": "kW"
+                }
+              }
+            },
+            "pv_rule": {
+              "name": "GridSupplement"
+            }
+          },
+          "constraints": {
+            "min_soc": {
+              "value": 30,
+              "unit": "%"
+            },
+            "max_soc": {
+              "value": 95,
+              "unit": "%"
+            },
+            "max_charge_power": {
+              "value": 100,
+              "unit": "%"
+            },
+            "max_discharge_power": {
+              "value": 100,
+              "unit": "%"
+            }
+          }
+        },
+        {
+          "planID": "2400010017",
+          "jobId": 2400010017,
+          "name": "Levtex NOV 21:00 18",
+          "version": "3.0",
+          "owner": "LocalSchedule",
+          "priority": 50,
+          "execType": "Cron",
+          "timezone": "America/Los_Angeles",
+          "cron": "0 0 21 1-30 NOV ? 2026",
+          "until": "2027-03-05T08:00:00Z",
+          "duration": {
+            "unit": "minutes",
+            "value": 180.0
+          },
+          "payload": {
+            "chargeThresholdKw": 0,
+            "command": "peakShaving",
+            "deadbandKw": 0.5,
+            "dischargeThresholdKw": 19.096139511990753,
+            "holdAtThreshold": true,
+            "maxChargePowerPct": 100,
+            "maxDischargePowerPct": 100,
+            "maxSocPct": 95,
+            "minSocPct": 30,
+            "port": "utilityGrid"
+          },
+          "strategy": {
+            "meter_rule": {
+              "discharge": {
+                "net_load_threshold": {
+                  "value": 19.096139511990753,
+                  "unit": "kW"
+                }
+              },
+              "charge": {
+                "net_load_threshold": {
+                  "value": 0,
+                  "unit": "kW"
+                }
+              }
+            },
+            "pv_rule": {
+              "name": "GridSupplement"
+            }
+          },
+          "constraints": {
+            "min_soc": {
+              "value": 30,
+              "unit": "%"
+            },
+            "max_soc": {
+              "value": 95,
+              "unit": "%"
+            },
+            "max_charge_power": {
+              "value": 100,
+              "unit": "%"
+            },
+            "max_discharge_power": {
+              "value": 100,
+              "unit": "%"
+            }
+          }
+        },
+        {
+          "planID": "2400010018",
+          "jobId": 2400010018,
+          "name": "Levtex DEC 00:00 19",
+          "version": "3.0",
+          "owner": "LocalSchedule",
+          "priority": 50,
+          "execType": "Cron",
+          "timezone": "America/Los_Angeles",
+          "cron": "0 0 0 5-6,12-13,19-20,26-27 DEC ? 2026",
+          "until": "2027-03-05T08:00:00Z",
+          "duration": {
+            "unit": "minutes",
+            "value": 480.0
+          },
+          "payload": {
+            "chargeThresholdKw": 0,
+            "command": "peakShaving",
+            "deadbandKw": 0.5,
+            "dischargeThresholdKw": 14.6307415873312,
+            "holdAtThreshold": true,
+            "maxChargePowerPct": 100,
+            "maxDischargePowerPct": 100,
+            "maxSocPct": 95,
+            "minSocPct": 30,
+            "port": "utilityGrid"
+          },
+          "strategy": {
+            "meter_rule": {
+              "discharge": {
+                "net_load_threshold": {
+                  "value": 14.6307415873312,
+                  "unit": "kW"
+                }
+              },
+              "charge": {
+                "net_load_threshold": {
+                  "value": 0,
+                  "unit": "kW"
+                }
+              }
+            },
+            "pv_rule": {
+              "name": "GridSupplement"
+            }
+          },
+          "constraints": {
+            "min_soc": {
+              "value": 30,
+              "unit": "%"
+            },
+            "max_soc": {
+              "value": 95,
+              "unit": "%"
+            },
+            "max_charge_power": {
+              "value": 100,
+              "unit": "%"
+            },
+            "max_discharge_power": {
+              "value": 100,
+              "unit": "%"
+            }
+          }
+        },
+        {
+          "planID": "2400010019",
+          "jobId": 2400010019,
+          "name": "Levtex DEC 00:00 20",
+          "version": "3.0",
+          "owner": "LocalSchedule",
+          "priority": 50,
+          "execType": "Cron",
+          "timezone": "America/Los_Angeles",
+          "cron": "0 0 0 2-4,7-11,14-18,21-25,28-31 DEC ? 2026",
+          "until": "2027-03-05T08:00:00Z",
+          "duration": {
+            "unit": "minutes",
+            "value": 480.0
+          },
+          "payload": {
+            "chargeThresholdKw": 0,
+            "command": "peakShaving",
+            "deadbandKw": 0.5,
+            "dischargeThresholdKw": 14.630741587331201,
+            "holdAtThreshold": true,
+            "maxChargePowerPct": 100,
+            "maxDischargePowerPct": 100,
+            "maxSocPct": 95,
+            "minSocPct": 30,
+            "port": "utilityGrid"
+          },
+          "strategy": {
+            "meter_rule": {
+              "discharge": {
+                "net_load_threshold": {
+                  "value": 14.630741587331201,
+                  "unit": "kW"
+                }
+              },
+              "charge": {
+                "net_load_threshold": {
+                  "value": 0,
+                  "unit": "kW"
+                }
+              }
+            },
+            "pv_rule": {
+              "name": "GridSupplement"
+            }
+          },
+          "constraints": {
+            "min_soc": {
+              "value": 30,
+              "unit": "%"
+            },
+            "max_soc": {
+              "value": 95,
+              "unit": "%"
+            },
+            "max_charge_power": {
+              "value": 100,
+              "unit": "%"
+            },
+            "max_discharge_power": {
+              "value": 100,
+              "unit": "%"
+            }
+          }
+        },
+        {
+          "planID": "2400010020",
+          "jobId": 2400010020,
+          "name": "Levtex DEC 00:00 21",
+          "version": "3.0",
+          "owner": "LocalSchedule",
+          "priority": 50,
+          "execType": "Cron",
+          "timezone": "America/Los_Angeles",
+          "cron": "0 0 0 1 DEC ? 2026",
+          "until": "2027-03-05T08:00:00Z",
+          "duration": {
+            "unit": "minutes",
+            "value": 480.0
+          },
+          "payload": {
+            "chargeThresholdKw": 0,
+            "command": "peakShaving",
+            "deadbandKw": 0.5,
+            "dischargeThresholdKw": 19.096139511990753,
+            "holdAtThreshold": true,
+            "maxChargePowerPct": 100,
+            "maxDischargePowerPct": 100,
+            "maxSocPct": 95,
+            "minSocPct": 30,
+            "port": "utilityGrid"
+          },
+          "strategy": {
+            "meter_rule": {
+              "discharge": {
+                "net_load_threshold": {
+                  "value": 19.096139511990753,
+                  "unit": "kW"
+                }
+              },
+              "charge": {
+                "net_load_threshold": {
+                  "value": 0,
+                  "unit": "kW"
+                }
+              }
+            },
+            "pv_rule": {
+              "name": "GridSupplement"
+            }
+          },
+          "constraints": {
+            "min_soc": {
+              "value": 30,
+              "unit": "%"
+            },
+            "max_soc": {
+              "value": 95,
+              "unit": "%"
+            },
+            "max_charge_power": {
+              "value": 100,
+              "unit": "%"
+            },
+            "max_discharge_power": {
+              "value": 100,
+              "unit": "%"
+            }
+          }
+        },
+        {
+          "planID": "2400010021",
+          "jobId": 2400010021,
+          "name": "Levtex DEC 08:00 22",
+          "version": "3.0",
+          "owner": "LocalSchedule",
+          "priority": 50,
+          "execType": "Cron",
+          "timezone": "America/Los_Angeles",
+          "cron": "0 0 8 1-4,7-11,14-18,21-25,28-31 DEC ? 2026",
+          "until": "2027-03-05T08:00:00Z",
+          "duration": {
+            "unit": "minutes",
+            "value": 480.0
+          },
+          "payload": {
+            "chargeThresholdKw": 0,
+            "command": "peakShaving",
+            "deadbandKw": 0.5,
+            "dischargeThresholdKw": 14.630741587331201,
+            "holdAtThreshold": true,
+            "maxChargePowerPct": 100,
+            "maxDischargePowerPct": 100,
+            "maxSocPct": 95,
+            "minSocPct": 30,
+            "port": "utilityGrid"
+          },
+          "strategy": {
+            "meter_rule": {
+              "discharge": {
+                "net_load_threshold": {
+                  "value": 14.630741587331201,
+                  "unit": "kW"
+                }
+              },
+              "charge": {
+                "net_load_threshold": {
+                  "value": 0,
+                  "unit": "kW"
+                }
+              }
+            },
+            "pv_rule": {
+              "name": "GridSupplement"
+            }
+          },
+          "constraints": {
+            "min_soc": {
+              "value": 30,
+              "unit": "%"
+            },
+            "max_soc": {
+              "value": 95,
+              "unit": "%"
+            },
+            "max_charge_power": {
+              "value": 100,
+              "unit": "%"
+            },
+            "max_discharge_power": {
+              "value": 100,
+              "unit": "%"
+            }
+          }
+        },
+        {
+          "planID": "2400010022",
+          "jobId": 2400010022,
+          "name": "Levtex DEC 08:00 23",
+          "version": "3.0",
+          "owner": "LocalSchedule",
+          "priority": 50,
+          "execType": "Cron",
+          "timezone": "America/Los_Angeles",
+          "cron": "0 0 8 5-6,12-13,19-20,26-27 DEC ? 2026",
+          "until": "2027-03-05T08:00:00Z",
+          "duration": {
+            "unit": "minutes",
+            "value": 480.0
+          },
+          "payload": {
+            "chargeThresholdKw": 0,
+            "command": "peakShaving",
+            "deadbandKw": 0.5,
+            "dischargeThresholdKw": 3.127566659999996,
+            "holdAtThreshold": true,
+            "maxChargePowerPct": 100,
+            "maxDischargePowerPct": 100,
+            "maxSocPct": 95,
+            "minSocPct": 30,
+            "port": "utilityGrid"
+          },
+          "strategy": {
+            "meter_rule": {
+              "discharge": {
+                "net_load_threshold": {
+                  "value": 3.127566659999996,
+                  "unit": "kW"
+                }
+              },
+              "charge": {
+                "net_load_threshold": {
+                  "value": 0,
+                  "unit": "kW"
+                }
+              }
+            },
+            "pv_rule": {
+              "name": "GridSupplement"
+            }
+          },
+          "constraints": {
+            "min_soc": {
+              "value": 30,
+              "unit": "%"
+            },
+            "max_soc": {
+              "value": 95,
+              "unit": "%"
+            },
+            "max_charge_power": {
+              "value": 100,
+              "unit": "%"
+            },
+            "max_discharge_power": {
+              "value": 100,
+              "unit": "%"
+            }
+          }
+        },
+        {
+          "planID": "2400010023",
+          "jobId": 2400010023,
+          "name": "Levtex DEC 16:00 24",
+          "version": "3.0",
+          "owner": "LocalSchedule",
+          "priority": 50,
+          "execType": "Cron",
+          "timezone": "America/Los_Angeles",
+          "cron": "0 0 16 1-31 DEC ? 2026",
+          "until": "2027-03-05T08:00:00Z",
+          "duration": {
+            "unit": "minutes",
+            "value": 300.0
+          },
+          "payload": {
+            "chargeThresholdKw": -999999,
+            "command": "peakShaving",
+            "deadbandKw": 0.5,
+            "dischargeThresholdKw": 0,
+            "holdAtThreshold": true,
+            "maxChargePowerPct": 100,
+            "maxDischargePowerPct": 100,
+            "maxSocPct": 95,
+            "minSocPct": 30,
+            "port": "utilityGrid"
+          },
+          "strategy": {
+            "meter_rule": {
+              "discharge": {
+                "net_load_threshold": {
+                  "value": 0,
+                  "unit": "kW"
+                }
+              },
+              "charge": {
+                "net_load_threshold": {
+                  "value": -999999,
+                  "unit": "kW"
+                }
+              }
+            },
+            "pv_rule": {
+              "name": "GridSupplement"
+            }
+          },
+          "constraints": {
+            "min_soc": {
+              "value": 30,
+              "unit": "%"
+            },
+            "max_soc": {
+              "value": 95,
+              "unit": "%"
+            },
+            "max_charge_power": {
+              "value": 100,
+              "unit": "%"
+            },
+            "max_discharge_power": {
+              "value": 100,
+              "unit": "%"
+            }
+          }
+        },
+        {
+          "planID": "2400010024",
+          "jobId": 2400010024,
+          "name": "Levtex DEC 21:00 25",
+          "version": "3.0",
+          "owner": "LocalSchedule",
+          "priority": 50,
+          "execType": "Cron",
+          "timezone": "America/Los_Angeles",
+          "cron": "0 0 21 5-6,12-13,19-20,26-27 DEC ? 2026",
+          "until": "2027-03-05T08:00:00Z",
+          "duration": {
+            "unit": "minutes",
+            "value": 180.0
+          },
+          "payload": {
+            "chargeThresholdKw": 0,
+            "command": "peakShaving",
+            "deadbandKw": 0.5,
+            "dischargeThresholdKw": 14.6307415873312,
+            "holdAtThreshold": true,
+            "maxChargePowerPct": 100,
+            "maxDischargePowerPct": 100,
+            "maxSocPct": 95,
+            "minSocPct": 30,
+            "port": "utilityGrid"
+          },
+          "strategy": {
+            "meter_rule": {
+              "discharge": {
+                "net_load_threshold": {
+                  "value": 14.6307415873312,
+                  "unit": "kW"
+                }
+              },
+              "charge": {
+                "net_load_threshold": {
+                  "value": 0,
+                  "unit": "kW"
+                }
+              }
+            },
+            "pv_rule": {
+              "name": "GridSupplement"
+            }
+          },
+          "constraints": {
+            "min_soc": {
+              "value": 30,
+              "unit": "%"
+            },
+            "max_soc": {
+              "value": 95,
+              "unit": "%"
+            },
+            "max_charge_power": {
+              "value": 100,
+              "unit": "%"
+            },
+            "max_discharge_power": {
+              "value": 100,
+              "unit": "%"
+            }
+          }
+        },
+        {
+          "planID": "2400010025",
+          "jobId": 2400010025,
+          "name": "Levtex DEC 21:00 26",
+          "version": "3.0",
+          "owner": "LocalSchedule",
+          "priority": 50,
+          "execType": "Cron",
+          "timezone": "America/Los_Angeles",
+          "cron": "0 0 21 1-4,7-11,14-18,21-25,28-31 DEC ? 2026",
+          "until": "2027-03-05T08:00:00Z",
+          "duration": {
+            "unit": "minutes",
+            "value": 180.0
+          },
+          "payload": {
+            "chargeThresholdKw": 0,
+            "command": "peakShaving",
+            "deadbandKw": 0.5,
+            "dischargeThresholdKw": 14.630741587331201,
+            "holdAtThreshold": true,
+            "maxChargePowerPct": 100,
+            "maxDischargePowerPct": 100,
+            "maxSocPct": 95,
+            "minSocPct": 30,
+            "port": "utilityGrid"
+          },
+          "strategy": {
+            "meter_rule": {
+              "discharge": {
+                "net_load_threshold": {
+                  "value": 14.630741587331201,
+                  "unit": "kW"
+                }
+              },
+              "charge": {
+                "net_load_threshold": {
+                  "value": 0,
+                  "unit": "kW"
+                }
+              }
+            },
+            "pv_rule": {
+              "name": "GridSupplement"
+            }
+          },
+          "constraints": {
+            "min_soc": {
+              "value": 30,
+              "unit": "%"
+            },
+            "max_soc": {
+              "value": 95,
+              "unit": "%"
+            },
+            "max_charge_power": {
+              "value": 100,
+              "unit": "%"
+            },
+            "max_discharge_power": {
+              "value": 100,
+              "unit": "%"
+            }
+          }
+        },
+        {
+          "planID": "2400010026",
+          "jobId": 2400010026,
+          "name": "Levtex JAN 00:00 27",
+          "version": "3.0",
+          "owner": "LocalSchedule",
+          "priority": 50,
+          "execType": "Cron",
+          "timezone": "America/Los_Angeles",
+          "cron": "0 0 0 1 JAN ? 2027",
+          "until": "2027-03-05T08:00:00Z",
+          "duration": {
+            "unit": "minutes",
+            "value": 480.0
+          },
+          "payload": {
+            "chargeThresholdKw": 0,
+            "command": "peakShaving",
+            "deadbandKw": 0.5,
+            "dischargeThresholdKw": 14.630741587331201,
+            "holdAtThreshold": true,
+            "maxChargePowerPct": 100,
+            "maxDischargePowerPct": 100,
+            "maxSocPct": 95,
+            "minSocPct": 30,
+            "port": "utilityGrid"
+          },
+          "strategy": {
+            "meter_rule": {
+              "discharge": {
+                "net_load_threshold": {
+                  "value": 14.630741587331201,
+                  "unit": "kW"
+                }
+              },
+              "charge": {
+                "net_load_threshold": {
+                  "value": 0,
+                  "unit": "kW"
+                }
+              }
+            },
+            "pv_rule": {
+              "name": "GridSupplement"
+            }
+          },
+          "constraints": {
+            "min_soc": {
+              "value": 30,
+              "unit": "%"
+            },
+            "max_soc": {
+              "value": 95,
+              "unit": "%"
+            },
+            "max_charge_power": {
+              "value": 100,
+              "unit": "%"
+            },
+            "max_discharge_power": {
+              "value": 100,
+              "unit": "%"
+            }
+          }
+        },
+        {
+          "planID": "2400010027",
+          "jobId": 2400010027,
+          "name": "Levtex JAN 00:00 28",
+          "version": "3.0",
+          "owner": "LocalSchedule",
+          "priority": 50,
+          "execType": "Cron",
+          "timezone": "America/Los_Angeles",
+          "cron": "0 0 0 4-8,11-15,18-22,25-29 JAN ? 2027",
+          "until": "2027-03-05T08:00:00Z",
+          "duration": {
+            "unit": "minutes",
+            "value": 480.0
+          },
+          "payload": {
+            "chargeThresholdKw": 0,
+            "command": "peakShaving",
+            "deadbandKw": 0.5,
+            "dischargeThresholdKw": 17.07118375355623,
+            "holdAtThreshold": true,
+            "maxChargePowerPct": 100,
+            "maxDischargePowerPct": 100,
+            "maxSocPct": 95,
+            "minSocPct": 30,
+            "port": "utilityGrid"
+          },
+          "strategy": {
+            "meter_rule": {
+              "discharge": {
+                "net_load_threshold": {
+                  "value": 17.07118375355623,
+                  "unit": "kW"
+                }
+              },
+              "charge": {
+                "net_load_threshold": {
+                  "value": 0,
+                  "unit": "kW"
+                }
+              }
+            },
+            "pv_rule": {
+              "name": "GridSupplement"
+            }
+          },
+          "constraints": {
+            "min_soc": {
+              "value": 30,
+              "unit": "%"
+            },
+            "max_soc": {
+              "value": 95,
+              "unit": "%"
+            },
+            "max_charge_power": {
+              "value": 100,
+              "unit": "%"
+            },
+            "max_discharge_power": {
+              "value": 100,
+              "unit": "%"
+            }
+          }
+        },
+        {
+          "planID": "2400010028",
+          "jobId": 2400010028,
+          "name": "Levtex JAN 00:00 29",
+          "version": "3.0",
+          "owner": "LocalSchedule",
+          "priority": 50,
+          "execType": "Cron",
+          "timezone": "America/Los_Angeles",
+          "cron": "0 0 0 2-3,9-10,16-17,23-24,30-31 JAN ? 2027",
+          "until": "2027-03-05T08:00:00Z",
+          "duration": {
+            "unit": "minutes",
+            "value": 480.0
+          },
+          "payload": {
+            "chargeThresholdKw": 0,
+            "command": "peakShaving",
+            "deadbandKw": 0.5,
+            "dischargeThresholdKw": 9.093333333,
+            "holdAtThreshold": true,
+            "maxChargePowerPct": 100,
+            "maxDischargePowerPct": 100,
+            "maxSocPct": 95,
+            "minSocPct": 30,
+            "port": "utilityGrid"
+          },
+          "strategy": {
+            "meter_rule": {
+              "discharge": {
+                "net_load_threshold": {
+                  "value": 9.093333333,
+                  "unit": "kW"
+                }
+              },
+              "charge": {
+                "net_load_threshold": {
+                  "value": 0,
+                  "unit": "kW"
+                }
+              }
+            },
+            "pv_rule": {
+              "name": "GridSupplement"
+            }
+          },
+          "constraints": {
+            "min_soc": {
+              "value": 30,
+              "unit": "%"
+            },
+            "max_soc": {
+              "value": 95,
+              "unit": "%"
+            },
+            "max_charge_power": {
+              "value": 100,
+              "unit": "%"
+            },
+            "max_discharge_power": {
+              "value": 100,
+              "unit": "%"
+            }
+          }
+        },
+        {
+          "planID": "2400010029",
+          "jobId": 2400010029,
+          "name": "Levtex JAN 08:00 30",
+          "version": "3.0",
+          "owner": "LocalSchedule",
+          "priority": 50,
+          "execType": "Cron",
+          "timezone": "America/Los_Angeles",
+          "cron": "0 0 8 1,4-8,11-15,18-22,25-29 JAN ? 2027",
+          "until": "2027-03-05T08:00:00Z",
+          "duration": {
+            "unit": "minutes",
+            "value": 480.0
+          },
+          "payload": {
+            "chargeThresholdKw": 0,
+            "command": "peakShaving",
+            "deadbandKw": 0.5,
+            "dischargeThresholdKw": 17.07118375355623,
+            "holdAtThreshold": true,
+            "maxChargePowerPct": 100,
+            "maxDischargePowerPct": 100,
+            "maxSocPct": 95,
+            "minSocPct": 30,
+            "port": "utilityGrid"
+          },
+          "strategy": {
+            "meter_rule": {
+              "discharge": {
+                "net_load_threshold": {
+                  "value": 17.07118375355623,
+                  "unit": "kW"
+                }
+              },
+              "charge": {
+                "net_load_threshold": {
+                  "value": 0,
+                  "unit": "kW"
+                }
+              }
+            },
+            "pv_rule": {
+              "name": "GridSupplement"
+            }
+          },
+          "constraints": {
+            "min_soc": {
+              "value": 30,
+              "unit": "%"
+            },
+            "max_soc": {
+              "value": 95,
+              "unit": "%"
+            },
+            "max_charge_power": {
+              "value": 100,
+              "unit": "%"
+            },
+            "max_discharge_power": {
+              "value": 100,
+              "unit": "%"
+            }
+          }
+        },
+        {
+          "planID": "2400010030",
+          "jobId": 2400010030,
+          "name": "Levtex JAN 08:00 31",
+          "version": "3.0",
+          "owner": "LocalSchedule",
+          "priority": 50,
+          "execType": "Cron",
+          "timezone": "America/Los_Angeles",
+          "cron": "0 0 8 2-3,9-10,16-17,23-24,30-31 JAN ? 2027",
+          "until": "2027-03-05T08:00:00Z",
+          "duration": {
+            "unit": "minutes",
+            "value": 480.0
+          },
+          "payload": {
+            "chargeThresholdKw": 0,
+            "command": "peakShaving",
+            "deadbandKw": 0.5,
+            "dischargeThresholdKw": 4.722041666499999,
+            "holdAtThreshold": true,
+            "maxChargePowerPct": 100,
+            "maxDischargePowerPct": 100,
+            "maxSocPct": 95,
+            "minSocPct": 30,
+            "port": "utilityGrid"
+          },
+          "strategy": {
+            "meter_rule": {
+              "discharge": {
+                "net_load_threshold": {
+                  "value": 4.722041666499999,
+                  "unit": "kW"
+                }
+              },
+              "charge": {
+                "net_load_threshold": {
+                  "value": 0,
+                  "unit": "kW"
+                }
+              }
+            },
+            "pv_rule": {
+              "name": "GridSupplement"
+            }
+          },
+          "constraints": {
+            "min_soc": {
+              "value": 30,
+              "unit": "%"
+            },
+            "max_soc": {
+              "value": 95,
+              "unit": "%"
+            },
+            "max_charge_power": {
+              "value": 100,
+              "unit": "%"
+            },
+            "max_discharge_power": {
+              "value": 100,
+              "unit": "%"
+            }
+          }
+        },
+        {
+          "planID": "2400010031",
+          "jobId": 2400010031,
+          "name": "Levtex JAN 16:00 32",
+          "version": "3.0",
+          "owner": "LocalSchedule",
+          "priority": 50,
+          "execType": "Cron",
+          "timezone": "America/Los_Angeles",
+          "cron": "0 0 16 1-31 JAN ? 2027",
+          "until": "2027-03-05T08:00:00Z",
+          "duration": {
+            "unit": "minutes",
+            "value": 300.0
+          },
+          "payload": {
+            "chargeThresholdKw": -999999,
+            "command": "peakShaving",
+            "deadbandKw": 0.5,
+            "dischargeThresholdKw": 0,
+            "holdAtThreshold": true,
+            "maxChargePowerPct": 100,
+            "maxDischargePowerPct": 100,
+            "maxSocPct": 95,
+            "minSocPct": 30,
+            "port": "utilityGrid"
+          },
+          "strategy": {
+            "meter_rule": {
+              "discharge": {
+                "net_load_threshold": {
+                  "value": 0,
+                  "unit": "kW"
+                }
+              },
+              "charge": {
+                "net_load_threshold": {
+                  "value": -999999,
+                  "unit": "kW"
+                }
+              }
+            },
+            "pv_rule": {
+              "name": "GridSupplement"
+            }
+          },
+          "constraints": {
+            "min_soc": {
+              "value": 30,
+              "unit": "%"
+            },
+            "max_soc": {
+              "value": 95,
+              "unit": "%"
+            },
+            "max_charge_power": {
+              "value": 100,
+              "unit": "%"
+            },
+            "max_discharge_power": {
+              "value": 100,
+              "unit": "%"
+            }
+          }
+        },
+        {
+          "planID": "2400010032",
+          "jobId": 2400010032,
+          "name": "Levtex JAN 21:00 33",
+          "version": "3.0",
+          "owner": "LocalSchedule",
+          "priority": 50,
+          "execType": "Cron",
+          "timezone": "America/Los_Angeles",
+          "cron": "0 0 21 1,4-8,11-15,18-22,25-29 JAN ? 2027",
+          "until": "2027-03-05T08:00:00Z",
+          "duration": {
+            "unit": "minutes",
+            "value": 180.0
+          },
+          "payload": {
+            "chargeThresholdKw": 0,
+            "command": "peakShaving",
+            "deadbandKw": 0.5,
+            "dischargeThresholdKw": 17.07118375355623,
+            "holdAtThreshold": true,
+            "maxChargePowerPct": 100,
+            "maxDischargePowerPct": 100,
+            "maxSocPct": 95,
+            "minSocPct": 30,
+            "port": "utilityGrid"
+          },
+          "strategy": {
+            "meter_rule": {
+              "discharge": {
+                "net_load_threshold": {
+                  "value": 17.07118375355623,
+                  "unit": "kW"
+                }
+              },
+              "charge": {
+                "net_load_threshold": {
+                  "value": 0,
+                  "unit": "kW"
+                }
+              }
+            },
+            "pv_rule": {
+              "name": "GridSupplement"
+            }
+          },
+          "constraints": {
+            "min_soc": {
+              "value": 30,
+              "unit": "%"
+            },
+            "max_soc": {
+              "value": 95,
+              "unit": "%"
+            },
+            "max_charge_power": {
+              "value": 100,
+              "unit": "%"
+            },
+            "max_discharge_power": {
+              "value": 100,
+              "unit": "%"
+            }
+          }
+        },
+        {
+          "planID": "2400010033",
+          "jobId": 2400010033,
+          "name": "Levtex JAN 21:00 34",
+          "version": "3.0",
+          "owner": "LocalSchedule",
+          "priority": 50,
+          "execType": "Cron",
+          "timezone": "America/Los_Angeles",
+          "cron": "0 0 21 2-3,9-10,16-17,23-24,30-31 JAN ? 2027",
+          "until": "2027-03-05T08:00:00Z",
+          "duration": {
+            "unit": "minutes",
+            "value": 180.0
+          },
+          "payload": {
+            "chargeThresholdKw": 0,
+            "command": "peakShaving",
+            "deadbandKw": 0.5,
+            "dischargeThresholdKw": 9.093333333,
+            "holdAtThreshold": true,
+            "maxChargePowerPct": 100,
+            "maxDischargePowerPct": 100,
+            "maxSocPct": 95,
+            "minSocPct": 30,
+            "port": "utilityGrid"
+          },
+          "strategy": {
+            "meter_rule": {
+              "discharge": {
+                "net_load_threshold": {
+                  "value": 9.093333333,
+                  "unit": "kW"
+                }
+              },
+              "charge": {
+                "net_load_threshold": {
+                  "value": 0,
+                  "unit": "kW"
+                }
+              }
+            },
+            "pv_rule": {
+              "name": "GridSupplement"
+            }
+          },
+          "constraints": {
+            "min_soc": {
+              "value": 30,
+              "unit": "%"
+            },
+            "max_soc": {
+              "value": 95,
+              "unit": "%"
+            },
+            "max_charge_power": {
+              "value": 100,
+              "unit": "%"
+            },
+            "max_discharge_power": {
+              "value": 100,
+              "unit": "%"
+            }
+          }
+        },
+        {
+          "planID": "2400010034",
+          "jobId": 2400010034,
+          "name": "Levtex FEB 00:00 35",
+          "version": "3.0",
+          "owner": "LocalSchedule",
+          "priority": 50,
+          "execType": "Cron",
+          "timezone": "America/Los_Angeles",
+          "cron": "0 0 0 6-7,13-14,20-21,27-28 FEB ? 2027",
+          "until": "2027-03-05T08:00:00Z",
+          "duration": {
+            "unit": "minutes",
+            "value": 480.0
+          },
+          "payload": {
+            "chargeThresholdKw": 0,
+            "command": "peakShaving",
+            "deadbandKw": 0.5,
+            "dischargeThresholdKw": 4.947,
+            "holdAtThreshold": true,
+            "maxChargePowerPct": 100,
+            "maxDischargePowerPct": 100,
+            "maxSocPct": 95,
+            "minSocPct": 30,
+            "port": "utilityGrid"
+          },
+          "strategy": {
+            "meter_rule": {
+              "discharge": {
+                "net_load_threshold": {
+                  "value": 4.947,
+                  "unit": "kW"
+                }
+              },
+              "charge": {
+                "net_load_threshold": {
+                  "value": 0,
+                  "unit": "kW"
+                }
+              }
+            },
+            "pv_rule": {
+              "name": "GridSupplement"
+            }
+          },
+          "constraints": {
+            "min_soc": {
+              "value": 30,
+              "unit": "%"
+            },
+            "max_soc": {
+              "value": 95,
+              "unit": "%"
+            },
+            "max_charge_power": {
+              "value": 100,
+              "unit": "%"
+            },
+            "max_discharge_power": {
+              "value": 100,
+              "unit": "%"
+            }
+          }
+        },
+        {
+          "planID": "2400010035",
+          "jobId": 2400010035,
+          "name": "Levtex FEB 00:00 36",
+          "version": "3.0",
+          "owner": "LocalSchedule",
+          "priority": 50,
+          "execType": "Cron",
+          "timezone": "America/Los_Angeles",
+          "cron": "0 0 0 1-5,8-12,15-19,22-26 FEB ? 2027",
+          "until": "2027-03-05T08:00:00Z",
+          "duration": {
+            "unit": "minutes",
+            "value": 480.0
+          },
+          "payload": {
+            "chargeThresholdKw": 0,
+            "command": "peakShaving",
+            "deadbandKw": 0.5,
+            "dischargeThresholdKw": 8.073930935219762,
+            "holdAtThreshold": true,
+            "maxChargePowerPct": 100,
+            "maxDischargePowerPct": 100,
+            "maxSocPct": 95,
+            "minSocPct": 30,
+            "port": "utilityGrid"
+          },
+          "strategy": {
+            "meter_rule": {
+              "discharge": {
+                "net_load_threshold": {
+                  "value": 8.073930935219762,
+                  "unit": "kW"
+                }
+              },
+              "charge": {
+                "net_load_threshold": {
+                  "value": 0,
+                  "unit": "kW"
+                }
+              }
+            },
+            "pv_rule": {
+              "name": "GridSupplement"
+            }
+          },
+          "constraints": {
+            "min_soc": {
+              "value": 30,
+              "unit": "%"
+            },
+            "max_soc": {
+              "value": 95,
+              "unit": "%"
+            },
+            "max_charge_power": {
+              "value": 100,
+              "unit": "%"
+            },
+            "max_discharge_power": {
+              "value": 100,
+              "unit": "%"
+            }
+          }
+        },
+        {
+          "planID": "2400010036",
+          "jobId": 2400010036,
+          "name": "Levtex FEB 08:00 37",
+          "version": "3.0",
+          "owner": "LocalSchedule",
+          "priority": 50,
+          "execType": "Cron",
+          "timezone": "America/Los_Angeles",
+          "cron": "0 0 8 6-7,13-14,20-21,27-28 FEB ? 2027",
+          "until": "2027-03-05T08:00:00Z",
+          "duration": {
+            "unit": "minutes",
+            "value": 480.0
+          },
+          "payload": {
+            "chargeThresholdKw": -999999,
+            "command": "peakShaving",
+            "deadbandKw": 0.5,
+            "dischargeThresholdKw": 0,
+            "holdAtThreshold": true,
+            "maxChargePowerPct": 100,
+            "maxDischargePowerPct": 100,
+            "maxSocPct": 95,
+            "minSocPct": 30,
+            "port": "utilityGrid"
+          },
+          "strategy": {
+            "meter_rule": {
+              "discharge": {
+                "net_load_threshold": {
+                  "value": 0,
+                  "unit": "kW"
+                }
+              },
+              "charge": {
+                "net_load_threshold": {
+                  "value": -999999,
+                  "unit": "kW"
+                }
+              }
+            },
+            "pv_rule": {
+              "name": "GridSupplement"
+            }
+          },
+          "constraints": {
+            "min_soc": {
+              "value": 30,
+              "unit": "%"
+            },
+            "max_soc": {
+              "value": 95,
+              "unit": "%"
+            },
+            "max_charge_power": {
+              "value": 100,
+              "unit": "%"
+            },
+            "max_discharge_power": {
+              "value": 100,
+              "unit": "%"
+            }
+          }
+        },
+        {
+          "planID": "2400010037",
+          "jobId": 2400010037,
+          "name": "Levtex FEB 08:00 38",
+          "version": "3.0",
+          "owner": "LocalSchedule",
+          "priority": 50,
+          "execType": "Cron",
+          "timezone": "America/Los_Angeles",
+          "cron": "0 0 8 1-5,8-12,15-19,22-26 FEB ? 2027",
+          "until": "2027-03-05T08:00:00Z",
+          "duration": {
+            "unit": "minutes",
+            "value": 480.0
+          },
+          "payload": {
+            "chargeThresholdKw": 0,
+            "command": "peakShaving",
+            "deadbandKw": 0.5,
+            "dischargeThresholdKw": 8.073930935219762,
+            "holdAtThreshold": true,
+            "maxChargePowerPct": 100,
+            "maxDischargePowerPct": 100,
+            "maxSocPct": 95,
+            "minSocPct": 30,
+            "port": "utilityGrid"
+          },
+          "strategy": {
+            "meter_rule": {
+              "discharge": {
+                "net_load_threshold": {
+                  "value": 8.073930935219762,
+                  "unit": "kW"
+                }
+              },
+              "charge": {
+                "net_load_threshold": {
+                  "value": 0,
+                  "unit": "kW"
+                }
+              }
+            },
+            "pv_rule": {
+              "name": "GridSupplement"
+            }
+          },
+          "constraints": {
+            "min_soc": {
+              "value": 30,
+              "unit": "%"
+            },
+            "max_soc": {
+              "value": 95,
+              "unit": "%"
+            },
+            "max_charge_power": {
+              "value": 100,
+              "unit": "%"
+            },
+            "max_discharge_power": {
+              "value": 100,
+              "unit": "%"
+            }
+          }
+        },
+        {
+          "planID": "2400010038",
+          "jobId": 2400010038,
+          "name": "Levtex FEB 16:00 39",
+          "version": "3.0",
+          "owner": "LocalSchedule",
+          "priority": 50,
+          "execType": "Cron",
+          "timezone": "America/Los_Angeles",
+          "cron": "0 0 16 1-28 FEB ? 2027",
+          "until": "2027-03-05T08:00:00Z",
+          "duration": {
+            "unit": "minutes",
+            "value": 300.0
+          },
+          "payload": {
+            "chargeThresholdKw": -999999,
+            "command": "peakShaving",
+            "deadbandKw": 0.5,
+            "dischargeThresholdKw": 0,
+            "holdAtThreshold": true,
+            "maxChargePowerPct": 100,
+            "maxDischargePowerPct": 100,
+            "maxSocPct": 95,
+            "minSocPct": 30,
+            "port": "utilityGrid"
+          },
+          "strategy": {
+            "meter_rule": {
+              "discharge": {
+                "net_load_threshold": {
+                  "value": 0,
+                  "unit": "kW"
+                }
+              },
+              "charge": {
+                "net_load_threshold": {
+                  "value": -999999,
+                  "unit": "kW"
+                }
+              }
+            },
+            "pv_rule": {
+              "name": "GridSupplement"
+            }
+          },
+          "constraints": {
+            "min_soc": {
+              "value": 30,
+              "unit": "%"
+            },
+            "max_soc": {
+              "value": 95,
+              "unit": "%"
+            },
+            "max_charge_power": {
+              "value": 100,
+              "unit": "%"
+            },
+            "max_discharge_power": {
+              "value": 100,
+              "unit": "%"
+            }
+          }
+        },
+        {
+          "planID": "2400010039",
+          "jobId": 2400010039,
+          "name": "Levtex FEB 21:00 40",
+          "version": "3.0",
+          "owner": "LocalSchedule",
+          "priority": 50,
+          "execType": "Cron",
+          "timezone": "America/Los_Angeles",
+          "cron": "0 0 21 6-7,13-14,20-21,27-28 FEB ? 2027",
+          "until": "2027-03-05T08:00:00Z",
+          "duration": {
+            "unit": "minutes",
+            "value": 180.0
+          },
+          "payload": {
+            "chargeThresholdKw": 0,
+            "command": "peakShaving",
+            "deadbandKw": 0.5,
+            "dischargeThresholdKw": 4.947,
+            "holdAtThreshold": true,
+            "maxChargePowerPct": 100,
+            "maxDischargePowerPct": 100,
+            "maxSocPct": 95,
+            "minSocPct": 30,
+            "port": "utilityGrid"
+          },
+          "strategy": {
+            "meter_rule": {
+              "discharge": {
+                "net_load_threshold": {
+                  "value": 4.947,
+                  "unit": "kW"
+                }
+              },
+              "charge": {
+                "net_load_threshold": {
+                  "value": 0,
+                  "unit": "kW"
+                }
+              }
+            },
+            "pv_rule": {
+              "name": "GridSupplement"
+            }
+          },
+          "constraints": {
+            "min_soc": {
+              "value": 30,
+              "unit": "%"
+            },
+            "max_soc": {
+              "value": 95,
+              "unit": "%"
+            },
+            "max_charge_power": {
+              "value": 100,
+              "unit": "%"
+            },
+            "max_discharge_power": {
+              "value": 100,
+              "unit": "%"
+            }
+          }
+        },
+        {
+          "planID": "2400010040",
+          "jobId": 2400010040,
+          "name": "Levtex FEB 21:00 41",
+          "version": "3.0",
+          "owner": "LocalSchedule",
+          "priority": 50,
+          "execType": "Cron",
+          "timezone": "America/Los_Angeles",
+          "cron": "0 0 21 1-5,8-12,15-19,22-26 FEB ? 2027",
+          "until": "2027-03-05T08:00:00Z",
+          "duration": {
+            "unit": "minutes",
+            "value": 180.0
+          },
+          "payload": {
+            "chargeThresholdKw": 0,
+            "command": "peakShaving",
+            "deadbandKw": 0.5,
+            "dischargeThresholdKw": 8.073930935219762,
+            "holdAtThreshold": true,
+            "maxChargePowerPct": 100,
+            "maxDischargePowerPct": 100,
+            "maxSocPct": 95,
+            "minSocPct": 30,
+            "port": "utilityGrid"
+          },
+          "strategy": {
+            "meter_rule": {
+              "discharge": {
+                "net_load_threshold": {
+                  "value": 8.073930935219762,
+                  "unit": "kW"
+                }
+              },
+              "charge": {
+                "net_load_threshold": {
+                  "value": 0,
+                  "unit": "kW"
+                }
+              }
+            },
+            "pv_rule": {
+              "name": "GridSupplement"
+            }
+          },
+          "constraints": {
+            "min_soc": {
+              "value": 30,
+              "unit": "%"
+            },
+            "max_soc": {
+              "value": 95,
+              "unit": "%"
+            },
+            "max_charge_power": {
+              "value": 100,
+              "unit": "%"
+            },
+            "max_discharge_power": {
+              "value": 100,
+              "unit": "%"
+            }
+          }
+        },
+        {
+          "planID": "2400010041",
+          "jobId": 2400010041,
+          "name": "Levtex MAR 00:00 42",
+          "version": "3.0",
+          "owner": "LocalSchedule",
+          "priority": 50,
+          "execType": "Cron",
+          "timezone": "America/Los_Angeles",
+          "cron": "0 0 0 1-4 MAR ? 2027",
+          "until": "2027-03-05T08:00:00Z",
+          "duration": {
+            "unit": "minutes",
+            "value": 480.0
+          },
+          "payload": {
+            "chargeThresholdKw": 0,
+            "command": "peakShaving",
+            "deadbandKw": 0.5,
+            "dischargeThresholdKw": 6.135784632248374,
+            "holdAtThreshold": true,
+            "maxChargePowerPct": 100,
+            "maxDischargePowerPct": 100,
+            "maxSocPct": 95,
+            "minSocPct": 30,
+            "port": "utilityGrid"
+          },
+          "strategy": {
+            "meter_rule": {
+              "discharge": {
+                "net_load_threshold": {
+                  "value": 6.135784632248374,
+                  "unit": "kW"
+                }
+              },
+              "charge": {
+                "net_load_threshold": {
+                  "value": 0,
+                  "unit": "kW"
+                }
+              }
+            },
+            "pv_rule": {
+              "name": "GridSupplement"
+            }
+          },
+          "constraints": {
+            "min_soc": {
+              "value": 30,
+              "unit": "%"
+            },
+            "max_soc": {
+              "value": 95,
+              "unit": "%"
+            },
+            "max_charge_power": {
+              "value": 100,
+              "unit": "%"
+            },
+            "max_discharge_power": {
+              "value": 100,
+              "unit": "%"
+            }
+          }
+        },
+        {
+          "planID": "2400010042",
+          "jobId": 2400010042,
+          "name": "Levtex MAR 08:00 43",
+          "version": "3.0",
+          "owner": "LocalSchedule",
+          "priority": 50,
+          "execType": "Cron",
+          "timezone": "America/Los_Angeles",
+          "cron": "0 0 8 1-4 MAR ? 2027",
+          "until": "2027-03-05T08:00:00Z",
+          "duration": {
+            "unit": "minutes",
+            "value": 480.0
+          },
+          "payload": {
+            "chargeThresholdKw": 0,
+            "command": "peakShaving",
+            "deadbandKw": 0.5,
+            "dischargeThresholdKw": 6.135784632248374,
+            "holdAtThreshold": true,
+            "maxChargePowerPct": 100,
+            "maxDischargePowerPct": 100,
+            "maxSocPct": 95,
+            "minSocPct": 30,
+            "port": "utilityGrid"
+          },
+          "strategy": {
+            "meter_rule": {
+              "discharge": {
+                "net_load_threshold": {
+                  "value": 6.135784632248374,
+                  "unit": "kW"
+                }
+              },
+              "charge": {
+                "net_load_threshold": {
+                  "value": 0,
+                  "unit": "kW"
+                }
+              }
+            },
+            "pv_rule": {
+              "name": "GridSupplement"
+            }
+          },
+          "constraints": {
+            "min_soc": {
+              "value": 30,
+              "unit": "%"
+            },
+            "max_soc": {
+              "value": 95,
+              "unit": "%"
+            },
+            "max_charge_power": {
+              "value": 100,
+              "unit": "%"
+            },
+            "max_discharge_power": {
+              "value": 100,
+              "unit": "%"
+            }
+          }
+        },
+        {
+          "planID": "2400010043",
+          "jobId": 2400010043,
+          "name": "Levtex MAR 16:00 44",
+          "version": "3.0",
+          "owner": "LocalSchedule",
+          "priority": 50,
+          "execType": "Cron",
+          "timezone": "America/Los_Angeles",
+          "cron": "0 0 16 1-4 MAR ? 2027",
+          "until": "2027-03-05T08:00:00Z",
+          "duration": {
+            "unit": "minutes",
+            "value": 300.0
+          },
+          "payload": {
+            "chargeThresholdKw": -999999,
+            "command": "peakShaving",
+            "deadbandKw": 0.5,
+            "dischargeThresholdKw": 0,
+            "holdAtThreshold": true,
+            "maxChargePowerPct": 100,
+            "maxDischargePowerPct": 100,
+            "maxSocPct": 95,
+            "minSocPct": 30,
+            "port": "utilityGrid"
+          },
+          "strategy": {
+            "meter_rule": {
+              "discharge": {
+                "net_load_threshold": {
+                  "value": 0,
+                  "unit": "kW"
+                }
+              },
+              "charge": {
+                "net_load_threshold": {
+                  "value": -999999,
+                  "unit": "kW"
+                }
+              }
+            },
+            "pv_rule": {
+              "name": "GridSupplement"
+            }
+          },
+          "constraints": {
+            "min_soc": {
+              "value": 30,
+              "unit": "%"
+            },
+            "max_soc": {
+              "value": 95,
+              "unit": "%"
+            },
+            "max_charge_power": {
+              "value": 100,
+              "unit": "%"
+            },
+            "max_discharge_power": {
+              "value": 100,
+              "unit": "%"
+            }
+          }
+        },
+        {
+          "planID": "2400010044",
+          "jobId": 2400010044,
+          "name": "Levtex MAR 21:00 45",
+          "version": "3.0",
+          "owner": "LocalSchedule",
+          "priority": 50,
+          "execType": "Cron",
+          "timezone": "America/Los_Angeles",
+          "cron": "0 0 21 1-4 MAR ? 2027",
+          "until": "2027-03-05T08:00:00Z",
+          "duration": {
+            "unit": "minutes",
+            "value": 180.0
+          },
+          "payload": {
+            "chargeThresholdKw": 0,
+            "command": "peakShaving",
+            "deadbandKw": 0.5,
+            "dischargeThresholdKw": 6.135784632248374,
+            "holdAtThreshold": true,
+            "maxChargePowerPct": 100,
+            "maxDischargePowerPct": 100,
+            "maxSocPct": 95,
+            "minSocPct": 30,
+            "port": "utilityGrid"
+          },
+          "strategy": {
+            "meter_rule": {
+              "discharge": {
+                "net_load_threshold": {
+                  "value": 6.135784632248374,
+                  "unit": "kW"
+                }
+              },
+              "charge": {
+                "net_load_threshold": {
+                  "value": 0,
+                  "unit": "kW"
+                }
+              }
+            },
+            "pv_rule": {
+              "name": "GridSupplement"
+            }
+          },
+          "constraints": {
+            "min_soc": {
+              "value": 30,
+              "unit": "%"
+            },
+            "max_soc": {
+              "value": 95,
+              "unit": "%"
+            },
+            "max_charge_power": {
+              "value": 100,
+              "unit": "%"
+            },
+            "max_discharge_power": {
+              "value": 100,
+              "unit": "%"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

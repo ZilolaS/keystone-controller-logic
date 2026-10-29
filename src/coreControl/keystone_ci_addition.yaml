@@ -14,7 +14,7 @@ points:
       Cluster: SiteConfig
       Element: SystemProfile
   subsection_id: site-identity
-  help: C&I product/topology identifier such as eSpire280 or MINI-* profile. Used by Keystone controller to validate topology-specific
+  help: C&I product/topology identifier such as eSpire280, NANO, or MINI-* profile. Used by Keystone controller to validate topology-specific
     settings and defaults.
 - section_id: site
   title: Controller Timezone

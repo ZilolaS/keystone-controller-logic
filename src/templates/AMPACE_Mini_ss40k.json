@@ -24,7 +24,7 @@
       "category": "Telemetry",
       "function": "HRUI",
       "address": 62000,
-      "pollClass": "normal",
+      "pollClass": "fast",
       "scale": {
         "mode": "Linear",
         "rawLow": 0,
@@ -43,7 +43,7 @@
       "category": "Telemetry",
       "function": "HRI",
       "address": 62002,
-      "pollClass": "normal",
+      "pollClass": "fast",
       "scale": {
         "mode": "Linear",
         "rawLow": 0,
@@ -63,7 +63,7 @@
       "category": "Telemetry",
       "function": "HRI",
       "address": 62004,
-      "pollClass": "normal",
+      "pollClass": "fast",
       "scale": {
         "mode": "Linear",
         "rawLow": 0,
@@ -152,7 +152,7 @@
       "category": "read",
       "function": "HRUS",
       "address": 62006,
-      "pollClass": "normal",
+      "pollClass": "fast",
       "scale": {
         "mode": "Linear",
         "rawLow": 0,
@@ -192,7 +192,7 @@
       "category": "Telemetry",
       "function": "HRUI",
       "address": 62008,
-      "pollClass": "normal",
+      "pollClass": "fast",
       "scale": {
         "mode": "Linear",
         "rawLow": 0,
@@ -207,7 +207,7 @@
       "category": "Telemetry",
       "function": "HRUI",
       "address": 62010,
-      "pollClass": "normal",
+      "pollClass": "fast",
       "scale": {
         "mode": "Linear",
         "rawLow": 0,
@@ -222,7 +222,7 @@
       "category": "Telemetry",
       "function": "HRUI",
       "address": 62012,
-      "pollClass": "normal",
+      "pollClass": "fast",
       "scale": {
         "mode": "Linear",
         "rawLow": 0,
@@ -242,7 +242,7 @@
       "category": "Telemetry",
       "function": "HRUI",
       "address": 62014,
-      "pollClass": "normal",
+      "pollClass": "fast",
       "scale": {
         "mode": "Linear",
         "rawLow": 0,
@@ -718,7 +718,8 @@
       "noMerge": true,
       "alarm": true,
       "supportingTag": true,
-      "bitfieldStatus": true
+      "bitfieldStatus": true,
+      "notes": "Raw vendor U64 map read as one 4-register chunk; normalized SS52K alarm fields are calculated locally for cloud compatibility."
     },
     {
       "id": "BamsSysFaultCode0_8",
@@ -730,7 +731,8 @@
       "noMerge": true,
       "alarm": true,
       "supportingTag": true,
-      "bitfieldStatus": true
+      "bitfieldStatus": true,
+      "notes": "Raw vendor U64 map read as one 4-register chunk; normalized SS52K alarm fields are calculated locally for cloud compatibility."
     },
     {
       "id": "BamsOtherErrCode0_8",
@@ -742,7 +744,8 @@
       "noMerge": true,
       "alarm": true,
       "supportingTag": true,
-      "bitfieldStatus": true
+      "bitfieldStatus": true,
+      "notes": "Raw vendor U64 map read as one 4-register chunk; normalized SS52K alarm fields are calculated locally for cloud compatibility."
     },
     {
       "id": "BamsHwErrCode0_8",
@@ -754,7 +757,8 @@
       "noMerge": true,
       "alarm": true,
       "supportingTag": true,
-      "bitfieldStatus": true
+      "bitfieldStatus": true,
+      "notes": "Raw vendor U64 map read as one 4-register chunk; normalized SS52K alarm fields are calculated locally for cloud compatibility."
     },
     {
       "id": "BamsHwStaCode0_8",
@@ -766,7 +770,162 @@
       "noMerge": true,
       "alarm": true,
       "supportingTag": true,
-      "bitfieldStatus": true
+      "bitfieldStatus": true,
+      "notes": "Raw vendor U64 map read as one 4-register chunk; normalized SS52K alarm fields are calculated locally for cloud compatibility."
+    },
+    {
+      "id": "batteryProtectionWarningWord",
+      "description": "Calculated cloud-safe SS52K protection warning word from BamsProtAlarm0_8 level-1 severity pairs",
+      "category": "Faults",
+      "pollClass": "slow",
+      "calc": {
+        "inputs": {
+          "p": "BamsProtAlarm0_8"
+        },
+        "expr": "((bit(p, 0) && !bit(p, 1)) ? pow(2, 0) : 0) + ((bit(p, 2) && !bit(p, 3)) ? pow(2, 1) : 0) + ((bit(p, 4) && !bit(p, 5)) ? pow(2, 2) : 0) + ((bit(p, 6) && !bit(p, 7)) ? pow(2, 3) : 0) + ((bit(p, 8) && !bit(p, 9)) ? pow(2, 4) : 0) + ((bit(p, 10) && !bit(p, 11)) ? pow(2, 5) : 0) + ((bit(p, 12) && !bit(p, 13)) ? pow(2, 6) : 0) + ((bit(p, 14) && !bit(p, 15)) ? pow(2, 7) : 0) + ((bit(p, 16) && !bit(p, 17)) ? pow(2, 8) : 0) + ((bit(p, 18) && !bit(p, 19)) ? pow(2, 9) : 0) + ((bit(p, 20) && !bit(p, 21)) ? pow(2, 10) : 0) + ((bit(p, 22) && !bit(p, 23)) ? pow(2, 11) : 0) + ((bit(p, 24) && !bit(p, 25)) ? pow(2, 12) : 0) + ((bit(p, 26) && !bit(p, 27)) ? pow(2, 13) : 0) + ((bit(p, 30) && !bit(p, 31)) ? pow(2, 14) : 0) + ((bit(p, 32) && !bit(p, 33)) ? pow(2, 15) : 0) + ((bit(p, 34) && !bit(p, 35)) ? pow(2, 16) : 0) + ((bit(p, 36) && !bit(p, 37)) ? pow(2, 17) : 0) + ((bit(p, 38) && !bit(p, 39)) ? pow(2, 18) : 0) + ((bit(p, 40) && !bit(p, 41)) ? pow(2, 19) : 0) + ((bit(p, 42) && !bit(p, 43)) ? pow(2, 20) : 0) + ((bit(p, 50) && !bit(p, 51)) ? pow(2, 21) : 0) + ((bit(p, 54) && !bit(p, 55)) ? pow(2, 22) : 0) + ((bit(p, 56) && !bit(p, 57)) ? pow(2, 23) : 0) + ((bit(p, 58) && !bit(p, 59)) ? pow(2, 24) : 0) + ((bit(p, 60) && !bit(p, 61)) ? pow(2, 25) : 0)"
+      },
+      "alarm": true,
+      "supportingTag": true,
+      "bitfieldStatus": true,
+      "ss40k": {
+        "name": "batteryProtectionWarningWord",
+        "model": "52103"
+      }
+    },
+    {
+      "id": "batteryProtectionFaultWord",
+      "description": "Calculated cloud-safe SS52K protection fault word from BamsProtAlarm0_8 level-2/3 severity pairs",
+      "category": "Faults",
+      "pollClass": "slow",
+      "calc": {
+        "inputs": {
+          "p": "BamsProtAlarm0_8"
+        },
+        "expr": "(bit(p, 1) ? pow(2, 0) : 0) + (bit(p, 3) ? pow(2, 1) : 0) + (bit(p, 5) ? pow(2, 2) : 0) + (bit(p, 7) ? pow(2, 3) : 0) + (bit(p, 9) ? pow(2, 4) : 0) + (bit(p, 11) ? pow(2, 5) : 0) + (bit(p, 13) ? pow(2, 6) : 0) + (bit(p, 15) ? pow(2, 7) : 0) + (bit(p, 17) ? pow(2, 8) : 0) + (bit(p, 19) ? pow(2, 9) : 0) + (bit(p, 21) ? pow(2, 10) : 0) + (bit(p, 23) ? pow(2, 11) : 0) + (bit(p, 25) ? pow(2, 12) : 0) + (bit(p, 27) ? pow(2, 13) : 0) + (bit(p, 31) ? pow(2, 14) : 0) + (bit(p, 33) ? pow(2, 15) : 0) + (bit(p, 35) ? pow(2, 16) : 0) + (bit(p, 37) ? pow(2, 17) : 0) + (bit(p, 39) ? pow(2, 18) : 0) + (bit(p, 41) ? pow(2, 19) : 0) + (bit(p, 43) ? pow(2, 20) : 0) + (bit(p, 51) ? pow(2, 21) : 0) + (bit(p, 55) ? pow(2, 22) : 0) + (bit(p, 57) ? pow(2, 23) : 0) + (bit(p, 59) ? pow(2, 24) : 0) + (bit(p, 61) ? pow(2, 25) : 0)"
+      },
+      "alarm": true,
+      "supportingTag": true,
+      "bitfieldStatus": true,
+      "ss40k": {
+        "name": "batteryProtectionFaultWord",
+        "model": "52103"
+      }
+    },
+    {
+      "id": "batterySystemFaultWordA",
+      "description": "Calculated cloud-safe SS52K system fault word A from BamsSysFaultCode0_8 severity pairs",
+      "category": "Faults",
+      "pollClass": "slow",
+      "notes": "Cloud alarm bitfields are interpreted as signed 32-bit values. Do not pack any alarm into output bit 31; use word B for overflow conditions.",
+      "calc": {
+        "inputs": {
+          "s": "BamsSysFaultCode0_8"
+        },
+        "expr": "((bit(s, 0) || bit(s, 1)) ? pow(2, 0) : 0) + ((bit(s, 2) || bit(s, 3)) ? pow(2, 1) : 0) + ((bit(s, 4) || bit(s, 5)) ? pow(2, 2) : 0) + ((bit(s, 6) || bit(s, 7)) ? pow(2, 3) : 0) + ((bit(s, 8) || bit(s, 9)) ? pow(2, 4) : 0) + ((bit(s, 10) || bit(s, 11)) ? pow(2, 5) : 0) + ((bit(s, 12) || bit(s, 13)) ? pow(2, 6) : 0) + ((bit(s, 14) || bit(s, 15)) ? pow(2, 7) : 0) + ((bit(s, 16) || bit(s, 17)) ? pow(2, 8) : 0) + ((bit(s, 18) || bit(s, 19)) ? pow(2, 9) : 0) + ((bit(s, 20) || bit(s, 21)) ? pow(2, 10) : 0) + ((bit(s, 22) || bit(s, 23)) ? pow(2, 11) : 0) + ((bit(s, 24) || bit(s, 25)) ? pow(2, 12) : 0) + ((bit(s, 26) || bit(s, 27)) ? pow(2, 13) : 0) + ((bit(s, 28) || bit(s, 29)) ? pow(2, 14) : 0) + ((bit(s, 30) || bit(s, 31)) ? pow(2, 15) : 0) + ((bit(s, 32) || bit(s, 33)) ? pow(2, 16) : 0) + ((bit(s, 34) || bit(s, 35)) ? pow(2, 17) : 0) + ((bit(s, 36) || bit(s, 37)) ? pow(2, 18) : 0) + ((bit(s, 38) || bit(s, 39)) ? pow(2, 19) : 0) + ((bit(s, 40) || bit(s, 41)) ? pow(2, 20) : 0) + ((bit(s, 42) || bit(s, 43)) ? pow(2, 21) : 0) + ((bit(s, 44) || bit(s, 45)) ? pow(2, 22) : 0) + ((bit(s, 46) || bit(s, 47)) ? pow(2, 23) : 0) + ((bit(s, 48) || bit(s, 49)) ? pow(2, 24) : 0) + ((bit(s, 50) || bit(s, 51)) ? pow(2, 25) : 0) + ((bit(s, 52) || bit(s, 53)) ? pow(2, 26) : 0) + ((bit(s, 54) || bit(s, 55)) ? pow(2, 27) : 0) + ((bit(s, 56) || bit(s, 57)) ? pow(2, 28) : 0) + ((bit(s, 58) || bit(s, 59)) ? pow(2, 29) : 0) + ((bit(s, 60) || bit(s, 61)) ? pow(2, 30) : 0)"
+      },
+      "alarm": true,
+      "supportingTag": true,
+      "bitfieldStatus": true,
+      "ss40k": {
+        "name": "batterySystemFaultWordA",
+        "model": "52103"
+      }
+    },
+    {
+      "id": "batterySystemFaultWordB",
+      "description": "Calculated cloud-safe SS52K system fault word B from BamsSysFaultCode0_8 severity pairs",
+      "category": "Faults",
+      "pollClass": "slow",
+      "calc": {
+        "inputs": {
+          "s": "BamsSysFaultCode0_8"
+        },
+        "expr": "((bit(s, 62) || bit(s, 63)) ? pow(2, 0) : 0)"
+      },
+      "alarm": true,
+      "supportingTag": true,
+      "bitfieldStatus": true,
+      "ss40k": {
+        "name": "batterySystemFaultWordB",
+        "model": "52103"
+      }
+    },
+    {
+      "id": "batteryOtherErrorWordA",
+      "description": "Calculated cloud-safe SS52K other error word A from BamsOtherErrCode0_8 bits using vendor byte order",
+      "category": "Faults",
+      "pollClass": "slow",
+      "notes": "Cloud alarm bitfields are interpreted as signed 32-bit values. Do not pack any alarm into output bit 31; use word B for overflow conditions.",
+      "calc": {
+        "inputs": {
+          "o": "BamsOtherErrCode0_8"
+        },
+        "expr": "(bit(o, 56) ? pow(2, 0) : 0) + (bit(o, 57) ? pow(2, 1) : 0) + (bit(o, 58) ? pow(2, 2) : 0) + (bit(o, 59) ? pow(2, 3) : 0) + (bit(o, 60) ? pow(2, 4) : 0) + (bit(o, 61) ? pow(2, 5) : 0) + (bit(o, 62) ? pow(2, 6) : 0) + (bit(o, 63) ? pow(2, 7) : 0) + (bit(o, 48) ? pow(2, 8) : 0) + (bit(o, 49) ? pow(2, 9) : 0) + (bit(o, 50) ? pow(2, 10) : 0) + (bit(o, 51) ? pow(2, 11) : 0) + (bit(o, 52) ? pow(2, 12) : 0) + (bit(o, 53) ? pow(2, 13) : 0) + (bit(o, 54) ? pow(2, 14) : 0) + (bit(o, 55) ? pow(2, 15) : 0) + (bit(o, 40) ? pow(2, 16) : 0) + (bit(o, 41) ? pow(2, 17) : 0) + (bit(o, 42) ? pow(2, 18) : 0) + (bit(o, 43) ? pow(2, 19) : 0) + (bit(o, 44) ? pow(2, 20) : 0) + (bit(o, 45) ? pow(2, 21) : 0) + (bit(o, 46) ? pow(2, 22) : 0) + (bit(o, 47) ? pow(2, 23) : 0) + (bit(o, 38) ? pow(2, 24) : 0) + (bit(o, 39) ? pow(2, 25) : 0) + (bit(o, 29) ? pow(2, 26) : 0) + (bit(o, 30) ? pow(2, 27) : 0) + (bit(o, 31) ? pow(2, 28) : 0) + (bit(o, 8) ? pow(2, 29) : 0) + (bit(o, 9) ? pow(2, 30) : 0)"
+      },
+      "alarm": true,
+      "supportingTag": true,
+      "bitfieldStatus": true,
+      "ss40k": {
+        "name": "batteryOtherErrorWordA",
+        "model": "52103"
+      }
+    },
+    {
+      "id": "batteryOtherErrorWordB",
+      "description": "Calculated cloud-safe SS52K other error word B from BamsOtherErrCode0_8 bits using vendor byte order",
+      "category": "Faults",
+      "pollClass": "slow",
+      "calc": {
+        "inputs": {
+          "o": "BamsOtherErrCode0_8"
+        },
+        "expr": "(bit(o, 10) ? pow(2, 0) : 0) + (bit(o, 6) ? pow(2, 1) : 0) + (bit(o, 7) ? pow(2, 2) : 0)"
+      },
+      "alarm": true,
+      "supportingTag": true,
+      "bitfieldStatus": true,
+      "ss40k": {
+        "name": "batteryOtherErrorWordB",
+        "model": "52103"
+      }
+    },
+    {
+      "id": "batteryHardwareErrorWord",
+      "description": "Calculated cloud-safe SS52K hardware error word from BamsHwErrCode0_8 severity pairs",
+      "category": "Faults",
+      "pollClass": "slow",
+      "calc": {
+        "inputs": {
+          "h": "BamsHwErrCode0_8"
+        },
+        "expr": "((bit(h, 0) || bit(h, 1)) ? pow(2, 0) : 0) + ((bit(h, 2) || bit(h, 3)) ? pow(2, 1) : 0) + ((bit(h, 4) || bit(h, 5)) ? pow(2, 2) : 0) + ((bit(h, 6) || bit(h, 7)) ? pow(2, 3) : 0) + ((bit(h, 8) || bit(h, 9)) ? pow(2, 4) : 0) + ((bit(h, 10) || bit(h, 11)) ? pow(2, 5) : 0) + ((bit(h, 12) || bit(h, 13)) ? pow(2, 6) : 0) + ((bit(h, 14) || bit(h, 15)) ? pow(2, 7) : 0) + ((bit(h, 18) || bit(h, 19)) ? pow(2, 8) : 0) + ((bit(h, 20) || bit(h, 21)) ? pow(2, 9) : 0) + ((bit(h, 22) || bit(h, 23)) ? pow(2, 10) : 0) + ((bit(h, 24) || bit(h, 25)) ? pow(2, 11) : 0) + ((bit(h, 26) || bit(h, 27)) ? pow(2, 12) : 0) + ((bit(h, 28) || bit(h, 29)) ? pow(2, 13) : 0) + ((bit(h, 30) || bit(h, 31)) ? pow(2, 14) : 0) + ((bit(h, 34) || bit(h, 35)) ? pow(2, 15) : 0) + ((bit(h, 36) || bit(h, 37)) ? pow(2, 16) : 0) + ((bit(h, 38) || bit(h, 39)) ? pow(2, 17) : 0) + ((bit(h, 40) || bit(h, 41)) ? pow(2, 18) : 0) + ((bit(h, 42) || bit(h, 43)) ? pow(2, 19) : 0) + ((bit(h, 44) || bit(h, 45)) ? pow(2, 20) : 0) + ((bit(h, 46) || bit(h, 47)) ? pow(2, 21) : 0) + ((bit(h, 48) || bit(h, 49)) ? pow(2, 22) : 0) + ((bit(h, 50) || bit(h, 51)) ? pow(2, 23) : 0) + ((bit(h, 52) || bit(h, 53)) ? pow(2, 24) : 0) + ((bit(h, 54) || bit(h, 55)) ? pow(2, 25) : 0) + ((bit(h, 56) || bit(h, 57)) ? pow(2, 26) : 0) + ((bit(h, 58) || bit(h, 59)) ? pow(2, 27) : 0) + ((bit(h, 60) || bit(h, 61)) ? pow(2, 28) : 0) + ((bit(h, 62) || bit(h, 63)) ? pow(2, 29) : 0)"
+      },
+      "alarm": true,
+      "supportingTag": true,
+      "bitfieldStatus": true,
+      "ss40k": {
+        "name": "batteryHardwareErrorWord",
+        "model": "52103"
+      }
+    },
+    {
+      "id": "batteryHardwareStatusWord",
+      "description": "Calculated cloud-safe SS52K hardware status word from BamsHwStaCode0_8 bits",
+      "category": "Faults",
+      "pollClass": "slow",
+      "calc": {
+        "inputs": {
+          "hs": "BamsHwStaCode0_8"
+        },
+        "expr": "(bit(hs, 0) ? pow(2, 0) : 0) + (bit(hs, 1) ? pow(2, 1) : 0) + (bit(hs, 2) ? pow(2, 2) : 0) + (bit(hs, 3) ? pow(2, 3) : 0) + (bit(hs, 4) ? pow(2, 4) : 0) + (bit(hs, 5) ? pow(2, 5) : 0) + (bit(hs, 8) ? pow(2, 6) : 0) + (bit(hs, 9) ? pow(2, 7) : 0) + (bit(hs, 10) ? pow(2, 8) : 0) + (bit(hs, 11) ? pow(2, 9) : 0) + (bit(hs, 12) ? pow(2, 10) : 0) + (bit(hs, 13) ? pow(2, 11) : 0) + (bit(hs, 14) ? pow(2, 12) : 0) + (bit(hs, 15) ? pow(2, 13) : 0)"
+      },
+      "alarm": true,
+      "supportingTag": true,
+      "bitfieldStatus": true,
+      "ss40k": {
+        "name": "batteryHardwareStatusWord",
+        "model": "52103"
+      }
     },
     {
       "id": "BamsFaultCode0_8",

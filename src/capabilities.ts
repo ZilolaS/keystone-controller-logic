@@ -79,6 +79,7 @@ function includesNumber(values: readonly number[], value: number): boolean {
 export interface SiteCapabilities {
   isMini: boolean;
   is280: boolean;
+  isNano: boolean;
   hasPcs: boolean;
   hasMbmu: boolean;
   hasGenerator: boolean;
@@ -102,10 +103,11 @@ export function deriveCapabilities(config: SiteConfig): SiteCapabilities {
   const profile = config.system.systemProfile.trim();
 
   const is280 = profile === "eSpire280";
+  const isNano = isNanoModel(profile);
   const miniModelInfo = parseMiniModel(profile);
   const isMini = !!miniModelInfo;
 
-  const hasPcs = (is280 && !!config.pcs) || isMini;
+  const hasPcs = (is280 && !!config.pcs) || isMini || isNano;
   const hasMbmu = is280 && !!config.mbmu;
   const hasGenerator = !!config.generator;
   const hasACPV = config.pv.acInverters?.length > 0;
@@ -131,6 +133,7 @@ export function deriveCapabilities(config: SiteConfig): SiteCapabilities {
   return {
     isMini,
     is280,
+    isNano,
     hasPcs,
     hasMbmu,
     hasGenerator,
@@ -149,4 +152,8 @@ export function deriveCapabilities(config: SiteConfig): SiteCapabilities {
     pvCurtailmentViaFrequencyShift,
     miniModelInfo,
   };
+}
+
+export function isNanoModel(systemProfile: string): boolean {
+  return /^NANO(?:-|$)/i.test(systemProfile.trim());
 }
