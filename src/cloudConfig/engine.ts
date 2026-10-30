@@ -4,6 +4,7 @@ import { isDeepStrictEqual } from "util";
 import type { SiteConfig, CustomGridProfile } from "../config";
 import {
   deriveCapabilities,
+  isNanoModel,
   parseMiniModel,
   type SiteCapabilities,
 } from "../capabilities";
@@ -565,9 +566,11 @@ function applySystemProfile(
   config.system.systemProfile = systemProfile;
 
   const miniModel = parseMiniModel(systemProfile);
-  if (miniModel) {
+  if (miniModel || isNanoModel(systemProfile)) {
     delete config.pcs;
     delete config.mbmu;
+  }
+  if (miniModel) {
     config.system.nominal.voltageVll = miniModel.voltageVll;
   }
 
@@ -851,11 +854,12 @@ export function validateSiteConfig(config: SiteConfig): SiteConfigValidationIssu
     issues.push({ path: "system.systemProfile", message: "systemProfile is required" });
   } else if (
     config.system.systemProfile !== "eSpire280" &&
-    !parseMiniModel(config.system.systemProfile)
+    !parseMiniModel(config.system.systemProfile) &&
+    !isNanoModel(config.system.systemProfile)
   ) {
     issues.push({
       path: "system.systemProfile",
-      message: "systemProfile must be eSpire280 or a valid MINI-* profile",
+      message: "systemProfile must be eSpire280, NANO, or a valid MINI-* profile",
     });
   }
   if (!config.system?.controllerTimezone) {
@@ -1160,16 +1164,19 @@ export function validateSiteConfig(config: SiteConfig): SiteConfigValidationIssu
     }
   }
 
-  if (!config.metering?.meterType) {
+  const configuredMeters = Array.isArray(config.metering?.meters)
+    ? config.metering.meters
+    : [];
+  if (!config.metering?.meterType && configuredMeters.length === 0) {
     issues.push({ path: "metering.meterType", message: "meterType is required" });
   }
-  if (!config.metering?.modbusProfile) {
+  if (!config.metering?.modbusProfile && configuredMeters.length === 0) {
     issues.push({
       path: "metering.modbusProfile",
       message: "metering.modbusProfile is required",
     });
   }
-  if (!config.metering?.ip) {
+  if (!config.metering?.ip && configuredMeters.length === 0) {
     issues.push({ path: "metering.ip", message: "metering.ip is required" });
   }
   if (!config.metering?.reads) {
@@ -1190,6 +1197,43 @@ export function validateSiteConfig(config: SiteConfig): SiteConfigValidationIssu
       });
     }
   }
+  configuredMeters.forEach((meter, meterIndex) => {
+    const base = `metering.meters.${meterIndex}`;
+    if (!meter?.id || typeof meter.id !== "string") {
+      issues.push({ path: `${base}.id`, message: "meter id is required" });
+    }
+    if (!meter?.meterType || typeof meter.meterType !== "string") {
+      issues.push({ path: `${base}.meterType`, message: "meterType is required" });
+    }
+    if (!meter?.ip || typeof meter.ip !== "string") {
+      issues.push({ path: `${base}.ip`, message: "meter ip is required" });
+    }
+    if (meter.port !== undefined && (!Number.isInteger(meter.port) || meter.port < 1 || meter.port > 65535)) {
+      issues.push({ path: `${base}.port`, message: "port must be between 1 and 65535" });
+    }
+    if (meter.unitId !== undefined && (!Number.isInteger(meter.unitId) || meter.unitId < 1 || meter.unitId > 247)) {
+      issues.push({ path: `${base}.unitId`, message: "unitId must be between 1 and 247" });
+    }
+    if (!Array.isArray(meter.registerMap) || meter.registerMap.length === 0) {
+      issues.push({ path: `${base}.registerMap`, message: "registerMap must have at least one row" });
+      return;
+    }
+    meter.registerMap.forEach((row, rowIndex) => {
+      const rowBase = `${base}.registerMap.${rowIndex}`;
+      if (!row?.signal || typeof row.signal !== "string") {
+        issues.push({ path: `${rowBase}.signal`, message: "signal is required" });
+      }
+      if (!Number.isInteger(row?.register) || row.register < 0) {
+        issues.push({ path: `${rowBase}.register`, message: "register must be a non-negative integer" });
+      }
+      if (!row?.function || typeof row.function !== "string") {
+        issues.push({ path: `${rowBase}.function`, message: "function is required" });
+      }
+      if (row.scale !== undefined && !Number.isFinite(row.scale)) {
+        issues.push({ path: `${rowBase}.scale`, message: "scale must be a number" });
+      }
+    });
+  });
 
   if (config.generator) {
     if (!Number.isFinite(config.generator.maxKw) || config.generator.maxKw < 0) {

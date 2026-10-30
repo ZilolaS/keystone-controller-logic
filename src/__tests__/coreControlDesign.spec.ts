@@ -352,6 +352,234 @@ describe("Unified core control design", () => {
     );
   });
 
+  test("scheduled control uses canonical EdgeScheduler peak shaving payload", () => {
+    const config = makeBase280Config();
+    config.operation.crdMode = "no-restriction";
+    config.operation.scheduledControlEnabled = true;
+
+    const controller = initCoreControl(config);
+    const command = controller.evaluate(
+      {
+        soc: 0.7,
+        gridStatus: "normal",
+        utilityPowerKw: 60,
+        pcsActivePowerKw: 10,
+        realtimeActivePowerKwRequest: 5,
+      },
+      {
+        payload: {
+          command: "peakShaving",
+          dischargeThresholdKw: 50,
+          chargeThresholdKw: 0,
+          deadbandKw: 0.5,
+          minSocPct: 20,
+          maxSocPct: 95,
+          maxChargePowerPct: 100,
+          maxDischargePowerPct: 100,
+        },
+      }
+    );
+
+    expect(command.controlMode).toBe("scheduled");
+    expect(command.pcsActivePowerKw).toBe(20);
+    expect(command.reasons).toEqual(
+      expect.arrayContaining(["scheduled-command-peak-shaving-discharge"])
+    );
+  });
+
+  test("EdgeScheduler SOC percent limits use 0-100 payload values", () => {
+    const config = makeBase280Config();
+    config.operation.crdMode = "no-restriction";
+    config.operation.scheduledControlEnabled = true;
+
+    const controller = initCoreControl(config);
+    const command = controller.evaluate(
+      {
+        soc: 0.49,
+        gridStatus: "normal",
+        utilityPowerKw: 80,
+        pcsActivePowerKw: 0,
+      },
+      {
+        payload: {
+          command: "peakShaving",
+          dischargeThresholdKw: 50,
+          chargeThresholdKw: 0,
+          minSocPct: 50,
+          maxSocPct: 95,
+          maxChargePowerPct: 100,
+          maxDischargePowerPct: 100,
+        },
+      }
+    );
+
+    expect(command.controlMode).toBe("scheduled");
+    expect(command.pcsActivePowerKw).toBe(0);
+    expect(command.reasons).toContain(
+      "scheduled-command-peak-shaving-discharge-blocked"
+    );
+  });
+
+  test("canonical EdgeScheduler payload takes precedence over legacy strategy fallback", () => {
+    const config = makeBase280Config();
+    config.operation.crdMode = "no-restriction";
+    config.operation.scheduledControlEnabled = true;
+
+    const controller = initCoreControl(config);
+    const command = controller.evaluate(
+      {
+        soc: 0.7,
+        gridStatus: "normal",
+        utilityPowerKw: 60,
+        pcsActivePowerKw: 10,
+      },
+      {
+        payload: {
+          command: "peakShaving",
+          dischargeThresholdKw: 50,
+          chargeThresholdKw: 0,
+        },
+        strategy: {
+          meter_rule: {
+            discharge: { net_load_threshold: { value: 10, unit: "kW" } },
+          },
+        },
+      }
+    );
+
+    expect(command.pcsActivePowerKw).toBe(20);
+    expect(command.reasons).toContain("scheduled-command-peak-shaving-discharge");
+    expect(command.reasons).not.toContain("scheduled-meter-rule-discharge");
+  });
+
+  test("scheduled control uses canonical charge and discharge payloads", () => {
+    const config = makeBase280Config();
+    config.operation.crdMode = "no-restriction";
+    config.operation.scheduledControlEnabled = true;
+
+    const charge = initCoreControl(config).evaluate(
+      {
+        soc: 0.7,
+        gridStatus: "normal",
+      },
+      {
+        payload: {
+          command: "charge",
+          activePowerW: 12_000,
+        },
+      }
+    );
+    const discharge = initCoreControl(config).evaluate(
+      {
+        soc: 0.7,
+        gridStatus: "normal",
+      },
+      {
+        payload: {
+          command: "discharge",
+          activePowerW: 15_000,
+        },
+      }
+    );
+
+    expect(charge.controlMode).toBe("scheduled");
+    expect(charge.pcsActivePowerKw).toBe(-12);
+    expect(charge.reasons).toContain("scheduled-command-charge");
+    expect(discharge.controlMode).toBe("scheduled");
+    expect(discharge.pcsActivePowerKw).toBe(15);
+    expect(discharge.reasons).toContain("scheduled-command-discharge");
+  });
+
+  test("scheduled control uses canonical maximize PV self-consumption payload", () => {
+    const config = makeBase280Config();
+    config.operation.crdMode = "no-restriction";
+    config.operation.scheduledControlEnabled = true;
+
+    const controller = initCoreControl(config);
+    const command = controller.evaluate(
+      {
+        soc: 0.7,
+        gridStatus: "normal",
+        utilityPowerKw: 50,
+        pcsActivePowerKw: 10,
+        pvKw: 14,
+      },
+      {
+        payload: {
+          command: "maximizePvSelfConsumption",
+          targetImportKw: 1,
+          deadbandKw: 0.5,
+          minSocPct: 20,
+          maxSocPct: 95,
+          maxChargePowerPct: 100,
+          maxDischargePowerPct: 100,
+        },
+      }
+    );
+
+    expect(command.controlMode).toBe("scheduled");
+    expect(command.pcsActivePowerKw).toBe(-14);
+    expect(command.reasons).toContain("scheduled-command-self-consumption-pv-charge");
+  });
+
+  test("scheduled maximize PV self-consumption does not discharge from utility error", () => {
+    const config = makeBase280Config();
+    config.operation.crdMode = "no-restriction";
+    config.operation.scheduledControlEnabled = true;
+
+    const controller = initCoreControl(config);
+    const command = controller.evaluate(
+      {
+        soc: 0.7,
+        gridStatus: "normal",
+        utilityPowerKw: 50,
+        pcsActivePowerKw: 0,
+        pvKw: 0,
+      },
+      {
+        payload: {
+          command: "maximizePvSelfConsumption",
+          targetImportKw: 1,
+          deadbandKw: 0.5,
+          minSocPct: 20,
+          maxSocPct: 95,
+          maxChargePowerPct: 100,
+          maxDischargePowerPct: 100,
+        },
+      }
+    );
+
+    expect(command.controlMode).toBe("scheduled");
+    expect(command.pcsActivePowerKw).toBe(0);
+    expect(command.reasons).toContain("scheduled-command-self-consumption-no-pv");
+  });
+
+  test("scheduled maximize PV self-consumption stops at max SOC", () => {
+    const config = makeBase280Config();
+    config.operation.crdMode = "no-restriction";
+    config.operation.scheduledControlEnabled = true;
+
+    const controller = initCoreControl(config);
+    const command = controller.evaluate(
+      {
+        soc: 0.96,
+        gridStatus: "normal",
+        pvKw: 40,
+      },
+      {
+        payload: {
+          command: "maximizePvSelfConsumption",
+          maxSocPct: 95,
+          maxChargePowerPct: 100,
+        },
+      }
+    );
+
+    expect(command.controlMode).toBe("scheduled");
+    expect(command.pcsActivePowerKw).toBe(0);
+    expect(command.reasons).toContain("scheduled-command-self-consumption-charge-blocked");
+  });
+
   test("disabled scheduled control falls back to realtime request", () => {
     const config = makeBase280Config();
     config.operation.crdMode = "no-restriction";
@@ -814,6 +1042,31 @@ describe("Unified core control design", () => {
         "generator",
         "protection",
       ])
+    );
+  });
+
+  test("route plan selects NANO path without eSpire280 topology", () => {
+    const config = makeBase280Config();
+    config.system.systemProfile = "NANO";
+    config.system.nominal.voltageVll = 240;
+    config.operation.crdMode = "no-restriction";
+    config.operation.scheduledControlEnabled = false;
+    delete config.pcs;
+    delete config.mbmu;
+    delete config.generator;
+    config.pv.acInverters = [];
+    config.pv.curtailmentMethod = null;
+
+    const design = buildUnifiedControlDesign(config);
+    const routePlan = buildUnifiedControlRoutePlan(design);
+
+    expect(design.productLine).toBe("NANO");
+    expect(routePlan.productPath).toBe("NANO");
+    expect(routePlan.activeRouteIds).toEqual(
+      expect.arrayContaining(["product-nano", "metering"])
+    );
+    expect(routePlan.activeRouteIds).not.toEqual(
+      expect.arrayContaining(["product-280", "product-mini", "pcs-dispatch"])
     );
   });
 

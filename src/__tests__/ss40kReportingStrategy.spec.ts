@@ -68,6 +68,48 @@ describe("SS40K reporting strategy", () => {
     expect(changed.decisions[0].reason).toBe("fault-changed");
   });
 
+  test("Mini-specific 50103 and 52103 models follow fault reporting strategy", () => {
+    let state: Ss40kReportingState | undefined;
+    const first = filterSs40kPayloadsForReporting({
+      messages: [
+        message("50103", { pcsFaultWord106: 0 }),
+        message("52103", { batteryProtectionWarningWord: 0 }),
+      ],
+      state,
+      nowMs: 0,
+    });
+    expect(first.messages).toHaveLength(2);
+    expect(first.decisions.map((decision) => decision.reason)).toEqual([
+      "initial",
+      "initial",
+    ]);
+    state = first.state;
+
+    const unchanged = filterSs40kPayloadsForReporting({
+      messages: [
+        message("50103", { pcsFaultWord106: 0 }),
+        message("52103", { batteryProtectionWarningWord: 0 }),
+      ],
+      state,
+      nowMs: 300_000,
+    });
+    expect(unchanged.messages).toHaveLength(0);
+
+    const changed = filterSs40kPayloadsForReporting({
+      messages: [
+        message("50103", { pcsFaultWord106: 1 }),
+        message("52103", { batteryProtectionWarningWord: 2 }),
+      ],
+      state,
+      nowMs: 305_000,
+    });
+    expect(changed.messages).toHaveLength(2);
+    expect(changed.decisions.map((decision) => decision.reason)).toEqual([
+      "fault-changed",
+      "fault-changed",
+    ]);
+  });
+
   test("40104 reports on the 5 minute cadence and on change", () => {
     const first = filterSs40kPayloadsForReporting({
       messages: [message("40104", { VoltVarV1: 100 })],

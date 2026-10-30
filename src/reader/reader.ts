@@ -9,6 +9,7 @@ interface Runtime {
   updatedAt: Record<string, number>;
   pending: Set<string>;
   nextReqId: number;
+  drain?: () => void;
 }
 
 const RUNTIMES = new Map<EquipId, Runtime>();
@@ -80,8 +81,7 @@ export function start(
 
   RUNTIMES.set(plan.equipmentId, rt);
 
-  const poll = (i: number, blk: ReadPlan["blocks"][number]) => {
-    if (rt.inflight >= (env.MAX_IN_FLIGHT ?? 1)) return;
+  const sendPoll = (i: number, blk: ReadPlan["blocks"][number]) => {
     const reqKey = `${i}:${rt.nextReqId++}`;
     rt.inflight++;
     rt.pending.add(reqKey);
@@ -116,8 +116,31 @@ export function start(
     setTimeout(() => {
       if (rt.pending.delete(reqKey)) {
         rt.inflight = Math.max(0, rt.inflight - 1);
+        rt.drain?.();
       }
     }, (env.REQUEST_TIMEOUT_MS ?? 1500) + 10);
+  };
+
+  // Coalesce overdue polls per block and serve them in arrival order. A busy
+  // transport must not permanently starve a status block or drop startup reads.
+  const queued = new Set<number>();
+  let draining = false;
+  rt.drain = () => {
+    if (draining || RUNTIMES.get(plan.equipmentId) !== rt) return;
+    draining = true;
+    try {
+      while (queued.size && rt.inflight < (env.MAX_IN_FLIGHT ?? 1)) {
+        const index = queued.values().next().value!;
+        queued.delete(index);
+        sendPoll(index, plan.blocks[index]);
+      }
+    } finally {
+      draining = false;
+    }
+  };
+  const poll = (index: number) => {
+    queued.add(index);
+    rt.drain?.();
   };
 
   const recurringCounts = new Map<number, number>();
@@ -143,11 +166,11 @@ export function start(
     const jitterDelay = jitter ? Math.floor(Math.random() * jitter) : 0;
     const delay = baseDelay + jitterDelay;
     const t0 = setTimeout(() => {
-      poll(i, blk);
+      poll(i);
       if ((blk as any).startupOnly) {
         return;
       }
-      const t = setInterval(() => poll(i, blk), period);
+      const t = setInterval(() => poll(i), period);
       rt.timers.push(t);
     }, delay);
     rt.timers.push(t0);
@@ -511,10 +534,14 @@ export function onReply(
   const calcValues =
     rt?.values ||
     Object.fromEntries(samples.map((sample) => [sample.tagID, sample.value]));
-  const derived = evaluateCalculatedTags(plan, calcValues, env, rt?.updatedAt);
+  const calcUpdatedAt = rt?.updatedAt ||
+    Object.fromEntries(samples.map((sample) => [sample.tagID, Number(sample.timestamp)]));
+  const derived = evaluateCalculatedTags(plan, calcValues, env, calcUpdatedAt);
   if (derived.length) {
     samples.push(...derived);
   }
+
+  rt?.drain?.();
 
   if (!samples.length) {
     return {
@@ -556,6 +583,7 @@ function evaluateCalculatedTags(
   for (const calc of calcs) {
     const scope: Record<string, any> = {};
     let missing = false;
+    let timestamp = now;
 
     for (const [name, tagID] of Object.entries(calc.inputs || {})) {
       const value = values[tagID as string];
@@ -567,12 +595,13 @@ function evaluateCalculatedTags(
           typeof value === "bigint"
         ) ||
         (enforceFreshness &&
-          (!Number.isFinite(inputUpdatedAt) || now - Number(inputUpdatedAt) > maxAgeMs))
+          (!Number.isFinite(inputUpdatedAt) || Number(inputUpdatedAt) > now || now - Number(inputUpdatedAt) > maxAgeMs))
       ) {
         missing = true;
         break;
       }
       scope[name] = value;
+      if (Number.isFinite(inputUpdatedAt)) timestamp = Math.min(timestamp, Number(inputUpdatedAt));
     }
 
     if (missing) continue;
@@ -583,7 +612,7 @@ function evaluateCalculatedTags(
     out.push({
       tagID: calc.tagID,
       value,
-      timestamp: Date.now(),
+      timestamp,
       alarm: calc.alarm || "No",
       supportingTag: calc.supportingTag || "No",
     });

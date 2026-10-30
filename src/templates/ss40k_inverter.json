@@ -13526,6 +13526,27 @@
     },
     {
       "model": 40104,
+      "point": "MaxDischargingCurrent",
+      "block": "fixed",
+      "entry": {
+        "name": "MaxDischargingCurrent",
+        "description": "Max Battery Current Max Discharge Preset",
+        "longdescription": "Value from Site Configuration Battery/Setup. Sets the maximum discharging current allowed for BMS1 of the connected inverter. This value is set on the inverter. Data code: 40104.MaxDischargingCurrent",
+        "dtype": "uint16",
+        "unit": "A",
+        "category": "BatteryBase",
+        "meanings": {}
+      },
+      "labels": [
+        { "label_family": "Level of Detail", "label_text": "Complete" },
+        { "label_family": "Equipment", "label_text": "Battery" },
+        { "label_family": "Component", "label_text": "Battery" },
+        { "label_family": "Type of Data", "label_text": "Settings" },
+        { "label_family": "Feature", "label_text": "Setup" }
+      ]
+    },
+    {
+      "model": 40104,
       "point": "OnGridCutOffSoc",
       "block": "fixed",
       "entry": {

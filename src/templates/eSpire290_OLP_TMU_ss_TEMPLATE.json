@@ -1,0 +1,493 @@
+{
+  "version": "2",
+  "device": {
+    "vendor": "OLiPower",
+    "model": "Omni BL 290 TMU (liquid cooling) template",
+    "protocol": "modbus-tcp",
+    "name": "eSpire290_OLP_TMU",
+    "sourceFormat": "json-offset-template",
+    "defaultByteOrder": "BE",
+    "defaultWordOrder32": "ABCD",
+    "notes": "Addresses are offsets from the TMU base. Runtime base = 33162 + tmuIndex * 28 (TMU 1 = index 0). Instantiate with buildEspire290TmuTemplate()."
+  },
+  "telemetry": [
+    {
+      "id": "TmuId",
+      "constant": "${tmuId}",
+      "pollClass": "startup",
+      "ss40k": {
+        "name": "TmuId",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "WorkMode",
+      "description": "TMU work mode",
+      "category": "Status",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 0,
+      "confidence": "high",
+      "enumStatus": {
+        "0": "Idle",
+        "1": "Inner loop",
+        "2": "Cooling",
+        "3": "Heating",
+        "4": "Auto"
+      },
+      "ss40k": {
+        "name": "WorkMode",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "PowerOnStatus",
+      "description": "TMU power-on status",
+      "category": "Status",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 1,
+      "confidence": "high",
+      "ss40k": {
+        "name": "PowerOnStatus",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "CoolingTemperature",
+      "description": "Cooling setpoint (C)",
+      "category": "Telemetry",
+      "pollClass": "slow",
+      "function": "IR",
+      "address": 2,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 10,
+        "engLow": 0,
+        "engHigh": 1
+      },
+      "confidence": "high",
+      "ss40k": {
+        "name": "CoolingTemperature",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "CoolingTemperatureDiff",
+      "description": "Cooling hysteresis (C)",
+      "category": "Telemetry",
+      "pollClass": "slow",
+      "function": "IR",
+      "address": 3,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 10,
+        "engLow": 0,
+        "engHigh": 1
+      },
+      "confidence": "high",
+      "ss40k": {
+        "name": "CoolingTemperatureDiff",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "HeatingTemperature",
+      "description": "Heating setpoint (C)",
+      "category": "Telemetry",
+      "pollClass": "slow",
+      "function": "IR",
+      "address": 4,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 10,
+        "engLow": 0,
+        "engHigh": 1
+      },
+      "confidence": "high",
+      "ss40k": {
+        "name": "HeatingTemperature",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "HeatingTemperatureDiff",
+      "description": "Heating hysteresis (C)",
+      "category": "Telemetry",
+      "pollClass": "slow",
+      "function": "IR",
+      "address": 5,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 10,
+        "engLow": 0,
+        "engHigh": 1
+      },
+      "confidence": "high",
+      "ss40k": {
+        "name": "HeatingTemperatureDiff",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "TemperatureSetpoint",
+      "description": "Temperature setpoint (C)",
+      "category": "Telemetry",
+      "pollClass": "slow",
+      "function": "IR",
+      "address": 6,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 10,
+        "engLow": 0,
+        "engHigh": 1
+      },
+      "confidence": "high",
+      "ss40k": {
+        "name": "TemperatureSetpoint",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "OuterTemperature",
+      "description": "Outdoor temperature (C)",
+      "category": "Telemetry",
+      "pollClass": "normal",
+      "function": "IR",
+      "address": 7,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 10,
+        "engLow": 0,
+        "engHigh": 1
+      },
+      "confidence": "high",
+      "ss40k": {
+        "name": "OuterTemperature",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "InnerTemperature",
+      "description": "Indoor temperature (C)",
+      "category": "Telemetry",
+      "pollClass": "normal",
+      "function": "IR",
+      "address": 8,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 10,
+        "engLow": 0,
+        "engHigh": 1
+      },
+      "confidence": "high",
+      "ss40k": {
+        "name": "InnerTemperature",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "OutletTemperature",
+      "description": "Coolant outlet temperature (C)",
+      "category": "Telemetry",
+      "pollClass": "normal",
+      "function": "IR",
+      "address": 9,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 10,
+        "engLow": 0,
+        "engHigh": 1
+      },
+      "confidence": "high",
+      "ss40k": {
+        "name": "OutletTemperature",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "InletTemperature",
+      "description": "Coolant return temperature (C)",
+      "category": "Telemetry",
+      "pollClass": "normal",
+      "function": "IR",
+      "address": 10,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 10,
+        "engLow": 0,
+        "engHigh": 1
+      },
+      "confidence": "high",
+      "ss40k": {
+        "name": "InletTemperature",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "OutletPressure",
+      "description": "Outlet pressure (bar)",
+      "category": "Telemetry",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 11,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 10,
+        "engLow": 0,
+        "engHigh": 1
+      },
+      "confidence": "high",
+      "ss40k": {
+        "name": "OutletPressure",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "InletPressure",
+      "description": "Inlet pressure (bar)",
+      "category": "Telemetry",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 12,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 10,
+        "engLow": 0,
+        "engHigh": 1
+      },
+      "confidence": "high",
+      "ss40k": {
+        "name": "InletPressure",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "Humidity",
+      "description": "Humidity (%)",
+      "category": "Telemetry",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 13,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 10,
+        "engLow": 0,
+        "engHigh": 1
+      },
+      "confidence": "high",
+      "ss40k": {
+        "name": "Humidity",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "FaultCode1",
+      "description": "TMU fault code 1 (per chiller vendor protocol - not provided)",
+      "category": "Faults",
+      "pollClass": "slow",
+      "function": "IRUS",
+      "address": 14,
+      "confidence": "low",
+      "alarm": true,
+      "bitfieldStatus": true,
+      "ss40k": {
+        "name": "FaultCode1",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "FaultCode2",
+      "description": "TMU fault code 2 (per chiller vendor protocol - not provided)",
+      "category": "Faults",
+      "pollClass": "slow",
+      "function": "IRUS",
+      "address": 15,
+      "confidence": "low",
+      "alarm": true,
+      "bitfieldStatus": true,
+      "ss40k": {
+        "name": "FaultCode2",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "FaultCode3",
+      "description": "TMU fault code 3 (per chiller vendor protocol - not provided)",
+      "category": "Faults",
+      "pollClass": "slow",
+      "function": "IRUS",
+      "address": 16,
+      "confidence": "low",
+      "alarm": true,
+      "bitfieldStatus": true,
+      "ss40k": {
+        "name": "FaultCode3",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "FaultCode4",
+      "description": "TMU fault code 4 (per chiller vendor protocol - not provided)",
+      "category": "Faults",
+      "pollClass": "slow",
+      "function": "IRUS",
+      "address": 17,
+      "confidence": "low",
+      "alarm": true,
+      "bitfieldStatus": true,
+      "ss40k": {
+        "name": "FaultCode4",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "FaultCode5",
+      "description": "TMU fault code 5 (per chiller vendor protocol - not provided)",
+      "category": "Faults",
+      "pollClass": "slow",
+      "function": "IRUS",
+      "address": 18,
+      "confidence": "low",
+      "alarm": true,
+      "bitfieldStatus": true,
+      "ss40k": {
+        "name": "FaultCode5",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "WarningCode1",
+      "description": "TMU warning code 1 (per chiller vendor protocol - not provided)",
+      "category": "Warnings",
+      "pollClass": "slow",
+      "function": "IRUS",
+      "address": 19,
+      "confidence": "low",
+      "alarm": true,
+      "bitfieldStatus": true,
+      "ss40k": {
+        "name": "WarningCode1",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "WarningCode2",
+      "description": "TMU warning code 2 (per chiller vendor protocol - not provided)",
+      "category": "Warnings",
+      "pollClass": "slow",
+      "function": "IRUS",
+      "address": 20,
+      "confidence": "low",
+      "alarm": true,
+      "bitfieldStatus": true,
+      "ss40k": {
+        "name": "WarningCode2",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "WarningCode3",
+      "description": "TMU warning code 3 (per chiller vendor protocol - not provided)",
+      "category": "Warnings",
+      "pollClass": "slow",
+      "function": "IRUS",
+      "address": 21,
+      "confidence": "low",
+      "alarm": true,
+      "bitfieldStatus": true,
+      "ss40k": {
+        "name": "WarningCode3",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "WarningCode4",
+      "description": "TMU warning code 4 (per chiller vendor protocol - not provided)",
+      "category": "Warnings",
+      "pollClass": "slow",
+      "function": "IRUS",
+      "address": 22,
+      "confidence": "low",
+      "alarm": true,
+      "bitfieldStatus": true,
+      "ss40k": {
+        "name": "WarningCode4",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "WarningCode5",
+      "description": "TMU warning code 5 (per chiller vendor protocol - not provided)",
+      "category": "Warnings",
+      "pollClass": "slow",
+      "function": "IRUS",
+      "address": 23,
+      "confidence": "low",
+      "alarm": true,
+      "bitfieldStatus": true,
+      "ss40k": {
+        "name": "WarningCode5",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "PumpSpeed",
+      "description": "Pump speed (%)",
+      "category": "Telemetry",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 24,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 10,
+        "engLow": 0,
+        "engHigh": 1
+      },
+      "confidence": "high",
+      "ss40k": {
+        "name": "PumpSpeed",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "PumpStatus",
+      "description": "Pump: 0 off, 1 on",
+      "category": "Status",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 25,
+      "confidence": "high",
+      "ss40k": {
+        "name": "PumpStatus",
+        "model": "TODO"
+      }
+    },
+    {
+      "id": "CompressorStatus",
+      "description": "Compressor: 0 off, 1 on",
+      "category": "Status",
+      "pollClass": "normal",
+      "function": "IRUS",
+      "address": 26,
+      "confidence": "high",
+      "ss40k": {
+        "name": "CompressorStatus",
+        "model": "TODO"
+      }
+    }
+  ]
+}

@@ -1,0 +1,473 @@
+{
+  "version": "2",
+  "device": {
+    "vendor": "CATL",
+    "model": "EnerOne SBMU template",
+    "protocol": "modbus-tcp",
+    "defaultByteOrder": "BE",
+    "defaultWordOrder32": "ABCD",
+    "name": "CATL_280_SBMU_42k",
+    "sourceFormat": "json-offset-template",
+    "notes": "Addresses in this template are offsets from the SBMU base. Runtime base = 0x0400 + sbmuIndex * 0x0400."
+  },
+  "telemetry": [
+    {
+      "id": "Manufacturer",
+      "constant": "fortress",
+      "pollClass": "startup",
+      "ss40k": { "name": "Mn", "model": "42100" }
+    },
+    {
+      "id": "ProductModel",
+      "constant": "eSpire-BMS",
+      "pollClass": "startup",
+      "ss40k": { "name": "Md", "model": "42100" }
+    },
+    {
+      "id": "SerialNumber",
+      "constant": "${serialNumber}",
+      "pollClass": "startup",
+      "ss40k": { "name": "SN", "model": "42100" }
+    },
+    {
+      "id": "BatterySubsystemVoltageOutside",
+      "description": "Battery subsystem DC outside voltage, register 0x0420",
+      "function": "HRUS",
+      "address": 32,
+      "pollClass": "slow",
+      "scale": { "mode": "Linear", "rawLow": 0, "rawHigh": 10, "engLow": 0, "engHigh": 1 }
+    },
+    {
+      "id": "BatterySubsystemVoltageInside",
+      "description": "Battery subsystem DC inside voltage, register 0x0421",
+      "function": "HRUS",
+      "address": 33,
+      "pollClass": "slow",
+      "scale": { "mode": "Linear", "rawLow": 0, "rawHigh": 10, "engLow": 0, "engHigh": 1 },
+      "ss40k": { "name": "V", "model": "42101" }
+    },
+    {
+      "id": "BatterySubsystemCurrent",
+      "description": "Battery subsystem charge/discharge current, register 0x0422",
+      "function": "HRUS",
+      "address": 34,
+      "pollClass": "slow",
+      "scale": { "mode": "Linear", "rawLow": 0, "rawHigh": 40000, "engLow": -2000, "engHigh": 2000 },
+      "ss40k": { "name": "A", "model": "42101" }
+    },
+    {
+      "id": "SOC",
+      "description": "Battery subsystem SOC, register 0x0423",
+      "function": "HRUS",
+      "address": 35,
+      "pollClass": "slow",
+      "scale": { "mode": "Linear", "rawLow": 0, "rawHigh": 1000, "engLow": 0, "engHigh": 1 },
+      "ss40k": { "name": "SoC", "model": "42101", "exportMultiplier": 100 }
+    },
+    {
+      "id": "SOH",
+      "description": "Battery subsystem SOH, register 0x0424",
+      "function": "HRUS",
+      "address": 36,
+      "pollClass": "slow",
+      "scale": { "mode": "Linear", "rawLow": 0, "rawHigh": 1000, "engLow": 0, "engHigh": 1 },
+      "ss40k": { "name": "SoH", "model": "42101", "exportMultiplier": 100 }
+    },
+    {
+      "id": "MaxCellVoltage",
+      "description": "Max single cell voltage, register 0x0425",
+      "function": "HRUS",
+      "address": 37,
+      "pollClass": "slow",
+      "scale": { "mode": "Linear", "rawLow": 0, "rawHigh": 1000, "engLow": 0, "engHigh": 1 },
+      "ss40k": { "name": "CellVMax", "model": "42101" }
+    },
+    {
+      "id": "MinCellVoltage",
+      "description": "Min single cell voltage, register 0x0426",
+      "function": "HRUS",
+      "address": 38,
+      "pollClass": "slow",
+      "scale": { "mode": "Linear", "rawLow": 0, "rawHigh": 1000, "engLow": 0, "engHigh": 1 },
+      "ss40k": { "name": "CellVMin", "model": "42101" }
+    },
+    {
+      "id": "AvgCellVoltage",
+      "description": "Average cell voltage, register 0x0427",
+      "function": "HRUS",
+      "address": 39,
+      "pollClass": "slow",
+      "scale": { "mode": "Linear", "rawLow": 0, "rawHigh": 1000, "engLow": 0, "engHigh": 1 }
+    },
+    {
+      "id": "MaxCellTemperature",
+      "description": "Max single cell temperature, register 0x0428",
+      "function": "HRUS",
+      "address": 40,
+      "pollClass": "slow",
+      "scale": { "mode": "Linear", "rawLow": 0, "rawHigh": 255, "engLow": -50, "engHigh": 205 },
+      "ss40k": { "name": "ModTmpMax", "model": "42101" }
+    },
+    {
+      "id": "MinCellTemperature",
+      "description": "Min single cell temperature, register 0x0429",
+      "function": "HRUS",
+      "address": 41,
+      "pollClass": "slow",
+      "scale": { "mode": "Linear", "rawLow": 0, "rawHigh": 255, "engLow": -50, "engHigh": 205 },
+      "ss40k": { "name": "ModTmpMin", "model": "42101" }
+    },
+    {
+      "id": "AvgCellTemperature",
+      "description": "Average single cell temperature, register 0x042A",
+      "function": "HRUS",
+      "address": 42,
+      "pollClass": "slow",
+      "scale": { "mode": "Linear", "rawLow": 0, "rawHigh": 255, "engLow": -50, "engHigh": 205 }
+    },
+    {
+      "id": "MaxAllowedChargeCurrent",
+      "description": "Max allowed charge current, register 0x042B",
+      "function": "HRUS",
+      "address": 43,
+      "pollClass": "slow",
+      "scale": { "mode": "Linear", "rawLow": 0, "rawHigh": 40000, "engLow": -2000, "engHigh": 2000 }
+    },
+    {
+      "id": "MaxAllowedDischargeCurrent",
+      "description": "Max allowed discharge current, register 0x042C",
+      "function": "HRUS",
+      "address": 44,
+      "pollClass": "slow",
+      "scale": { "mode": "Linear", "rawLow": 0, "rawHigh": 40000, "engLow": -2000, "engHigh": 2000 }
+    },
+    {
+      "id": "MaxChargePowerAllowed",
+      "description": "Max charge power allowed, register 0x042D",
+      "function": "HRUS",
+      "address": 45,
+      "pollClass": "slow",
+      "scale": { "mode": "Linear", "rawLow": 0, "rawHigh": 40000, "engLow": -2000, "engHigh": 2000 }
+    },
+    {
+      "id": "MaxDischargePowerAllowed",
+      "description": "Max discharge power allowed, register 0x042E",
+      "function": "HRUS",
+      "address": 46,
+      "pollClass": "slow",
+      "scale": { "mode": "Linear", "rawLow": 0, "rawHigh": 40000, "engLow": -2000, "engHigh": 2000 }
+    },
+    {
+      "id": "BatterySubsystemPower",
+      "description": "Battery subsystem power, register 0x042F",
+      "function": "HRUS",
+      "address": 47,
+      "pollClass": "slow",
+      "scale": { "mode": "Linear", "rawLow": 0, "rawHigh": 40000, "engLow": -2000, "engHigh": 2000 },
+      "ss40k": { "name": "W", "model": "42101", "exportMultiplier": 1000 }
+    },
+    {
+      "id": "MaxCellVoltagePosition",
+      "description": "Max cell voltage position, register 0x0430. Low byte is cell number, high byte is module number.",
+      "function": "HRUS",
+      "address": 48,
+      "pollClass": "slow"
+    },
+    {
+      "id": "MaxCellVoltageCellNumber",
+      "calc": { "inputs": { "pos": "MaxCellVoltagePosition" }, "expr": "pos & 255" },
+      "pollClass": "slow",
+      "ss40k": { "name": "CellVMaxNCell", "model": "42101" }
+    },
+    {
+      "id": "MinCellVoltagePosition",
+      "description": "Min cell voltage position, register 0x0431. Low byte is cell number, high byte is module number.",
+      "function": "HRUS",
+      "address": 49,
+      "pollClass": "slow"
+    },
+    {
+      "id": "MinCellVoltageCellNumber",
+      "calc": { "inputs": { "pos": "MinCellVoltagePosition" }, "expr": "pos & 255" },
+      "pollClass": "slow",
+      "ss40k": { "name": "CellVMinNCell", "model": "42101" }
+    },
+    {
+      "id": "MaxCellTemperaturePosition",
+      "description": "Max single cell temperature position, register 0x0432",
+      "function": "HRUS",
+      "address": 50,
+      "pollClass": "slow",
+      "ss40k": { "name": "ModTmpMaxN", "model": "42101" }
+    },
+    {
+      "id": "MinCellTemperaturePosition",
+      "description": "Min single cell temperature position, register 0x0433",
+      "function": "HRUS",
+      "address": 51,
+      "pollClass": "slow",
+      "ss40k": { "name": "ModTmpMinN", "model": "42101" }
+    },
+    {
+      "id": "ChargeSOE",
+      "description": "Charge SOE, register 0x0434",
+      "function": "HRUS",
+      "address": 52,
+      "pollClass": "slow",
+      "scale": { "mode": "Linear", "rawLow": 0, "rawHigh": 1000, "engLow": 0, "engHigh": 100 }
+    },
+    {
+      "id": "DischargeSOE",
+      "description": "Discharge SOE, register 0x0435",
+      "function": "HRUS",
+      "address": 53,
+      "pollClass": "slow",
+      "scale": { "mode": "Linear", "rawLow": 0, "rawHigh": 1000, "engLow": 0, "engHigh": 100 }
+    },
+    {
+      "id": "RemainingChargeEnergy",
+      "description": "Subsystem remaining charging energy, register 0x0436",
+      "function": "HRUS",
+      "address": 54,
+      "pollClass": "slow",
+      "scale": { "mode": "Linear", "rawLow": 0, "rawHigh": 10, "engLow": 0, "engHigh": 1 }
+    },
+    {
+      "id": "RemainingDischargeEnergy",
+      "description": "Subsystem remaining discharging energy, register 0x0437",
+      "function": "HRUS",
+      "address": 55,
+      "pollClass": "slow",
+      "scale": { "mode": "Linear", "rawLow": 0, "rawHigh": 10, "engLow": 0, "engHigh": 1 }
+    },
+    {
+      "id": "SumOfCellVoltage",
+      "description": "Sum of cell voltage, register 0x0438",
+      "function": "HRUS",
+      "address": 56,
+      "pollClass": "slow",
+      "scale": { "mode": "Linear", "rawLow": 0, "rawHigh": 10, "engLow": 0, "engHigh": 1 }
+    },
+    {
+      "id": "PreChargeRelayStatus",
+      "description": "Pre-charge relay status, register 0x0410",
+      "function": "HRUS",
+      "address": 16,
+      "pollClass": "slow",
+      "enumStatus": { "0": "Open", "1": "Close" },
+      "statusFlag": true
+    },
+    {
+      "id": "MasterPositiveRelayStatus",
+      "description": "Master positive relay status, register 0x0411",
+      "function": "HRUS",
+      "address": 17,
+      "pollClass": "slow",
+      "enumStatus": { "0": "Open", "1": "Close" },
+      "statusFlag": true
+    },
+    {
+      "id": "MasterNegativeRelayStatus",
+      "description": "Master negative relay status, register 0x0412",
+      "function": "HRUS",
+      "address": 18,
+      "pollClass": "slow",
+      "enumStatus": { "0": "Open", "1": "Close" },
+      "statusFlag": true
+    },
+    {
+      "id": "HighVoltageOnlineStatus",
+      "description": "High voltage online status, register 0x0413",
+      "function": "HRUS",
+      "address": 19,
+      "pollClass": "slow",
+      "enumStatus": { "0": "Off", "1": "On" },
+      "statusFlag": true
+    },
+    {
+      "id": "SbmuStringStatus",
+      "calc": { "inputs": { "hv": "HighVoltageOnlineStatus" }, "expr": "hv ? 1 : 0" },
+      "pollClass": "slow",
+      "ss40k": { "name": "St", "model": "42101" }
+    },
+    {
+      "id": "SbmuChargeStatus",
+      "calc": {
+        "inputs": { "a": "BatterySubsystemCurrent" },
+        "expr": "a < -1 ? 1 : (a > 1 ? 2 : 3)"
+      },
+      "pollClass": "slow",
+      "ss40k": { "name": "ChaSt", "model": "42101" }
+    },
+    {
+      "id": "SbmuContactorStatus",
+      "calc": {
+        "inputs": { "pos": "MasterPositiveRelayStatus", "neg": "MasterNegativeRelayStatus" },
+        "expr": "(pos && neg) ? 3 : 0"
+      },
+      "pollClass": "slow",
+      "ss40k": { "name": "ConSt", "model": "42101" }
+    },
+    {
+      "id": "HistoricalCumulativeChargingEnergy",
+      "description": "Historical cumulative charging energy, registers 0x0454-0x0455",
+      "function": "HRUI",
+      "address": 84,
+      "pollClass": "slow",
+      "scale": { "mode": "Linear", "rawLow": 0, "rawHigh": 10, "engLow": 0, "engHigh": 1 },
+      "ss40k": { "name": "eBatChgTot", "model": "42101", "exportMultiplier": 1000 }
+    },
+    {
+      "id": "HistoricalCumulativeDischargingEnergy",
+      "description": "Historical cumulative discharging energy, registers 0x0456-0x0457",
+      "function": "HRUI",
+      "address": 86,
+      "pollClass": "slow",
+      "scale": { "mode": "Linear", "rawLow": 0, "rawHigh": 10, "engLow": 0, "engHigh": 1 },
+      "ss40k": { "name": "eBatDischgTot", "model": "42101", "exportMultiplier": 1000 }
+    },
+    {
+      "id": "HistoricalCycleCount",
+      "description": "Historical cumulative charge/discharge cycle count, register 0x045C",
+      "function": "HRUS",
+      "address": 92,
+      "pollClass": "slow",
+      "ss40k": { "name": "Cycles", "model": "42101" }
+    },
+    {
+      "id": "ProductionDateYear",
+      "description": "Battery production date year, register 0x046C",
+      "function": "HRUS",
+      "address": 108,
+      "pollClass": "startup"
+    },
+    {
+      "id": "ProductionDateWeek",
+      "description": "Battery production date week, register 0x046D",
+      "function": "HRUS",
+      "address": 109,
+      "pollClass": "startup"
+    },
+    {
+      "id": "ProductionDateDayOfWeek",
+      "description": "Battery production date day of week, register 0x046E",
+      "function": "HRUS",
+      "address": 110,
+      "pollClass": "startup"
+    },
+    {
+      "id": "WarningWord0400",
+      "description": "Subsystem warning/fault word 0x0400",
+      "function": "HRUS",
+      "address": 0,
+      "pollClass": "slow",
+      "alarm": true,
+      "bitfieldStatus": true,
+      "ss40k": { "name": "BatteryWarning1", "model": "42103" }
+    },
+    {
+      "id": "WarningWord0401",
+      "description": "Subsystem warning/fault word 0x0401",
+      "function": "HRUS",
+      "address": 1,
+      "pollClass": "slow",
+      "alarm": true,
+      "bitfieldStatus": true,
+      "ss40k": { "name": "BatteryWarning2", "model": "42103" }
+    },
+    {
+      "id": "WarningWord0402",
+      "description": "Subsystem warning/fault word 0x0402",
+      "function": "HRUS",
+      "address": 2,
+      "pollClass": "slow",
+      "alarm": true,
+      "bitfieldStatus": true
+    },
+    {
+      "id": "WarningWord0403",
+      "description": "Subsystem warning/fault word 0x0403",
+      "function": "HRUS",
+      "address": 3,
+      "pollClass": "slow",
+      "alarm": true,
+      "bitfieldStatus": true
+    },
+    {
+      "id": "WarningWord0404",
+      "description": "Subsystem warning/fault word 0x0404",
+      "function": "HRUS",
+      "address": 4,
+      "pollClass": "slow",
+      "alarm": true,
+      "bitfieldStatus": true
+    },
+    {
+      "id": "WarningWord0405",
+      "description": "Subsystem warning/fault word 0x0405",
+      "function": "HRUS",
+      "address": 5,
+      "pollClass": "slow",
+      "alarm": true,
+      "bitfieldStatus": true
+    },
+    {
+      "id": "WarningWord0406",
+      "description": "Subsystem warning/fault word 0x0406",
+      "function": "HRUS",
+      "address": 6,
+      "pollClass": "slow",
+      "alarm": true,
+      "bitfieldStatus": true
+    },
+    {
+      "id": "WarningWord0407",
+      "description": "Subsystem warning/fault word 0x0407",
+      "function": "HRUS",
+      "address": 7,
+      "pollClass": "slow",
+      "alarm": true,
+      "bitfieldStatus": true
+    },
+    {
+      "id": "WarningWord0408",
+      "description": "Subsystem warning/fault word 0x0408",
+      "function": "HRUS",
+      "address": 8,
+      "pollClass": "slow",
+      "alarm": true,
+      "bitfieldStatus": true
+    },
+    {
+      "id": "WarningWord0409",
+      "description": "Subsystem warning/fault word 0x0409",
+      "function": "HRUS",
+      "address": 9,
+      "pollClass": "slow",
+      "alarm": true,
+      "bitfieldStatus": true
+    },
+    {
+      "id": "SbmuBatteryFault",
+      "calc": {
+        "inputs": {
+          "w0": "WarningWord0400",
+          "w1": "WarningWord0401",
+          "w2": "WarningWord0402",
+          "w3": "WarningWord0403",
+          "w4": "WarningWord0404",
+          "w5": "WarningWord0405",
+          "w6": "WarningWord0406",
+          "w7": "WarningWord0407",
+          "w8": "WarningWord0408",
+          "w9": "WarningWord0409"
+        },
+        "expr": "(w0 || w1 || w2 || w3 || w4 || w5 || w6 || w7 || w8 || w9) ? 1 : 0"
+      },
+      "pollClass": "slow",
+      "alarm": true,
+      "bitfieldStatus": true,
+      "ss40k": { "name": "BatteryFault", "model": "42103" }
+    }
+  ]
+}

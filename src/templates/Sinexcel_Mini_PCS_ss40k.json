@@ -11,6 +11,44 @@
   },
   "telemetry": [
     {
+      "id": "MaxChargingCurrent",
+      "description": "PCS maximum charging current readback in amps, not the BMS permitted current.",
+      "category": "Battery",
+      "pollClass": "normal",
+      "function": "HR",
+      "address": 1626,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 10,
+        "scaledLow": 0,
+        "scaledHigh": 1
+      },
+      "ss40k": {
+        "name": "MaxChargingCurrent",
+        "model": "40104"
+      }
+    },
+    {
+      "id": "MaxDischargingCurrent",
+      "description": "PCS maximum discharging current readback in amps, not the BMS permitted current.",
+      "category": "Battery",
+      "pollClass": "normal",
+      "function": "HR",
+      "address": 1627,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 10,
+        "scaledLow": 0,
+        "scaledHigh": 1
+      },
+      "ss40k": {
+        "name": "MaxDischargingCurrent",
+        "model": "40104"
+      }
+    },
+    {
       "id": "SerialNumber",
       "description": "PCS serial number decoded from register 0 as two-byte big-endian ASCII words",
       "category": "Identity",
@@ -25,18 +63,87 @@
       }
     },
     {
+      "id": "ManufacturerName40100",
+      "description": "Mini PCS manufacturer identity for SS40K 40100.",
+      "category": "Identity",
+      "constant": "fortress",
+      "pollClass": "startup",
+      "ss40k": {
+        "name": "Mn",
+        "model": "40100"
+      }
+    },
+    {
+      "id": "ProductModel40100",
+      "description": "Mini PCS product identity for SS40K 40100.",
+      "category": "Identity",
+      "constant": "eSpire-Mini-PCS",
+      "pollClass": "startup",
+      "ss40k": {
+        "name": "Md",
+        "model": "40100"
+      }
+    },
+    {
+      "id": "SerialNumber40100",
+      "description": "Mini PCS serial identity for SS40K 40100.",
+      "category": "Identity",
+      "pollClass": "startup",
+      "virtual": true,
+      "ss40k": {
+        "sourceTagID": "PCS.SerialNumber",
+        "name": "SN",
+        "model": "40100"
+      }
+    },
+    {
       "id": "SystemStatusMap",
+      "description": "Sinexcel PCS system status bitfield. Bit 4 = grid-tied, bit 5 = off-grid.",
       "pollClass": "normal",
       "function": "HRUS",
       "address": 32,
+      "bitfieldStatus": {
+        "0": "Fault",
+        "2": "Derating",
+        "3": "Booting",
+        "4": "Grid-tied",
+        "5": "Off-grid",
+        "9": "Failed"
+      }
+    },
+    {
+      "id": "InverterOperationStatus",
+      "description": "Calculated SS40K run/stop status from Sinexcel PCS system status. Reports running when grid-tied or off-grid.",
+      "pollClass": "normal",
+      "calc": {
+        "inputs": {
+          "status": "SystemStatusMap"
+        },
+        "expr": "(bit(status, 4) || bit(status, 5)) ? 1 : 0"
+      },
       "ss40k": {
-        "name": "invMode",
+        "name": "invOpStatus",
+        "model": "40101"
+      }
+    },
+    {
+      "id": "GridStatus",
+      "description": "FMP grid status using site operating-state semantics: fault/failed/stopped/disconnected = 1, grid-tied = 0, off-grid = 2. Off-grid is labeled Outage by FMP, not independent proof of utility loss.",
+      "pollClass": "normal",
+      "calc": {
+        "inputs": {
+          "status": "SystemStatusMap"
+        },
+        "expr": "(bit(status, 0) || bit(status, 9)) ? 1 : ((bit(status, 4) && !bit(status, 5)) ? 0 : ((bit(status, 5) && !bit(status, 4)) ? 2 : 1))"
+      },
+      "ss40k": {
+        "name": "gridStat",
         "model": "40101"
       }
     },
     {
       "id": "ACBusTotalActivePower",
-      "pollClass": "normal",
+      "pollClass": "fast",
       "function": "HR",
       "address": 168,
       "scale": {
@@ -54,7 +161,7 @@
     },
     {
       "id": "ACBusL1ActivePower",
-      "pollClass": "normal",
+      "pollClass": "fast",
       "function": "HR",
       "address": 169,
       "scale": {
@@ -72,7 +179,7 @@
     },
     {
       "id": "ACBusL2ActivePower",
-      "pollClass": "normal",
+      "pollClass": "fast",
       "function": "HR",
       "address": 170,
       "scale": {
@@ -90,7 +197,7 @@
     },
     {
       "id": "ACBusL3ActivePower",
-      "pollClass": "normal",
+      "pollClass": "fast",
       "function": "HR",
       "address": 171,
       "scale": {
@@ -1445,7 +1552,7 @@
     },
     {
       "id": "pcsWarning",
-      "description": "Calculated SS40K 40103 pcsWarning from Sinexcel PCS fault/alarm words",
+      "description": "Calculated SS40K 40103 pcsWarning from Sinexcel PCS fault/alarm words. Fan abnormal uses register 108 bit 1; register 36 fan-stop status bits are not faults.",
       "category": "Faults",
       "pollClass": "normal",
       "calc": {
@@ -1466,7 +1573,7 @@
           "w120": "SinexcelFaultWord120",
           "w121": "SinexcelFaultWord121"
         },
-        "expr": "((((w36 >>> 5) & 1) | ((w36 >>> 6) & 1) | ((w108 >>> 1) & 1)) << 0) | ((((w119 >>> 3) & 1)) << 3) | ((((w106 >>> 13) & 1)) << 4)"
+        "expr": "(((w108 >>> 1) & 1) << 0) | ((((w119 >>> 3) & 1)) << 3) | ((((w106 >>> 13) & 1)) << 4)"
       },
       "alarm": true,
       "bitfieldStatus": true,
@@ -1829,7 +1936,7 @@
     },
     {
       "id": "GridTotalActivePower",
-      "pollClass": "normal",
+      "pollClass": "fast",
       "function": "HR",
       "address": 224,
       "scale": {
@@ -1848,7 +1955,7 @@
     },
     {
       "id": "GridL1ActivePower",
-      "pollClass": "normal",
+      "pollClass": "fast",
       "function": "HR",
       "address": 225,
       "scale": {
@@ -1866,7 +1973,7 @@
     },
     {
       "id": "GridL2ActivePower",
-      "pollClass": "normal",
+      "pollClass": "fast",
       "function": "HR",
       "address": 226,
       "scale": {
@@ -1884,7 +1991,7 @@
     },
     {
       "id": "GridL3ActivePower",
-      "pollClass": "normal",
+      "pollClass": "fast",
       "function": "HR",
       "address": 227,
       "scale": {
@@ -2188,9 +2295,9 @@
     },
     {
       "id": "BatteryScheduling",
-      "description": "Temporary hard-coded daily schedule telemetry for cloud UI validation",
+      "description": "Legacy FMP daily schedule disabled; operational plans are managed by EdgeScheduler.",
       "pollClass": "startup",
-      "constant": 1,
+      "constant": 0,
       "ss40k": {
         "name": "BatteryScheduling",
         "model": "40104"
@@ -2198,7 +2305,7 @@
     },
     {
       "id": "ACChargeStatus",
-      "description": "Temporary hard-coded daily schedule telemetry for cloud UI validation",
+      "description": "Legacy FMP daily schedule disabled; operational plans are managed by EdgeScheduler.",
       "pollClass": "startup",
       "constant": 0,
       "ss40k": {
@@ -2208,7 +2315,7 @@
     },
     {
       "id": "chgST1",
-      "description": "Temporary hard-coded daily schedule telemetry for cloud UI validation",
+      "description": "Legacy FMP daily schedule disabled; operational plans are managed by EdgeScheduler.",
       "pollClass": "startup",
       "constant": 0,
       "ss40k": {
@@ -2218,9 +2325,9 @@
     },
     {
       "id": "chgET1",
-      "description": "Temporary hard-coded daily schedule telemetry for cloud UI validation",
+      "description": "Legacy FMP daily schedule disabled; operational plans are managed by EdgeScheduler.",
       "pollClass": "startup",
-      "constant": 15127,
+      "constant": 0,
       "ss40k": {
         "name": "chgET1",
         "model": "40104"
@@ -2228,7 +2335,7 @@
     },
     {
       "id": "chgST2",
-      "description": "Temporary hard-coded daily schedule telemetry for cloud UI validation",
+      "description": "Legacy FMP daily schedule disabled; operational plans are managed by EdgeScheduler.",
       "pollClass": "startup",
       "constant": 0,
       "ss40k": {
@@ -2238,7 +2345,7 @@
     },
     {
       "id": "chgET2",
-      "description": "Temporary hard-coded daily schedule telemetry for cloud UI validation",
+      "description": "Legacy FMP daily schedule disabled; operational plans are managed by EdgeScheduler.",
       "pollClass": "startup",
       "constant": 0,
       "ss40k": {
@@ -2248,7 +2355,7 @@
     },
     {
       "id": "chgST3",
-      "description": "Temporary hard-coded daily schedule telemetry for cloud UI validation",
+      "description": "Legacy FMP daily schedule disabled; operational plans are managed by EdgeScheduler.",
       "pollClass": "startup",
       "constant": 0,
       "ss40k": {
@@ -2258,7 +2365,7 @@
     },
     {
       "id": "chgET3",
-      "description": "Temporary hard-coded daily schedule telemetry for cloud UI validation",
+      "description": "Legacy FMP daily schedule disabled; operational plans are managed by EdgeScheduler.",
       "pollClass": "startup",
       "constant": 0,
       "ss40k": {
@@ -2268,7 +2375,7 @@
     },
     {
       "id": "dischgST1",
-      "description": "Temporary hard-coded daily schedule telemetry for cloud UI validation",
+      "description": "Legacy FMP daily schedule disabled; operational plans are managed by EdgeScheduler.",
       "pollClass": "startup",
       "constant": 0,
       "ss40k": {
@@ -2278,9 +2385,9 @@
     },
     {
       "id": "dischgET1",
-      "description": "Temporary hard-coded daily schedule telemetry for cloud UI validation",
+      "description": "Legacy FMP daily schedule disabled; operational plans are managed by EdgeScheduler.",
       "pollClass": "startup",
-      "constant": 15127,
+      "constant": 0,
       "ss40k": {
         "name": "dischgET1",
         "model": "40104"
@@ -2288,7 +2395,7 @@
     },
     {
       "id": "dischgST2",
-      "description": "Temporary hard-coded daily schedule telemetry for cloud UI validation",
+      "description": "Legacy FMP daily schedule disabled; operational plans are managed by EdgeScheduler.",
       "pollClass": "startup",
       "constant": 0,
       "ss40k": {
@@ -2298,7 +2405,7 @@
     },
     {
       "id": "dischgET2",
-      "description": "Temporary hard-coded daily schedule telemetry for cloud UI validation",
+      "description": "Legacy FMP daily schedule disabled; operational plans are managed by EdgeScheduler.",
       "pollClass": "startup",
       "constant": 0,
       "ss40k": {
@@ -2308,7 +2415,7 @@
     },
     {
       "id": "dischgST3",
-      "description": "Temporary hard-coded daily schedule telemetry for cloud UI validation",
+      "description": "Legacy FMP daily schedule disabled; operational plans are managed by EdgeScheduler.",
       "pollClass": "startup",
       "constant": 0,
       "ss40k": {
@@ -2318,7 +2425,7 @@
     },
     {
       "id": "dischgET3",
-      "description": "Temporary hard-coded daily schedule telemetry for cloud UI validation",
+      "description": "Legacy FMP daily schedule disabled; operational plans are managed by EdgeScheduler.",
       "pollClass": "startup",
       "constant": 0,
       "ss40k": {
@@ -2328,7 +2435,7 @@
     },
     {
       "id": "acChgST1",
-      "description": "Temporary hard-coded daily schedule telemetry for cloud UI validation",
+      "description": "Legacy FMP daily schedule disabled; operational plans are managed by EdgeScheduler.",
       "pollClass": "startup",
       "constant": 0,
       "ss40k": {
@@ -2338,7 +2445,7 @@
     },
     {
       "id": "acChgET1",
-      "description": "Temporary hard-coded daily schedule telemetry for cloud UI validation",
+      "description": "Legacy FMP daily schedule disabled; operational plans are managed by EdgeScheduler.",
       "pollClass": "startup",
       "constant": 0,
       "ss40k": {
@@ -2348,7 +2455,7 @@
     },
     {
       "id": "acChgST2",
-      "description": "Temporary hard-coded daily schedule telemetry for cloud UI validation",
+      "description": "Legacy FMP daily schedule disabled; operational plans are managed by EdgeScheduler.",
       "pollClass": "startup",
       "constant": 0,
       "ss40k": {
@@ -2358,7 +2465,7 @@
     },
     {
       "id": "acChgET2",
-      "description": "Temporary hard-coded daily schedule telemetry for cloud UI validation",
+      "description": "Legacy FMP daily schedule disabled; operational plans are managed by EdgeScheduler.",
       "pollClass": "startup",
       "constant": 0,
       "ss40k": {
@@ -2368,7 +2475,7 @@
     },
     {
       "id": "acChgST3",
-      "description": "Temporary hard-coded daily schedule telemetry for cloud UI validation",
+      "description": "Legacy FMP daily schedule disabled; operational plans are managed by EdgeScheduler.",
       "pollClass": "startup",
       "constant": 0,
       "ss40k": {
@@ -2378,7 +2485,7 @@
     },
     {
       "id": "acChgET3",
-      "description": "Temporary hard-coded daily schedule telemetry for cloud UI validation",
+      "description": "Legacy FMP daily schedule disabled; operational plans are managed by EdgeScheduler.",
       "pollClass": "startup",
       "constant": 0,
       "ss40k": {
@@ -2433,13 +2540,27 @@
       "id": "MaxChgCurrent",
       "function": "HR",
       "address": 1626,
-      "readback": true
+      "readback": true,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 10,
+        "scaledLow": 0,
+        "scaledHigh": 1
+      }
     },
     {
       "id": "MaxDsgCurrent",
       "function": "HR",
       "address": 1627,
-      "readback": true
+      "readback": true,
+      "scale": {
+        "mode": "Linear",
+        "rawLow": 0,
+        "rawHigh": 10,
+        "scaledLow": 0,
+        "scaledHigh": 1
+      }
     },
     {
       "id": "PvDcdcConverterEnable",

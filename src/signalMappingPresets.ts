@@ -22,6 +22,13 @@ export function buildMiniSignalMappingPreset(
   const sources: Record<string, SignalMappingSourceConfig> = {
     PCS: { profile: "Sinexcel_Mini_PCS_ss40k", role: "pcs" },
     AMPACE: { profile: "AMPACE_Mini_ss40k", role: "bms" },
+    Gateway: {
+      profile: "Sinexcel_Mini_Gateway_ss40k",
+      role: "other",
+      ip: "192.168.1.101",
+      port: 502,
+      unitId: 1,
+    },
     ...pvdcSources(pvdcCount),
   };
 

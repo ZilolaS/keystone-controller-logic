@@ -173,12 +173,6 @@
           "transform": "invert_sign_for_control_feedback",
           "notes": "Mini reports positive while charging and negative while discharging. Control convention is positive discharge and negative charge."
         },
-        "TelemetrySnapshot.pvKw": {
-          "tagID": "PVSideTotalPower",
-          "aggregate": "sumAcrossMiniPvDcModules",
-          "condition": "Mini model YY > 0. YY=45 means one DC/DC module, YY=90 means two modules, YY=135 means three modules.",
-          "notes": "PVSideTotalPower is per DC/DC module, not site total. Total DC PV is the sum of each module instance."
-        },
         "TelemetrySnapshot.machineStatus.batteryVoltageV": {
           "tagID": "DCInputVoltage"
         }

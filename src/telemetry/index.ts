@@ -19,11 +19,33 @@ export {
   adaptTelemetryTemplateToReadProfile,
   resolveTelemetryTemplate,
 } from "./templateAdapter";
-export { buildConfiguredEgaugeTemplate } from "./egaugeConfigTemplate";
+export {
+  buildConfiguredEgaugeTemplate,
+  buildConfiguredEgaugeTemplates,
+} from "./egaugeConfigTemplate";
+export { buildSiteTelemetryEquipmentConfig } from "./siteEquipmentConfig";
 export {
   buildAmpaceBcu42kEquipmentConfig,
   buildAmpaceBcu42kTemplate,
 } from "./ampaceBcu42k";
+export {
+  buildCatlSbmu42kEquipmentConfig,
+  buildCatlSbmu42kTemplate,
+} from "./catlSbmu42k";
+export {
+  ESPIRE290_MAX_CLUSTERS,
+  ESPIRE290_SYSTEM_PROFILE,
+  buildEspire290ClusterTemplate,
+  buildEspire290EquipmentConfig,
+  buildEspire290TmuTemplate,
+  espire290ClusterControlBase,
+} from "./espire290OlpCms";
+export {
+  ESPIRE290_CONFIG_MODELS,
+  ESPIRE290_FAULT_MODELS,
+  ESPIRE290_INFO_MODELS,
+  ESPIRE290_MONITORING_MODELS,
+} from "./espire290ReportingModels";
 export {
   createTelemetryRuntimeState,
   handleTelemetryMessage,
@@ -32,11 +54,28 @@ export {
   buildSs40kFixedPayloads,
   buildSs40kLookup,
   DEFAULT_SS40K_MODEL_INDEX_MAP,
+  type Ss40kEnergyAccumulatorOptions,
+  type Ss40kEnergyAccumulatorState,
 } from "./ss40k";
 export {
   filterSs40kPayloadsForReporting,
   type Ss40kReportingState,
 } from "./reportingStrategy";
+export {
+  applyLegacyTelemetryAdapters,
+  buildLegacyCompatibilityPreset,
+  buildMiniNonAlarmTelemetryLegacyCompatibility,
+  isLegacyTelemetrySource,
+  legacySourceAllowsBcuTelemetry,
+  legacyTelemetryAdaptersFromConfig,
+  publishUnifiedTelemetryToLegacy,
+  unifiedToLegacyTelemetryBridgesFromConfig,
+  type LegacyTelemetryAdapter,
+  type LegacyTelemetryAdapterResult,
+  type MiniLegacyCompatibilityOptions,
+  type UnifiedToLegacyTelemetryBridge,
+  type UnifiedToLegacyTelemetryBridgeResult,
+} from "./legacyAdapter";
 
 export function initTelemetry(config: SiteConfig): {
   caps: SiteCapabilities;

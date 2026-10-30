@@ -1,0 +1,582 @@
+{
+  "system": {
+    "systemProfile": "MINI-60-90-122-480",
+    "controllerTimezone": "America/Los_Angeles",
+    "nominal": {
+      "voltageVll": 480,
+      "frequencyHz": 60
+    }
+  },
+  "network": {
+    "controller": {
+      "ip": "192.168.1.31",
+      "modbusServer": {
+        "ip": "192.168.1.10",
+        "port": 502
+      }
+    },
+    "assets": [
+      {
+        "id": "PCS",
+        "role": "pcs",
+        "productLine": "Mini",
+        "profileName": "Sinexcel_Mini_PCS_ss40k",
+        "ip": "192.168.1.10",
+        "port": 502,
+        "unitId": 1
+      },
+      {
+        "id": "AMPACE",
+        "role": "bms",
+        "productLine": "Mini",
+        "profileName": "AMPACE_Mini_ss40k",
+        "ip": "192.168.1.100",
+        "port": 502,
+        "unitId": 1
+      },
+      {
+        "id": "Load",
+        "role": "load",
+        "productLine": "Mini",
+        "profileName": "Sinexcel_Mini_Load_ss40k",
+        "ip": "192.168.1.10",
+        "port": 502,
+        "unitId": 1
+      },
+      {
+        "id": "PVDC1",
+        "role": "pvdc",
+        "productLine": "Mini",
+        "profileName": "Sinexcel_Mini_PVDC_Module1_ss40k",
+        "ip": "192.168.1.10",
+        "port": 502,
+        "unitId": 1
+      },
+      {
+        "id": "PVDC2",
+        "role": "pvdc",
+        "productLine": "Mini",
+        "profileName": "Sinexcel_Mini_PVDC_Module2_ss40k",
+        "ip": "192.168.1.10",
+        "port": 502,
+        "unitId": 1
+      },
+      {
+        "id": "Gateway",
+        "role": "other",
+        "productLine": "Mini",
+        "profileName": "Sinexcel_Mini_Gateway_ss40k",
+        "ip": "192.168.1.101",
+        "port": 502,
+        "unitId": 1
+      },
+      {
+        "id": "Meter",
+        "role": "meter",
+        "profileName": "configured_eGauge",
+        "ip": "192.168.1.88",
+        "port": 502,
+        "unitId": 1
+      }
+    ]
+  },
+  "operation": {
+    "mode": "grid-tied",
+    "gridCode": "IEEE1547-2018",
+    "crdMode": "no-restriction",
+    "siteExportMode": "no-restriction",
+    "siteExportTargetImportKw": 0,
+    "siteExportDeadbandKw": 0.5,
+    "scheduledControlEnabled": true,
+    "controlEnabled": true,
+    "writesEnabled": true
+  },
+  "pcs": {
+    "pcsDaisyChain": [],
+    "maxChargeKw": 60,
+    "maxDischargeKw": 60
+  },
+  "battery": {
+    "minSoc": 0.2,
+    "maxSoc": 0.95,
+    "socLow": 0.2,
+    "socLowRecover": 0.22,
+    "socHigh": 0.95,
+    "socHighRecover": 0.93,
+    "forceGridChargeSoc": 0.02,
+    "forceGridChargeMinCellVoltageV": 2.95,
+    "forceGridChargeKw": 10,
+    "powerHeadroomKw": 0,
+    "commandRampKwPerSec": 1000,
+    "bcuCount": 1
+  },
+  "pv": {
+    "acInverters": [],
+    "curtailmentMethod": null,
+    "dcCoupledToMiniPcs": true
+  },
+  "metering": {
+    "meterType": "eGauge",
+    "modbusProfile": "configured_eGauge",
+    "ip": "192.168.1.88",
+    "port": 502,
+    "unitId": 1,
+    "registerMap": [
+      {
+        "signal": "custom",
+        "tagID": "Meter.Nonback_L1_Current",
+        "register": 9000,
+        "function": "IRF",
+        "pollClass": "normal",
+        "supportingTag": true,
+        "description": "Non-backup L1 current"
+      },
+      {
+        "signal": "custom",
+        "tagID": "Meter.Nonback_L2_Current",
+        "register": 9002,
+        "function": "IRF",
+        "pollClass": "normal",
+        "supportingTag": true,
+        "description": "Non-backup L2 current"
+      },
+      {
+        "signal": "custom",
+        "tagID": "Meter.Nonback_L3_Current",
+        "register": 9004,
+        "function": "IRF",
+        "pollClass": "normal",
+        "supportingTag": true,
+        "description": "Non-backup L3 current"
+      },
+      {
+        "signal": "frequencyHz",
+        "tagID": "Meter.Utility_L1_Frequency",
+        "register": 9006,
+        "function": "IRF",
+        "pollClass": "normal",
+        "description": "Utility L1 frequency"
+      },
+      {
+        "signal": "custom",
+        "tagID": "Meter.Utility_L2_Frequency",
+        "register": 9008,
+        "function": "IRF",
+        "pollClass": "normal",
+        "supportingTag": true,
+        "description": "Utility L2 frequency"
+      },
+      {
+        "signal": "custom",
+        "tagID": "Meter.Utility_L3_Frequency",
+        "register": 9010,
+        "function": "IRF",
+        "pollClass": "normal",
+        "supportingTag": true,
+        "description": "Utility L3 frequency"
+      },
+      {
+        "signal": "custom",
+        "tagID": "Meter.Utility_Ph_1_Active_Power",
+        "register": 9012,
+        "function": "IRF",
+        "pollClass": "normal",
+        "scale": 0.001,
+        "supportingTag": true,
+        "description": "Utility L1 active power"
+      },
+      {
+        "signal": "custom",
+        "tagID": "Meter.Utility_Ph_2_Active_Power",
+        "register": 9014,
+        "function": "IRF",
+        "pollClass": "normal",
+        "scale": 0.001,
+        "supportingTag": true,
+        "description": "Utility L2 active power"
+      },
+      {
+        "signal": "custom",
+        "tagID": "Meter.Utility_Ph_3_Active_Power",
+        "register": 9016,
+        "function": "IRF",
+        "pollClass": "normal",
+        "scale": 0.001,
+        "supportingTag": true,
+        "description": "Utility L3 active power"
+      },
+      {
+        "signal": "acCoupledPvKw",
+        "tagID": "Meter.AC_PV_Power",
+        "register": 9018,
+        "function": "IRF",
+        "pollClass": "normal",
+        "scale": 0.001,
+        "description": "AC coupled PV power"
+      },
+      {
+        "signal": "custom",
+        "tagID": "Meter.Nonback_Power",
+        "register": 9020,
+        "function": "IRF",
+        "pollClass": "normal",
+        "scale": 0.001,
+        "supportingTag": true,
+        "description": "Non-backup load power"
+      },
+      {
+        "signal": "utilityPowerKw",
+        "tagID": "Meter.Utility_Active_Power",
+        "register": 9022,
+        "function": "IRF",
+        "pollClass": "normal",
+        "scale": 0.001,
+        "description": "Utility active power; positive import, negative export"
+      },
+      {
+        "signal": "voltageL1N",
+        "tagID": "Meter.Utility_L1_Voltage",
+        "register": 9024,
+        "function": "IRF",
+        "pollClass": "normal",
+        "description": "Utility L1-N voltage"
+      },
+      {
+        "signal": "voltageL2N",
+        "tagID": "Meter.Utility_L2_Voltage",
+        "register": 9026,
+        "function": "IRF",
+        "pollClass": "normal",
+        "description": "Utility L2-N voltage"
+      },
+      {
+        "signal": "voltageL3N",
+        "tagID": "Meter.Utility_L3_Voltage",
+        "register": 9028,
+        "function": "IRF",
+        "pollClass": "normal",
+        "description": "Utility L3-N voltage"
+      },
+      {
+        "signal": "custom",
+        "tagID": "Meter.AC_PV_L1_Current",
+        "register": 9040,
+        "function": "IRF",
+        "pollClass": "normal",
+        "supportingTag": true,
+        "description": "AC-coupled PV L1 current"
+      },
+      {
+        "signal": "custom",
+        "tagID": "Meter.AC_PV_L2_Current",
+        "register": 9042,
+        "function": "IRF",
+        "pollClass": "normal",
+        "supportingTag": true,
+        "description": "AC-coupled PV L2 current"
+      },
+      {
+        "signal": "custom",
+        "tagID": "Meter.AC_PV_L3_Current",
+        "register": 9044,
+        "function": "IRF",
+        "pollClass": "normal",
+        "supportingTag": true,
+        "description": "AC-coupled PV L3 current"
+      },
+      {
+        "signal": "custom",
+        "tagID": "Meter.Utility_L1_Current",
+        "register": 9034,
+        "function": "IRF",
+        "pollClass": "normal",
+        "supportingTag": true,
+        "description": "Utility L1 current"
+      },
+      {
+        "signal": "custom",
+        "tagID": "Meter.Utility_L2_Current",
+        "register": 9036,
+        "function": "IRF",
+        "pollClass": "normal",
+        "supportingTag": true,
+        "description": "Utility L2 current"
+      },
+      {
+        "signal": "custom",
+        "tagID": "Meter.Utility_L3_Current",
+        "register": 9038,
+        "function": "IRF",
+        "pollClass": "normal",
+        "supportingTag": true,
+        "description": "Utility L3 current"
+      }
+    ],
+    "calculations": {}
+  },
+  "telemetryReaders": [
+    {
+      "equipmentId": "PCS",
+      "profileName": "Sinexcel_Mini_PCS_ss40k",
+      "ip": "192.168.1.10",
+      "port": 502,
+      "unitId": 1,
+      "route": "PCS",
+      "role": "pcs"
+    },
+    {
+      "equipmentId": "AMPACE",
+      "profileName": "AMPACE_Mini_ss40k",
+      "ip": "192.168.1.100",
+      "port": 502,
+      "unitId": 1,
+      "route": "AMPACE",
+      "role": "bms"
+    },
+    {
+      "equipmentId": "Load",
+      "profileName": "Sinexcel_Mini_Load_ss40k",
+      "ip": "192.168.1.10",
+      "port": 502,
+      "unitId": 1,
+      "route": "Load",
+      "role": "load"
+    },
+    {
+      "equipmentId": "PVDC1",
+      "profileName": "Sinexcel_Mini_PVDC_Module1_ss40k",
+      "ip": "192.168.1.10",
+      "port": 502,
+      "unitId": 1,
+      "route": "PVDC1",
+      "role": "pvdc"
+    },
+    {
+      "equipmentId": "PVDC2",
+      "profileName": "Sinexcel_Mini_PVDC_Module2_ss40k",
+      "ip": "192.168.1.10",
+      "port": 502,
+      "unitId": 1,
+      "route": "PVDC2",
+      "role": "pvdc"
+    },
+    {
+      "equipmentId": "Gateway",
+      "profileName": "Sinexcel_Mini_Gateway_ss40k",
+      "ip": "192.168.1.101",
+      "port": 502,
+      "unitId": 1,
+      "route": "Gateway",
+      "role": "other"
+    },
+    {
+      "equipmentId": "Meter",
+      "profileName": "configured_eGauge",
+      "ip": "192.168.1.88",
+      "port": 502,
+      "unitId": 1,
+      "route": "Meter",
+      "role": "meter"
+    }
+  ],
+  "telemetryCompatibility": {
+    "publishUnifiedToLegacy": {
+      "PCS": {
+        "legacyEquipment": "INVERTER"
+      },
+      "Load": {
+        "legacyEquipment": "INVERTER"
+      },
+      "Meter": {
+        "legacyEquipment": "Meter"
+      },
+      "AMPACE": {
+        "legacyEquipment": "AMP_A"
+      }
+    }
+  },
+  "writerTargets": [
+    {
+      "equipmentId": "PCS",
+      "profileName": "Sinexcel_Mini_PCS_ss40k",
+      "ip": "192.168.1.10",
+      "port": 502,
+      "unitId": 1,
+      "route": "PCS",
+      "enabled": true
+    }
+  ],
+  "signalMapping": {
+    "sources": {
+      "PCS": {
+        "profileName": "Sinexcel_Mini_PCS_ss40k",
+        "role": "pcs",
+        "ip": "192.168.1.10",
+        "port": 502,
+        "unitId": 1,
+        "route": "PCS"
+      },
+      "AMPACE": {
+        "profileName": "AMPACE_Mini_ss40k",
+        "role": "bms",
+        "ip": "192.168.1.100",
+        "port": 502,
+        "unitId": 1,
+        "route": "AMPACE"
+      },
+      "Load": {
+        "profileName": "Sinexcel_Mini_Load_ss40k",
+        "role": "load",
+        "ip": "192.168.1.10",
+        "port": 502,
+        "unitId": 1,
+        "route": "Load"
+      },
+      "PVDC1": {
+        "profileName": "Sinexcel_Mini_PVDC_Module1_ss40k",
+        "role": "pvdc",
+        "ip": "192.168.1.10",
+        "port": 502,
+        "unitId": 1,
+        "route": "PVDC1"
+      },
+      "PVDC2": {
+        "profileName": "Sinexcel_Mini_PVDC_Module2_ss40k",
+        "role": "pvdc",
+        "ip": "192.168.1.10",
+        "port": 502,
+        "unitId": 1,
+        "route": "PVDC2"
+      },
+      "Gateway": {
+        "profileName": "Sinexcel_Mini_Gateway_ss40k",
+        "role": "other",
+        "ip": "192.168.1.101",
+        "port": 502,
+        "unitId": 1,
+        "route": "Gateway"
+      },
+      "Meter": {
+        "profileName": "configured_eGauge",
+        "role": "meter",
+        "ip": "192.168.1.88",
+        "port": 502,
+        "unitId": 1,
+        "route": "Meter"
+      }
+    },
+    "signals": {
+      "gridPowerKw": {
+        "expr": "Meter.Utility_Active_Power"
+      },
+      "utilityPowerKw": {
+        "expr": "Meter.Utility_Active_Power"
+      },
+      "loadPowerKw": {
+        "expr": "Meter.Utility_Active_Power + Meter.AC_PV_Power - PCS.ACBusTotalActivePower"
+      },
+      "siteLoadKw": {
+        "expr": "Meter.Utility_Active_Power + Meter.AC_PV_Power - PCS.ACBusTotalActivePower"
+      },
+      "pvPowerKw": {
+        "expr": "PVDC1.PVSideTotalPower + PVDC2.PVSideTotalPower + Meter.AC_PV_Power"
+      },
+      "pvKw": {
+        "expr": "PVDC1.PVSideTotalPower + PVDC2.PVSideTotalPower"
+      },
+      "pcsPowerKw": {
+        "expr": "PCS.ACBusTotalActivePower",
+        "invertSign": true
+      },
+      "pcsActivePowerKw": {
+        "expr": "PCS.ACBusTotalActivePower",
+        "invertSign": true
+      },
+      "batteryPowerKw": {
+        "expr": "AMPACE.BamsPower"
+      }
+    },
+    "ss40k": {
+      "pPvTotal": {
+        "expr": "PVDC1.PVSideTotalPower + PVDC2.PVSideTotalPower"
+      },
+      "pAcCplTot": {
+        "expr": "Meter.AC_PV_Power"
+      },
+      "pLoad": {
+        "expr": "Meter.Utility_Active_Power + Meter.AC_PV_Power - PCS.ACBusTotalActivePower"
+      },
+      "pGridImpTot": {
+        "expr": "max(Meter.Utility_Active_Power, 0)"
+      },
+      "pGridExpTot": {
+        "expr": "max(-Meter.Utility_Active_Power, 0)"
+      },
+      "pBatDischg": {
+        "expr": "max(AMPACE.BamsPower, 0)"
+      },
+      "pBatChg": {
+        "expr": "max(-AMPACE.BamsPower, 0)"
+      },
+      "socBat": {
+        "expr": "AMPACE.BamsSoc * 100"
+      },
+      "vBat": {
+        "expr": "AMPACE.BamsVoltage"
+      },
+      "vBatCellMax": {
+        "expr": "AMPACE.BamsMaxCellVol * 1000"
+      },
+      "vBatCellMin": {
+        "expr": "AMPACE.BamsMinCellVol * 1000"
+      },
+      "tempBatCellMax": {
+        "expr": "AMPACE.BamsMaxCellT * 10"
+      },
+      "tempBatCellMin": {
+        "expr": "AMPACE.BamsMinCellT * 10"
+      },
+      "fGrid": {
+        "expr": "Meter.Utility_L1_Frequency"
+      },
+      "vGridL1N": {
+        "expr": "Meter.Utility_L1_Voltage"
+      },
+      "vGridL2N": {
+        "expr": "Meter.Utility_L2_Voltage"
+      },
+      "vGridL3N": {
+        "expr": "Meter.Utility_L3_Voltage"
+      }
+    },
+    "energyAccumulator": {
+      "enabled": true,
+      "dailyEnabled": true,
+      "timezone": "America/Los_Angeles",
+      "outputMultiplier": 1000,
+      "maxGapMs": 300000,
+      "sourceTagIDs": {
+        "batteryPowerKw": "AMPACE.BamsPower"
+      }
+    }
+  },
+  "cloud": {
+    "thingId": "24000037",
+    "gsn": "24000037",
+    "telemetryTopic": "fort/v1/things/24000037/telem",
+    "telemetryPeriodicMs": 300000,
+    "reportingPeriodicMs": 300000,
+    "telemetryMaxSampleAgeMs": 600000,
+    "appVersion": "100.0.0",
+    "energyAccumulator": {
+      "enabled": true,
+      "dailyEnabled": true,
+      "timezone": "America/Los_Angeles",
+      "outputMultiplier": 1000,
+      "maxGapMs": 300000,
+      "sourceTagIDs": {
+        "batteryPowerKw": "AMPACE.BamsPower"
+      }
+    }
+  }
+}

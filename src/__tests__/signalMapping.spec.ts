@@ -85,6 +85,29 @@ describe("signal mapping", () => {
     expect(result.diagnostics).toEqual([]);
   });
 
+  test("keeps combined display PV separate from DC-only control PV", () => {
+    const result = evaluateSignalMapping(
+      {
+        signals: {
+          pvPowerKw: {
+            expr: "PVDC.Power + Meter.AcPvPower",
+          },
+          pvKw: {
+            expr: "PVDC.Power",
+          },
+        },
+      },
+      {
+        PVDC: [{ tagID: "PVDC.Power", value: 5 }],
+        Meter: [{ tagID: "Meter.AcPvPower", value: 20 }],
+      }
+    );
+
+    expect(result.signals.pvPowerKw).toBe(25);
+    expect(result.signals.pvKw).toBe(5);
+    expect(result.diagnostics).toEqual([]);
+  });
+
   test("supports deadband helper and reports expression errors", () => {
     const result = evaluateSignalMapping(
       {

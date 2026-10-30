@@ -1,0 +1,292 @@
+{
+  "edgeSchedulerJobs": {
+    "24002400": {
+      "protocolVer": 1,
+      "flags": 0,
+      "jobId": 24002400,
+      "jobName": "Mini Early Self Consumption",
+      "priority": 50,
+      "owner": "LocalSchedule",
+      "execType": "Cron",
+      "timezone": "America/Los_Angeles",
+      "startTs": 0,
+      "expireTs": 0,
+      "cronExpr": "0 0 0 * * *",
+      "durationSec": 10800,
+      "payload": {
+        "command": "peakShaving",
+        "port": "utilityGrid",
+        "dischargeThresholdKw": 999999,
+        "chargeThresholdKw": 0,
+        "minSocPct": 20,
+        "maxSocPct": 95,
+        "maxChargePowerPct": 100,
+        "maxDischargePowerPct": 100,
+        "deadbandKw": 0.5,
+        "holdAtThreshold": true
+      },
+      "payloadJson": "{\"command\":\"peakShaving\",\"port\":\"utilityGrid\",\"dischargeThresholdKw\":999999,\"chargeThresholdKw\":0,\"minSocPct\":20,\"maxSocPct\":95,\"maxChargePowerPct\":100,\"maxDischargePowerPct\":100,\"deadbandKw\":0.5,\"holdAtThreshold\":true}",
+      "state": "Pending"
+    },
+    "24002403": {
+      "protocolVer": 1,
+      "flags": 0,
+      "jobId": 24002403,
+      "jobName": "Mini Day Self Consumption",
+      "priority": 50,
+      "owner": "LocalSchedule",
+      "execType": "Cron",
+      "timezone": "America/Los_Angeles",
+      "startTs": 0,
+      "expireTs": 0,
+      "cronExpr": "0 0 3 * * *",
+      "durationSec": 46800,
+      "payload": {
+        "command": "peakShaving",
+        "port": "utilityGrid",
+        "dischargeThresholdKw": 999999,
+        "chargeThresholdKw": 0,
+        "minSocPct": 20,
+        "maxSocPct": 95,
+        "maxChargePowerPct": 100,
+        "maxDischargePowerPct": 100,
+        "deadbandKw": 0.5,
+        "holdAtThreshold": true
+      },
+      "payloadJson": "{\"command\":\"peakShaving\",\"port\":\"utilityGrid\",\"dischargeThresholdKw\":999999,\"chargeThresholdKw\":0,\"minSocPct\":20,\"maxSocPct\":95,\"maxChargePowerPct\":100,\"maxDischargePowerPct\":100,\"deadbandKw\":0.5,\"holdAtThreshold\":true}",
+      "state": "Pending"
+    },
+    "24002416": {
+      "protocolVer": 1,
+      "flags": 0,
+      "jobId": 24002416,
+      "jobName": "Mini Evening Peak Shaving",
+      "priority": 50,
+      "owner": "LocalSchedule",
+      "execType": "Cron",
+      "timezone": "America/Los_Angeles",
+      "startTs": 0,
+      "expireTs": 0,
+      "cronExpr": "0 0 16 * * *",
+      "durationSec": 18000,
+      "payload": {
+        "command": "peakShaving",
+        "port": "utilityGrid",
+        "dischargeThresholdKw": 0,
+        "chargeThresholdKw": -999999,
+        "minSocPct": 20,
+        "maxSocPct": 95,
+        "maxChargePowerPct": 100,
+        "maxDischargePowerPct": 100,
+        "deadbandKw": 0.5,
+        "holdAtThreshold": true
+      },
+      "payloadJson": "{\"command\":\"peakShaving\",\"port\":\"utilityGrid\",\"dischargeThresholdKw\":0,\"chargeThresholdKw\":-999999,\"minSocPct\":20,\"maxSocPct\":95,\"maxChargePowerPct\":100,\"maxDischargePowerPct\":100,\"deadbandKw\":0.5,\"holdAtThreshold\":true}",
+      "state": "Pending"
+    }
+  },
+  "schedulePlans": [
+    {
+      "version": "3.0",
+      "source": "converted-from-10.253.1.24-legacy-schedule",
+      "timezone": "America/Los_Angeles",
+      "timed": [
+        {
+          "planID": "24002400",
+          "jobId": 24002400,
+          "name": "Mini Early Self Consumption",
+          "version": "3.0",
+          "owner": "LocalSchedule",
+          "priority": 50,
+          "execType": "Cron",
+          "timezone": "America/Los_Angeles",
+          "cron": "0 0 0 * * *",
+          "duration": {
+            "unit": "minutes",
+            "value": 180
+          },
+          "payload": {
+            "command": "peakShaving",
+            "port": "utilityGrid",
+            "dischargeThresholdKw": 999999,
+            "chargeThresholdKw": 0,
+            "minSocPct": 20,
+            "maxSocPct": 95,
+            "maxChargePowerPct": 100,
+            "maxDischargePowerPct": 100,
+            "deadbandKw": 0.5,
+            "holdAtThreshold": true
+          },
+          "strategy": {
+            "meter_rule": {
+              "discharge": {
+                "net_load_threshold": {
+                  "value": 999999,
+                  "unit": "kW"
+                }
+              },
+              "charge": {
+                "net_load_threshold": {
+                  "value": 0,
+                  "unit": "kW"
+                }
+              }
+            },
+            "pv_rule": {
+              "name": "SelfConsumption"
+            }
+          },
+          "constraints": {
+            "min_soc": {
+              "value": 20,
+              "unit": "%"
+            },
+            "max_soc": {
+              "value": 95,
+              "unit": "%"
+            },
+            "max_charge_power": {
+              "value": 100,
+              "unit": "%"
+            },
+            "max_discharge_power": {
+              "value": 100,
+              "unit": "%"
+            }
+          },
+          "start": "2000-01-01T00:00:00"
+        },
+        {
+          "planID": "24002403",
+          "jobId": 24002403,
+          "name": "Mini Day Self Consumption",
+          "version": "3.0",
+          "owner": "LocalSchedule",
+          "priority": 50,
+          "execType": "Cron",
+          "timezone": "America/Los_Angeles",
+          "cron": "0 0 3 * * *",
+          "duration": {
+            "unit": "minutes",
+            "value": 780
+          },
+          "payload": {
+            "command": "peakShaving",
+            "port": "utilityGrid",
+            "dischargeThresholdKw": 999999,
+            "chargeThresholdKw": 0,
+            "minSocPct": 20,
+            "maxSocPct": 95,
+            "maxChargePowerPct": 100,
+            "maxDischargePowerPct": 100,
+            "deadbandKw": 0.5,
+            "holdAtThreshold": true
+          },
+          "strategy": {
+            "meter_rule": {
+              "discharge": {
+                "net_load_threshold": {
+                  "value": 999999,
+                  "unit": "kW"
+                }
+              },
+              "charge": {
+                "net_load_threshold": {
+                  "value": 0,
+                  "unit": "kW"
+                }
+              }
+            },
+            "pv_rule": {
+              "name": "SelfConsumption"
+            }
+          },
+          "constraints": {
+            "min_soc": {
+              "value": 20,
+              "unit": "%"
+            },
+            "max_soc": {
+              "value": 95,
+              "unit": "%"
+            },
+            "max_charge_power": {
+              "value": 100,
+              "unit": "%"
+            },
+            "max_discharge_power": {
+              "value": 100,
+              "unit": "%"
+            }
+          },
+          "start": "2000-01-01T03:00:00"
+        },
+        {
+          "planID": "24002416",
+          "jobId": 24002416,
+          "name": "Mini Evening Peak Shaving",
+          "version": "3.0",
+          "owner": "LocalSchedule",
+          "priority": 50,
+          "execType": "Cron",
+          "timezone": "America/Los_Angeles",
+          "cron": "0 0 16 * * *",
+          "duration": {
+            "unit": "minutes",
+            "value": 300
+          },
+          "payload": {
+            "command": "peakShaving",
+            "port": "utilityGrid",
+            "dischargeThresholdKw": 0,
+            "chargeThresholdKw": -999999,
+            "minSocPct": 20,
+            "maxSocPct": 95,
+            "maxChargePowerPct": 100,
+            "maxDischargePowerPct": 100,
+            "deadbandKw": 0.5,
+            "holdAtThreshold": true
+          },
+          "strategy": {
+            "meter_rule": {
+              "discharge": {
+                "net_load_threshold": {
+                  "value": 0,
+                  "unit": "kW"
+                }
+              },
+              "charge": {
+                "net_load_threshold": {
+                  "value": -999999,
+                  "unit": "kW"
+                }
+              }
+            },
+            "pv_rule": {
+              "name": "SelfConsumption"
+            }
+          },
+          "constraints": {
+            "min_soc": {
+              "value": 20,
+              "unit": "%"
+            },
+            "max_soc": {
+              "value": 95,
+              "unit": "%"
+            },
+            "max_charge_power": {
+              "value": 100,
+              "unit": "%"
+            },
+            "max_discharge_power": {
+              "value": 100,
+              "unit": "%"
+            }
+          },
+          "start": "2000-01-01T16:00:00"
+        }
+      ]
+    }
+  ]
+}

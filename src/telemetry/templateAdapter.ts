@@ -29,6 +29,7 @@ export interface TelemetryTemplateSs40k {
 export interface TelemetryTemplateEntry {
   id: string;
   description?: string;
+  notes?: string;
   function?: string | null;
   address?: number | null;
   length?: number;
@@ -120,9 +121,12 @@ const TEMPLATE_FILE_ALIASES: Record<string, string> = {
   egauge_280: "eGauge_280_ss40k.json",
   egauge: "eGauge_280_ss40k.json",
   udt_eGauge_V1: "eGauge_280_ss40k.json",
-  eGauge_Assisted_Living_ss40k: "eGauge_Assisted_Living_ss40k.json",
-  eGauge_Assisted_Living: "eGauge_Assisted_Living_ss40k.json",
-  udt_eGauge_Assisted_Living_V1: "eGauge_Assisted_Living_ss40k.json",
+  eGauge_Site_Meter_ss40k: "eGauge_Site_Meter_ss40k.json",
+  eGauge_Site_Meter: "eGauge_Site_Meter_ss40k.json",
+  udt_eGauge_Site_Meter_V1: "eGauge_Site_Meter_ss40k.json",
+  eGauge_Assisted_Living_ss40k: "eGauge_Site_Meter_ss40k.json",
+  eGauge_Assisted_Living: "eGauge_Site_Meter_ss40k.json",
+  udt_eGauge_Assisted_Living_V1: "eGauge_Site_Meter_ss40k.json",
   eGauge_Mission_Energy_ss40k: "eGauge_Mission_Energy_ss40k.json",
   eGauge_Mission_Energy: "eGauge_Mission_Energy_ss40k.json",
   eGauge_MissionEnergy: "eGauge_Mission_Energy_ss40k.json",
@@ -138,6 +142,10 @@ const TEMPLATE_FILE_ALIASES: Record<string, string> = {
   SEL851: "SEL851_ss40k.json",
   sel851: "SEL851_ss40k.json",
   udt_SEL851_v1: "SEL851_ss40k.json",
+  SEL751_ss40k: "SEL751_ss40k.json",
+  SEL751: "SEL751_ss40k.json",
+  sel751: "SEL751_ss40k.json",
+  udt_SEL751_v1: "SEL751_ss40k.json",
   AMPACE_Mini_ss40k: "AMPACE_Mini_ss40k.json",
   AMPACE_Mini: "AMPACE_Mini_ss40k.json",
   Ampace_BMS_ss40k: "AMPACE_Mini_ss40k.json",
@@ -145,14 +153,27 @@ const TEMPLATE_FILE_ALIASES: Record<string, string> = {
   udt_Ampace_A_V3: "AMPACE_Mini_ss40k.json",
   ampace_bms: "AMPACE_Mini_ss40k.json",
   ampace_mini: "AMPACE_Mini_ss40k.json",
+  Battery_Mini_ss40k: "AMPACE_Mini_ss40k.json",
+  Battery_Mini: "AMPACE_Mini_ss40k.json",
+  battery_mini: "AMPACE_Mini_ss40k.json",
   AMPACE_Mini_BCU_42k: "AMPACE_Mini_BCU_42k.json",
   AMPACE_Mini_BCU42k: "AMPACE_Mini_BCU_42k.json",
   ampace_mini_bcu_42k: "AMPACE_Mini_BCU_42k.json",
+  Battery_Mini_BCU_42k: "AMPACE_Mini_BCU_42k.json",
+  Battery_Mini_BCU42k: "AMPACE_Mini_BCU_42k.json",
+  battery_mini_bcu_42k: "AMPACE_Mini_BCU_42k.json",
+  CATL_280_SBMU_42k: "CATL_280_SBMU_42k.json",
+  CATL_280_SBMU42k: "CATL_280_SBMU_42k.json",
+  catl_280_sbmu_42k: "CATL_280_SBMU_42k.json",
   Sinexcel_Mini_PCS_ss40k: "Sinexcel_Mini_PCS_ss40k.json",
   Sinexcel_Mini_PCS: "Sinexcel_Mini_PCS_ss40k.json",
   udt_Sinexcel_Mini_PCS: "Sinexcel_Mini_PCS_ss40k.json",
   mini_pcs: "Sinexcel_Mini_PCS_ss40k.json",
   Sinexcel_Mini_ss40k: "Sinexcel_Mini_PCS_ss40k.json",
+  Sinexcel_Mini_Gateway_ss40k: "Sinexcel_Mini_Gateway_ss40k.json",
+  Sinexcel_Mini_Gateway: "Sinexcel_Mini_Gateway_ss40k.json",
+  udt_Sinexcel_Gateway_A_V2: "Sinexcel_Mini_Gateway_ss40k.json",
+  mini_gateway: "Sinexcel_Mini_Gateway_ss40k.json",
   Sinexcel_Mini_Load: "Sinexcel_Mini_Load_ss40k.json",
   udt_Sinexcel_Mini_Load: "Sinexcel_Mini_Load_ss40k.json",
   mini_load: "Sinexcel_Mini_Load_ss40k.json",
@@ -165,6 +186,11 @@ const TEMPLATE_FILE_ALIASES: Record<string, string> = {
   pvdc_module_1: "Sinexcel_Mini_PVDC_Module1_ss40k.json",
   pvdc_module_2: "Sinexcel_Mini_PVDC_Module2_ss40k.json",
   pvdc_module_3: "Sinexcel_Mini_PVDC_Module3_ss40k.json",
+  NANO_Hybrid_PCS_ss40k: "NANO_Hybrid_PCS_ss40k.json",
+  NANO_Hybrid_PCS: "NANO_Hybrid_PCS_ss40k.json",
+  Nano_Hybrid_PCS: "NANO_Hybrid_PCS_ss40k.json",
+  nano_hybrid_pcs: "NANO_Hybrid_PCS_ss40k.json",
+  udt_NANO_HybridInverter_V15: "NANO_Hybrid_PCS_ss40k.json",
 };
 
 function templatesDir() {
